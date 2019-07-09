@@ -1,0 +1,111 @@
+openapi: 3.0.0
+info:
+  version: '1.0.0'
+  title: 'Material list'
+  license:
+    name: 'GNU General Public License v3.0'
+    url: 'https://www.gnu.org/licenses/gpl-3.0.html'
+
+tags:
+  - name: 'List'
+    description: List handling
+paths:
+  /list/{listId}:
+    get:
+      tags:
+        - List
+      description: 'Get list with materials.'
+      parameters:
+        - $ref: '#/components/parameters/listId'
+      responses:
+        200:
+          description: 'The list data is returned.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/List'
+        404:
+          description: 'Unknown list.'
+        500:
+          description: 'Unspecified error.'
+
+  /list/{listId}/{materialId}:
+    get:
+      tags:
+        - List
+      description: 'Check existence of material on list.'
+      parameters:
+        - $ref: '#/components/parameters/listId'
+        - $ref: '#/components/parameters/materialId'
+      responses:
+        201:
+          description: 'The material exists on the list.'
+        404:
+          description: 'The list or material does not exist.'
+        500:
+          description: 'Unspecified error.'
+    put:
+      tags:
+        - List
+      description: 'Add material to the the list.'
+      parameters:
+        - $ref: '#/components/parameters/listId'
+        - $ref: '#/components/parameters/materialId'
+      responses:
+        201:
+          description: 'The material was successfully added to the list.'
+        404:
+          description: 'Unknown list.'
+        500:
+          description: 'Unspecified error.'
+    delete:
+      tags:
+        - List
+      description: 'Delete material from list.'
+      parameters:
+        - $ref: '#/components/parameters/listId'
+        - $ref: '#/components/parameters/materialId'
+      responses:
+        204:
+          description: 'Successfully removed.'
+        404:
+          description: 'Unknown list or material.'
+        500:
+          description: 'Unspecified error.'
+
+components:
+  parameters:
+    listId:
+      name: 'listId'
+      in: 'path'
+      description: 'The identifier of the list to return. Use "default" for the default list.'
+      required: true
+      schema:
+        type: string
+        example: 'default'
+    materialId:
+      name: 'materialId'
+      in: 'path'
+      description: 'The identifier of the material.'
+      required: true
+      schema:
+        type: string
+        example: '870970-basis:54871910'
+
+  schemas:
+    List:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          description: 'List identifier. In the initial version, this can only be "default".'
+          type: string
+          example: 'default'
+        materials:
+          type: array
+          items:
+            description: 'A material identifier.'
+            type: string
+            example: '870970-basis:54871910'
+
