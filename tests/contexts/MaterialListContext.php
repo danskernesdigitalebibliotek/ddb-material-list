@@ -3,11 +3,11 @@
 use Behat\Behat\Context\Context;
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
+use Behat\Behat\Tester\Exception\PendingException;
+use Behat\Gherkin\Node\TableNode;
+use Faker\Generator;
 use Illuminate\Support\Facades\Facade;
 use Laravel\Lumen\Testing\Concerns\MakesHttpRequests;
-
-use Faker\Generator;
-
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class MaterialListContext implements Context, SnippetAcceptingContext
@@ -36,9 +36,9 @@ class MaterialListContext implements Context, SnippetAcceptingContext
     protected $faker;
 
     /**
-     * The token to use in requests.
+     * Scenario state data.
      */
-    protected $token = '';
+    protected $state = [];
 
     public function __construct()
     {
@@ -52,9 +52,11 @@ class MaterialListContext implements Context, SnippetAcceptingContext
      */
     public function before(BeforeScenarioScope $scope)
     {
-        $this->token = '';
+        $this->state = [];
         // Boot the app.
         putenv('APP_ENV=testing');
+        putenv('DB_CONNECTION=sqlite');
+        putenv('DB_DATABASE=:memory:');
 
         Facade::clearResolvedInstances();
 
@@ -65,6 +67,23 @@ class MaterialListContext implements Context, SnippetAcceptingContext
         $this->app->make('url')->forceRootUrl($url);
 
         $this->app->boot();
+
+        // Run migration to create db tables.
+        $this->artisan('migrate:fresh');
+    }
+
+    /**
+     * Call artisan command and return code.
+     *
+     * (pilfered from Laravel\Lumen\Testing\TestCase)
+     *
+     * @param string  $command
+     * @param array   $parameters
+     * @return int
+     */
+    public function artisan($command, $parameters = [])
+    {
+        return $this->code = $this->app['Illuminate\Contracts\Console\Kernel']->call($command, $parameters);
     }
 
     /**
@@ -75,7 +94,7 @@ class MaterialListContext implements Context, SnippetAcceptingContext
     protected function getHeaders() : array
     {
         return [
-            'Authorization' => 'Bearer ' . $this->token,
+            'Authorization' => 'Bearer ' . $this->state['token'],
         ];
     }
 
@@ -85,15 +104,16 @@ class MaterialListContext implements Context, SnippetAcceptingContext
     public function anUnknownUser()
     {
         // An empty token is considered bad in TestTokenAccess.
-        $this->token = '';
+        $this->state['token'] = '';
     }
 
     /**
      * @Given a known user
+     * @Given a known user that has no items on list
      */
     public function aKnownUser()
     {
-        $this->token = $this->faker->sha1;
+        $this->state['token'] = $this->faker->sha1;
     }
 
     /**
@@ -101,17 +121,16 @@ class MaterialListContext implements Context, SnippetAcceptingContext
      */
     public function fetchingTheList()
     {
-        $this->get('/list/default', $this->getHeaders());
+        $this->fetchingTheListNamed('default');
     }
 
     /**
-     * @Then the system should return access denied
+     * @When fetching the :list list
      */
-    public function theSystemShouldReturnAccessDenied()
+    public function fetchingTheListNamed($list)
     {
-        if ($this->response->getStatusCode() != 401) {
-            throw new Exception('Status code ' . $this->response->getStatusCode() . ' instead of the expected 401');
-        }
+        $this->state['list'] = $list;
+        $this->get('/list/' . $list, $this->getHeaders());
     }
 
     /**
@@ -119,8 +138,104 @@ class MaterialListContext implements Context, SnippetAcceptingContext
      */
     public function theSystemShouldReturnSuccess()
     {
-        if ($this->response->getStatusCode() != 200) {
-            throw new Exception('Status code ' . $this->response->getStatusCode() . ' instead of the expected 200');
+        $this->checkStatusCode(200);
+    }
+
+    /**
+     * @Then the system should return access denied
+     */
+    public function theSystemShouldReturnAccessDenied()
+    {
+        $this->checkStatusCode(401);
+    }
+
+    /**
+     * @Then the system should return not found
+     */
+    public function theSystemShouldReturnNotFound()
+    {
+        $this->checkStatusCode(404);
+    }
+
+    /**
+     * Check that status code is the expected.
+     */
+    protected function checkStatusCode($expected)
+    {
+        if ($this->response->getStatusCode() != $expected) {
+            print("Response content: \n" . $this->response->getContent());
+            throw new Exception('Status code ' . $this->response->getStatusCode() .
+                                ' instead of the expected ' . $expected);
         }
     }
+
+    /**
+     * Test the basic structure of a list response.
+     *
+     * @return array
+     *   The decoded response.
+     */
+    protected function checkListResponse() : array
+    {
+        $response = json_decode($this->response->getContent(), true);
+        if (empty($response['id'])) {
+            throw new Exception('No list id in response');
+        }
+
+        if ($response['id'] !== $this->state['list']) {
+            throw new Exception('Bad list id in response');
+        }
+
+        if (!isset($response['materials'])) {
+            throw new Exception('No materials key in response');
+        }
+
+        return $response;
+    }
+
+    /**
+     * @Then the list should be emtpy
+     */
+    public function theListShouldBeEmtpy()
+    {
+        $response = $this->checkListResponse();
+
+        if (!empty($response['materials'])) {
+            throw new Exception('Material list not empty');
+        }
+    }
+
+    /**
+     * @Given they have the following items on the list:
+     */
+    public function theyHaveTheFollowingItemsOnTheList(TableNode $table)
+    {
+        foreach ($table as $row) {
+            DB::table('materials')->insert([
+                'guid' => $this->state['token'],
+                'list' => 'default',
+                'material' => $row['material'],
+            ]);
+        }
+    }
+
+    /**
+     * @Then the list should contain:
+     */
+    public function theListShouldContain(TableNode $table)
+    {
+        $response = $this->checkListResponse();
+
+        $expected = [];
+        foreach ($table as $row) {
+            $expected[] = $row['material'];
+        }
+
+        if ($response['materials'] !== $expected) {
+            print_r($expected);
+            print_r($response);
+            throw new Exception('List content not the expected');
+        }
+    }
+
 }
