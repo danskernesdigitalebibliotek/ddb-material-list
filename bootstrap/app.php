@@ -61,6 +61,20 @@ $app->singleton(
 //     App\Http\Middleware\ExampleMiddleware::class
 // ]);
 
+if ($app->environment('testing')) {
+    $app->middleware([
+        App\Http\Middleware\TestTokenChecker::class
+    ]);
+} else {
+    $app->middleware([
+        App\Http\Middleware\TokenChecker::class
+    ]);
+}
+
+$app->middleware([
+    App\Http\Middleware\TokenAccess::class
+]);
+
 // $app->routeMiddleware([
 //     'auth' => App\Http\Middleware\Authenticate::class,
 // ]);
