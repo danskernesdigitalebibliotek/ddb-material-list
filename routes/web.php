@@ -16,3 +16,4 @@ $router->get('/', function () use ($router) {
 });
 
 $router->get('/list/{listId}', 'ListController@get');
+$router->get('/list/{listId}/{materialId}', 'ListController@getMaterial');

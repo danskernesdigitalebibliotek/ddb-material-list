@@ -138,7 +138,7 @@ class MaterialListContext implements Context, SnippetAcceptingContext
      */
     public function theSystemShouldReturnSuccess()
     {
-        $this->checkStatusCode(200);
+            $this->checkStatusCode([200, 201]);
     }
 
     /**
@@ -162,10 +162,13 @@ class MaterialListContext implements Context, SnippetAcceptingContext
      */
     protected function checkStatusCode($expected)
     {
-        if ($this->response->getStatusCode() != $expected) {
-            print("Response content: \n" . $this->response->getContent());
+        if (!is_array($expected)) {
+            $expected = [$expected];
+        }
+        if (!in_array($this->response->getStatusCode(), $expected)) {
             throw new Exception('Status code ' . $this->response->getStatusCode() .
-                                ' instead of the expected ' . $expected);
+                                ' instead of the expected ' . implode(', ', $expected) .
+                                "\nResponse content: \n" . $this->response->getContent());
         }
     }
 
@@ -238,4 +241,11 @@ class MaterialListContext implements Context, SnippetAcceptingContext
         }
     }
 
+    /**
+     * @When checking if :material is on the list
+     */
+    public function checkingIfIsOnTheList($material)
+    {
+        $this->get('/list/default/' . $material, $this->getHeaders());
+    }
 }
