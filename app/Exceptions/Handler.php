@@ -3,9 +3,11 @@
 namespace App\Exceptions;
 
 use Exception;
-use Illuminate\Validation\ValidationException;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\Response;
+use Illuminate\Validation\ValidationException;
 use Laravel\Lumen\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
@@ -45,6 +47,21 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
-        return parent::render($request, $exception);
+        if ($exception instanceof HttpResponseException) {
+            return $exception->getResponse();
+        }
+
+        $rendered = parent::render($request, $exception);
+
+        // Render exceptions in debug mode, but not in
+        if (env('APP_DEBUG')) {
+            return new Response(
+                $exception->getMessage() . "\n",
+                $rendered->getStatusCode(),
+                ['Content-Type' => 'text/plain']
+            );
+        } else {
+            return new Response("Internal server error.", 500, ['Content-Type' => 'text/plain']);
+        }
     }
 }
