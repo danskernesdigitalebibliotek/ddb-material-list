@@ -209,6 +209,14 @@ class MaterialListContext implements Context, SnippetAcceptingContext
     }
 
     /**
+     * @When :material is added to the list
+     */
+    public function isAddedToTheList($material)
+    {
+        $this->put('/list/default/' . $material, [], $this->getHeaders());
+    }
+
+    /**
      * @Given they have the following items on the list:
      */
     public function theyHaveTheFollowingItemsOnTheList(TableNode $table)
@@ -248,4 +256,14 @@ class MaterialListContext implements Context, SnippetAcceptingContext
     {
         $this->get('/list/default/' . $material, $this->getHeaders());
     }
+
+    /**
+     * @Then :material should be on the list
+     */
+    public function shouldBeOnTheList($material)
+    {
+        $this->checkingIfIsOnTheList($material);
+        $this->theSystemShouldReturnSuccess();
+    }
+
 }

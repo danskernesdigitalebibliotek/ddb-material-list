@@ -41,4 +41,20 @@ class ListController extends Controller
             throw new NotFoundHttpException('No such material');
         }
     }
+
+    public function addMaterial(Request $request, string $listId, string $materialId)
+    {
+        if ($listId != 'default') {
+            throw new NotFoundHttpException('No such list');
+        }
+
+        $count = DB::table('materials')
+            ->insert([
+                'guid' => $request->user(),
+                'list' => $listId,
+                'material' => $materialId,
+            ]);
+
+        return new Response('', 201);
+    }
 }
