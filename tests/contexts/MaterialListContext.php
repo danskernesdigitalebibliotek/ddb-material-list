@@ -57,7 +57,7 @@ class MaterialListContext implements Context, SnippetAcceptingContext
         // Boot the app.
 
         // Use the test token handler. We can't do OAuth in tests.
-        putenv('APP_TOKENHANDLER=test');
+        putenv('APP_TOKENCHECKER=test');
 
         // Use in-memory db for speed.
         putenv('DB_CONNECTION=sqlite');
