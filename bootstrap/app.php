@@ -57,10 +57,6 @@ $app->singleton(
 |
 */
 
-// $app->middleware([
-//     App\Http\Middleware\ExampleMiddleware::class
-// ]);
-
 if ($app->environment('testing')) {
     $app->middleware([
         App\Http\Middleware\TestTokenChecker::class
