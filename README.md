@@ -11,7 +11,3 @@ controller directly with the appropriate request.
 
 Behat generates code coverage when running tests. To view them,
 generate an HTML report with `./vendor/bin/phpcov merge --html=./coverage/html ./coverage`
-
-Remember to add --strict to the behat invocation in main.workflow when
-all the existing features has been implemented. Then behat will fail
-on unimplemented features tests going forward.

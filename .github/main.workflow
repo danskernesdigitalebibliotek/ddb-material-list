@@ -11,7 +11,7 @@ action "Composer install" {
 action "Behaviour tests" {
   needs = ["Composer install"]
   uses = "./.github/actions/php-action"
-  runs = "vendor/bin/behat"
+  runs = "vendor/bin/behat --strict"
 }
 
 action "Behaviour test coverage" {
