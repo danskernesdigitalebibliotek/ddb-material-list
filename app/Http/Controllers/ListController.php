@@ -66,4 +66,20 @@ class ListController extends Controller
 
         return new Response('', 201);
     }
+
+    public function removeMaterial(Request $request, string $listId, string $materialId)
+    {
+        if ($listId != 'default') {
+            throw new NotFoundHttpException('No such list');
+        }
+
+        $count = DB::table('materials')
+            ->where([
+                'guid' => $request->user(),
+                'list' => $listId,
+                'material' => $materialId,
+            ])->delete();
+
+        return new Response('', $count > 0 ? 204 : 404);
+    }
 }

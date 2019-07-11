@@ -10,7 +10,7 @@ Feature: Deleting materials from list
       | pid 3    |
     When deleting "pid 2" from the list
     Then the system should return success
-    And the list should contain:
+    And fetching the list should return:
       | material |
-      | pid 1    |
       | pid 3    |
+      | pid 1    |

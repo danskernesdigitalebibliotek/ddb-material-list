@@ -139,7 +139,7 @@ class MaterialListContext implements Context, SnippetAcceptingContext
      */
     public function theSystemShouldReturnSuccess()
     {
-            $this->checkStatusCode([200, 201]);
+        $this->checkStatusCode([200, 201, 204]);
     }
 
     /**
@@ -275,5 +275,13 @@ class MaterialListContext implements Context, SnippetAcceptingContext
     {
         $this->checkingIfIsOnTheList($material);
         $this->theSystemShouldReturnSuccess();
+    }
+
+    /**
+     * @When deleting :material from the list
+     */
+    public function deletingFromTheList($material)
+    {
+        $this->delete('/list/default/' . $material, [], $this->getHeaders());
     }
 }
