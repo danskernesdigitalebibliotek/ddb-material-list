@@ -18,7 +18,7 @@ class CreateMaterialsTable extends Migration
             $table->string('guid');
             $table->string('list');
             $table->string('material');
-            $table->timestamps();
+            $table->timestamps(6);
         });
     }
 

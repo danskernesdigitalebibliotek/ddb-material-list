@@ -18,6 +18,8 @@ class ListController extends Controller
 
         $materials = DB::table('materials')
             ->where(['guid' => $request->user(), 'list' => $listId])
+            ->orderBy('updated_at', 'DESC')
+            ->select('material')
             ->pluck('material');
         return [
             'id' => $listId,
@@ -53,6 +55,9 @@ class ListController extends Controller
                 'guid' => $request->user(),
                 'list' => $listId,
                 'material' => $materialId,
+                // We need to format the dates ourselves to add microseconds.
+                'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s.u'),
+                'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s.u'),
             ]);
 
         return new Response('', 201);
