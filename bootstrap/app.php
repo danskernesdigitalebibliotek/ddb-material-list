@@ -57,7 +57,7 @@ $app->singleton(
 |
 */
 
-if ($app->environment('testing')) {
+if (env('APP_TOKENHANDLER', 'default') == 'test') {
     $app->middleware([
         App\Http\Middleware\TestTokenChecker::class
     ]);
