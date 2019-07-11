@@ -9,6 +9,7 @@ Feature: List order
     When fetching the list
     Then the system should return success
     And the list should contain:
-      | pid 3 |
-      | pid 2 |
-      | pid 1 |
+      | material |
+      | pid 3    |
+      | pid 2    |
+      | pid 1    |
