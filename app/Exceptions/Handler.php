@@ -55,9 +55,11 @@ class Handler extends ExceptionHandler
         // Render HttpExceptions as plain text responses. And do it to all
         // exceptions in debug mode.
         if ($exception instanceof HttpException || env('APP_DEBUG')) {
+            $statusCode = method_exists($exception, 'getStatusCode') ?
+                $exception->getStatusCode() : 500;
             return new Response(
                 $exception->getMessage(),
-                $exception->getStatusCode(),
+                $statusCode,
                 ['Content-Type' => 'text/plain']
             );
         }
