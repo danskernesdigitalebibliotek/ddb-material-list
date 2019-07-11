@@ -5,6 +5,7 @@ use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Gherkin\Node\TableNode;
+use Carbon\Carbon;
 use Faker\Generator;
 use Illuminate\Support\Facades\Facade;
 use Laravel\Lumen\Testing\Concerns\MakesHttpRequests;
@@ -226,6 +227,7 @@ class MaterialListContext implements Context, SnippetAcceptingContext
                 'guid' => $this->state['token'],
                 'list' => 'default',
                 'material' => $row['material'],
+                'changed_at' => Carbon::now()->format('Y-m-d H:i:s.u'),
             ]);
         }
     }
@@ -250,6 +252,15 @@ class MaterialListContext implements Context, SnippetAcceptingContext
     }
 
     /**
+     * @Then fetching the list should return:
+     */
+    public function fetchingTheListShouldReturn(TableNode $table)
+    {
+        $this->fetchingTheList();
+        $this->theListShouldContain($table);
+    }
+
+    /**
      * @When checking if :material is on the list
      */
     public function checkingIfIsOnTheList($material)
@@ -265,5 +276,4 @@ class MaterialListContext implements Context, SnippetAcceptingContext
         $this->checkingIfIsOnTheList($material);
         $this->theSystemShouldReturnSuccess();
     }
-
 }

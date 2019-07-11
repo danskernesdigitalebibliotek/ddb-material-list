@@ -25,5 +25,6 @@ Feature: Add to list
       | pid 1    |
     When "pid 1" is added to the list
     Then the system should return success
-    And "pid 1" should be on the list
-    And the list should have 1 item
+    And fetching the list should return:
+      | material |
+      | pid 1    |

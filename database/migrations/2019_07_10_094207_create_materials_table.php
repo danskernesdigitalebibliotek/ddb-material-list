@@ -18,7 +18,9 @@ class CreateMaterialsTable extends Migration
             $table->string('guid');
             $table->string('list');
             $table->string('material');
-            $table->timestamps(6);
+            $table->timestamp('changed_at', 6);
+
+            $table->unique(['guid', 'list', 'material']);
         });
     }
 

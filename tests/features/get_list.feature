@@ -23,9 +23,9 @@ Feature: Fetching list
     Then the system should return success
     And the list should contain:
       | material |
-      | pid 1    |
-      | pid 2    |
       | pid 3    |
+      | pid 2    |
+      | pid 1    |
 
   Scenario: A user can check that a material is on the list
     Given a known user

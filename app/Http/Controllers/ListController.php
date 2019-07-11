@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use DB;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -18,7 +19,7 @@ class ListController extends Controller
 
         $materials = DB::table('materials')
             ->where(['guid' => $request->user(), 'list' => $listId])
-            ->orderBy('updated_at', 'DESC')
+            ->orderBy('changed_at', 'DESC')
             ->select('material')
             ->pluck('material');
         return [
@@ -50,15 +51,18 @@ class ListController extends Controller
             throw new NotFoundHttpException('No such list');
         }
 
-        $count = DB::table('materials')
-            ->insert([
-                'guid' => $request->user(),
-                'list' => $listId,
-                'material' => $materialId,
-                // We need to format the dates ourselves to add microseconds.
-                'created_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s.u'),
-                'updated_at' => \Carbon\Carbon::now()->format('Y-m-d H:i:s.u'),
-            ]);
+        DB::table('materials')
+            ->updateOrInsert(
+                [
+                    'guid' => $request->user(),
+                    'list' => $listId,
+                    'material' => $materialId,
+                ],
+                [
+                    // We need to format the date ourselves to add microseconds.
+                    'changed_at' => Carbon::now()->format('Y-m-d H:i:s.u'),
+                ]
+            );
 
         return new Response('', 201);
     }
