@@ -1,3 +1,5 @@
+[![](https://img.shields.io/codecov/c/github/reload/material-list.svg?style=for-the-badge)](https://codecov.io/gh/reload/material-list)
+
 Loose notes that should be rewritten to proper documentation
 ------------------------------------------------------------
 
