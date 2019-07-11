@@ -16,7 +16,8 @@ class TestTokenChecker
      */
     public function handle($request, Closure $next, $guard = null)
     {
-        list(, $token) = explode(' ', $request->headers->get('Authorization'));
+        $parts = explode(' ', $request->headers->get('Authorization'));
+        $token = isset($parts[1]) ? $parts[1] : '';
 
         // We just use the token as GUID.
         $request->setUserResolver(function () use ($token) {
