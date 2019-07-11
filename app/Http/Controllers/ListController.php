@@ -13,9 +13,7 @@ class ListController extends Controller
 {
     public function get(Request $request, string $listId)
     {
-        if ($listId != 'default') {
-            throw new NotFoundHttpException('No such list');
-        }
+        $this->checkList($listId);
 
         $materials = DB::table('materials')
             ->where(['guid' => $request->user(), 'list' => $listId])
@@ -30,9 +28,7 @@ class ListController extends Controller
 
     public function getMaterial(Request $request, string $listId, string $materialId)
     {
-        if ($listId != 'default') {
-            throw new NotFoundHttpException('No such list');
-        }
+        $this->checkList($listId);
 
         $count = DB::table('materials')
             ->where(['guid' => $request->user(), 'list' => $listId, 'material' => $materialId])
@@ -47,9 +43,7 @@ class ListController extends Controller
 
     public function addMaterial(Request $request, string $listId, string $materialId)
     {
-        if ($listId != 'default') {
-            throw new NotFoundHttpException('No such list');
-        }
+        $this->checkList($listId);
 
         DB::table('materials')
             ->updateOrInsert(
@@ -69,9 +63,7 @@ class ListController extends Controller
 
     public function removeMaterial(Request $request, string $listId, string $materialId)
     {
-        if ($listId != 'default') {
-            throw new NotFoundHttpException('No such list');
-        }
+        $this->checkList($listId);
 
         $count = DB::table('materials')
             ->where([
@@ -81,5 +73,12 @@ class ListController extends Controller
             ])->delete();
 
         return new Response('', $count > 0 ? 204 : 404);
+    }
+
+    protected function checkList($listId)
+    {
+        if ($listId != 'default') {
+            throw new NotFoundHttpException('No such list');
+        }
     }
 }
