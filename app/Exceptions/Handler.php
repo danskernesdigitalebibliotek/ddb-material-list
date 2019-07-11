@@ -47,21 +47,22 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        // HttpResponseException already contains a response, just use it.
         if ($exception instanceof HttpResponseException) {
             return $exception->getResponse();
         }
 
-        $rendered = parent::render($request, $exception);
-
-        // Render exceptions in debug mode, but not in
-        if (env('APP_DEBUG')) {
+        // Render HttpExceptions as plain text responses. And do it to all
+        // exceptions in debug mode.
+        if ($exception instanceof HttpException || env('APP_DEBUG')) {
             return new Response(
-                $exception->getMessage() . "\n",
-                $rendered->getStatusCode(),
+                $exception->getMessage(),
+                $exception->getStatusCode(),
                 ['Content-Type' => 'text/plain']
             );
-        } else {
-            return new Response("Internal server error.", 500, ['Content-Type' => 'text/plain']);
         }
+
+        // Convert all other exceptions into internal error.
+        return new Response("Internal server error.", 500, ['Content-Type' => 'text/plain']);
     }
 }
