@@ -26,7 +26,7 @@ paths:
                 $ref: '#/components/schemas/List'
         404:
           description: 'Unknown list.'
-        500:
+        default:
           description: 'Unspecified error.'
 
   /list/{listId}/{materialId}:
@@ -42,7 +42,7 @@ paths:
           description: 'The material exists on the list.'
         404:
           description: 'The list or material does not exist.'
-        500:
+        default:
           description: 'Unspecified error.'
     put:
       tags:
@@ -56,7 +56,7 @@ paths:
           description: 'The material was successfully added to the list.'
         404:
           description: 'Unknown list.'
-        500:
+        default:
           description: 'Unspecified error.'
     delete:
       tags:
@@ -70,7 +70,7 @@ paths:
           description: 'Successfully removed.'
         404:
           description: 'Unknown list or material.'
-        500:
+        default:
           description: 'Unspecified error.'
 
 components:
