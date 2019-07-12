@@ -81,31 +81,32 @@ components:
       description: 'The identifier of the list to return. Use "default" for the default list.'
       required: true
       schema:
-        type: string
-        example: 'default'
+        $ref: '#/components/schemas/ListId'
     materialId:
       name: 'materialId'
       in: 'path'
       description: 'The identifier of the material.'
       required: true
       schema:
-        type: string
-        example: '870970-basis:54871910'
+        $ref: '#/components/schemas/MaterialId'
 
   schemas:
+    ListId:
+      description: 'List identifier. In the initial version, this can only be "default".'
+      type: string
+      example: 'default'
+    MaterialId:
+      description: 'A material identifier.'
+      type: string
+      example: '870970-basis:54871910'
     List:
       type: object
       required:
         - id
       properties:
         id:
-          description: 'List identifier. In the initial version, this can only be "default".'
-          type: string
-          example: 'default'
+          $ref: '#/components/schemas/ListId'
         materials:
           type: array
           items:
-            description: 'A material identifier.'
-            type: string
-            example: '870970-basis:54871910'
-
+            $ref: '#/components/schemas/MaterialId'
