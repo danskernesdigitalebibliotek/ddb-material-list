@@ -95,7 +95,7 @@ information.
 
 ### Testing ###
 
-### Behavior ###
+#### Behavior ####
 
 Most tests are done as behavior test using Behat. The features are in
 `tests/features` while the context classes reside in `tests/contexts`.
@@ -112,7 +112,7 @@ This also makes code coverage collection simpler. Behat writes
 coverage to `coverage`, which can be rendered to HTML with
 `./vendor/bin/phpcov merge --html=./coverage/html ./coverage`.
 
-### API specification test ###
+#### API specification test ####
 
 API specification tests are done by generating requests as documented
 by the specification and testing if the application reacts as
