@@ -9,6 +9,8 @@ info:
 tags:
   - name: 'List'
     description: List handling
+security:
+  - BearerAuth: []
 paths:
   /list/{listId}:
     get:
@@ -103,6 +105,8 @@ components:
       type: object
       required:
         - id
+        - materials
+      additionalProperties: false
       properties:
         id:
           $ref: '#/components/schemas/ListId'
