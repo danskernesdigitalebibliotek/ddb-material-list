@@ -1,6 +1,6 @@
 workflow "Run tests" {
   on = "push"
-  resolves = ["Behaviour Codecov", "Check codestyle", "Static code analysis"]
+  resolves = ["Behaviour Codecov", "Specification tests", "Check codestyle", "Static code analysis"]
 }
 
 action "Composer install" {
@@ -25,6 +25,12 @@ action "Behaviour Codecov" {
   uses = "./.github/actions/codecov"
   args = "-F Behaviour -f behat.xml"
   secrets = ["CODECOV_TOKEN"]
+}
+
+action "Specification tests" {
+  needs = ["Composer install"]
+  uses = "./.github/actions/spec-test"
+  runs = "dredd"
 }
 
 action "Check codestyle" {
