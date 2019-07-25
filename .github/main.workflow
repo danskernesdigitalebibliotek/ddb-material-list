@@ -30,7 +30,7 @@ action "Behaviour Codecov" {
 action "Specification tests" {
   needs = ["Composer install"]
   uses = "./.github/actions/spec-test"
-  runs = "dredd"
+  runs = "dredd --loglevel=debug"
 }
 
 action "Check codestyle" {
