@@ -8,9 +8,11 @@
 
 use Dredd\Hooks;
 use Guzzle\Client;
+use Illuminate\Contracts\Console\Kernel as ConsoleKernel;
+use Illuminate\Support\Facades\Artisan;
 
 $client = new GuzzleHttp\Client([
-    'base_uri' => 'http://localhost:8080',
+    'base_uri' => 'http://0.0.0.0:8080',
     'headers' => [
         'Authorization' => 'Bearer test-user',
     ],
@@ -27,6 +29,22 @@ function pathReplace($transaction, $from, $to)
     // Also fix the ID so the user can see the change.
     $transaction->id = strtr($transaction->id, $replacements);
 }
+
+/* @var \Laravel\Lumen\Application $app */
+$app = require __DIR__ . '/../../bootstrap/app.php';
+$artisan = $app->make(ConsoleKernel::class);
+
+Hooks::beforeAll(function (&$transaction) use ($artisan) {
+    putenv('DB_CONNECTION=sqlite');
+    putenv('DB_DATABASE=:memory:');
+
+    putenv('APP_TOKENCHECKER=test');
+
+    putenv('APP_ENV=testing');
+    putenv('APP_DEBUG=true');
+
+    $artisan->call('migrate:fresh');
+});
 
 Hooks::beforeEach(function ($transaction) {
     $transaction->request->headers->Authorization = 'Bearer test-user';
