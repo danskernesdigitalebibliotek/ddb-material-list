@@ -82,6 +82,7 @@ components:
       in: 'path'
       description: 'The identifier of the list to return. Use "default" for the default list.'
       required: true
+      example: 'default'
       schema:
         $ref: '#/components/schemas/ListId'
     materialId:
@@ -89,6 +90,7 @@ components:
       in: 'path'
       description: 'The identifier of the material.'
       required: true
+      example: '870970-basis:54871910'
       schema:
         $ref: '#/components/schemas/MaterialId'
 
@@ -96,11 +98,9 @@ components:
     ListId:
       description: 'List identifier. In the initial version, this can only be "default".'
       type: string
-      example: 'default'
     MaterialId:
       description: 'A material identifier.'
       type: string
-      example: '870970-basis:54871910'
     List:
       type: object
       required:
