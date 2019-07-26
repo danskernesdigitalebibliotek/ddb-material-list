@@ -62,9 +62,9 @@ if (env('APP_TOKENCHECKER') == 'test') {
         App\Http\Middleware\TestTokenChecker::class
     ]);
 } else {
-    $app->middleware([
-        App\Http\Middleware\TokenChecker::class
-    ]);
+    //$app->middleware([
+    //    App\Http\Middleware\TokenChecker::class
+    //]);
 }
 
 $app->middleware([
