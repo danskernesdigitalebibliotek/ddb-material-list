@@ -1,6 +1,6 @@
 workflow "Run tests" {
   on = "push"
-  resolves = ["Behaviour Codecov"]
+  resolves = ["Behaviour Codecov", "Check codestyle"]
 }
 
 action "Composer install" {
@@ -27,3 +27,8 @@ action "Behaviour Codecov" {
   secrets = ["CODECOV_TOKEN"]
 }
 
+action "Check codestyle" {
+  needs = ["Composer install"]
+  uses = "./.github/actions/php-action"
+  runs = "vendor/bin/phpcs"
+}
