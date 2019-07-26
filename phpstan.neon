@@ -1,0 +1,9 @@
+parameters:
+    level: max
+    excludes_analyse:
+        - vendor
+        - database/migrations
+    ignoreErrors:
+        -
+            message: '#Undefined variable: \$router#'
+            path: 'routes/web.php'

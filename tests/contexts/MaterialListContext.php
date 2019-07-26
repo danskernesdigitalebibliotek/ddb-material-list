@@ -7,6 +7,7 @@ use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Gherkin\Node\TableNode;
 use Carbon\Carbon;
 use Faker\Generator;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Facade;
 use Laravel\Lumen\Testing\Concerns\MakesHttpRequests;
 
@@ -89,7 +90,7 @@ class MaterialListContext implements Context, SnippetAcceptingContext
      */
     public function artisan($command, $parameters = [])
     {
-        return $this->code = $this->app['Illuminate\Contracts\Console\Kernel']->call($command, $parameters);
+        return $this->app['Illuminate\Contracts\Console\Kernel']->call($command, $parameters);
     }
 
     /**

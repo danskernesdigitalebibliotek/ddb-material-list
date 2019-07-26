@@ -1,6 +1,6 @@
 workflow "Run tests" {
   on = "push"
-  resolves = ["Behaviour Codecov", "Check codestyle"]
+  resolves = ["Behaviour Codecov", "Check codestyle", "Static code analysis"]
 }
 
 action "Composer install" {
@@ -31,4 +31,10 @@ action "Check codestyle" {
   needs = ["Composer install"]
   uses = "./.github/actions/php-action"
   runs = "vendor/bin/phpcs"
+}
+
+action "Static code analysis" {
+  needs = ["Composer install"]
+  uses = "./.github/actions/php-action"
+  runs = "vendor/bin/phpstan analyse ."
 }
