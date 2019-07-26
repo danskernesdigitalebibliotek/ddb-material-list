@@ -90,7 +90,7 @@ class MaterialListContext implements Context, SnippetAcceptingContext
      */
     public function artisan($command, $parameters = [])
     {
-        return $this->code = $this->app['Illuminate\Contracts\Console\Kernel']->call($command, $parameters);
+        return $this->app['Illuminate\Contracts\Console\Kernel']->call($command, $parameters);
     }
 
     /**
