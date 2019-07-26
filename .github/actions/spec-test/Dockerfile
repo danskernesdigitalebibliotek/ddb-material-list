@@ -5,4 +5,4 @@ RUN apk add --update --no-cache --virtual .build-deps \
 
 RUN npm install dredd --global --unsafe-perm=true
 
-ENTRYPOINT ["dredd"]
+ENTRYPOINT ["dredd --version"]

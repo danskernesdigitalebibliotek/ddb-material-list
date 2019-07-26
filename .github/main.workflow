@@ -30,7 +30,18 @@ action "Behaviour Codecov" {
 action "Specification tests" {
   needs = ["Composer install"]
   uses = "./.github/actions/spec-test"
-  runs = "dredd --loglevel=debug"
+  runs = "dredd"
+  env = {
+    # Disable the default OAuth token check
+    APP_TOKENCHECKER = "test"
+    # Ensure that we get as much information as possible if tests fail.
+    APP_DEBUG = "true"
+    # In non-production environments we can recreate the database before testing
+    APP_ENV="testing"
+    # Use SQLite for testing. Use a file in a directory we know we can write to
+    DB_CONNECTION = "sqlite"
+    DB_DATABASE = "/tmp/db.sqlite"
+  }
 }
 
 action "Check codestyle" {

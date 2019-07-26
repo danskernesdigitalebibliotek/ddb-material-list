@@ -35,15 +35,9 @@ $app = require __DIR__ . '/../../bootstrap/app.php';
 $artisan = $app->make(ConsoleKernel::class);
 
 Hooks::beforeAll(function (&$transaction) use ($artisan) {
-    putenv('DB_CONNECTION=sqlite');
-    putenv('DB_DATABASE=:memory:');
-
-    putenv('APP_TOKENCHECKER=test');
-
-    putenv('APP_ENV=testing');
-    putenv('APP_DEBUG=true');
-
     $artisan->call('migrate:fresh');
+    // Print the resulting output so it is picked out by Dredd for debugging.
+    echo $artisan->output();
 });
 
 Hooks::beforeEach(function ($transaction) {
