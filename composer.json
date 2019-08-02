@@ -3,9 +3,17 @@
     "description": "Service allowing users to create lists of materials. Based on Lumen. Specificed using OpenAPI.",
     "license": "AGPL",
     "type": "project",
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/reload/oauth2-adgangsplatformen"
+        }
+    ],
     "require": {
         "php": ">=7.1.3",
-        "laravel/lumen-framework": "5.8.*"
+        "danskernesdigitalebibliotek/oauth2-adgangsplatformen": "dev-master",
+        "laravel/lumen-framework": "5.8.*",
+        "softonic/laravel-psr15-bridge": "^1.0"
     },
     "require-dev": {
         "behat/behat": "^3.5",
