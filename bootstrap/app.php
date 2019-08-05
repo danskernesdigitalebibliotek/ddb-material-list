@@ -44,27 +44,6 @@ $app->singleton(
     App\Console\Kernel::class
 );
 
-$app->singleton(
-    \Adgangsplatformen\Middleware\TokenResourceOwnerMapper::class,
-    function () {
-        $provider = new \Adgangsplatformen\Provider\Adgangsplatformen([
-            env('APP_ADGANGSPLATFORMEN_CLIENT_ID'),
-            env('APP_ADGANGSPLATFORMEN_CLIENT_SECRET')
-        ]);
-        $tokenResourceOwnerMapper = new \Adgangsplatformen\Middleware\TokenResourceOwnerMapper(
-            $provider,
-            'resourceOwner'
-        );
-        return \Softonic\Laravel\Middleware\Psr15Bridge\Psr15MiddlewareAdapter::adapt($tokenResourceOwnerMapper);
-    }
-);
-$app->singleton(
-    \App\Http\Middleware\ResourceOwnerGuidMapper::class,
-    function () {
-        return new \App\Http\Middleware\ResourceOwnerGuidMapper('resourceOwner');
-    }
-);
-
 /*
 |--------------------------------------------------------------------------
 | Register Middleware
@@ -76,19 +55,9 @@ $app->singleton(
 |
 */
 
-if (env('APP_TOKENCHECKER') == 'test') {
-    $app->middleware([
-        App\Http\Middleware\TestTokenChecker::class
-    ]);
-} else {
-    $app->middleware([
-        \Adgangsplatformen\Middleware\TokenResourceOwnerMapper::class,
-        \App\Http\Middleware\ResourceOwnerGuidMapper::class
-    ]);
-}
-
 $app->middleware([
-    App\Http\Middleware\TokenAccess::class
+    \Adgangsplatformen\Middleware\TokenResourceOwnerMapper::class,
+    \App\Http\Middleware\TokenAccess::class
 ]);
 
 /*
@@ -101,6 +70,11 @@ $app->middleware([
 | totally optional, so you are not required to uncomment this line.
 |
 */
+
+$app->register(\App\Providers\AdgangsplatformenServiceProvider::class);
+if (env('APP_TOKENCHECKER') == 'test') {
+    $app->register(\App\Providers\TestServiceProvider::class);
+}
 
 // $app->register(App\Providers\AppServiceProvider::class);
 
