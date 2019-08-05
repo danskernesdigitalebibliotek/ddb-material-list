@@ -10,14 +10,14 @@ action "Composer install" {
 
 action "Behaviour tests" {
   needs = ["Composer install"]
-  uses = "./.github/actions/php-action"
-  runs = "vendor/bin/behat --strict"
+  uses = "docker://php:7.2-alpine"
+  runs = "phpdbg -qrr vendor/bin/behat --strict"
 }
 
 action "Behaviour test coverage" {
   needs = ["Behaviour tests"]
-  uses = "./.github/actions/php-action"
-  runs = "vendor/bin/phpcov merge --clover=behat.xml coverage/default.cov"
+  uses = "docker://php:7.2-alpine"
+  runs = "phpdbg -qrr vendor/bin/phpcov merge --clover=behat.xml coverage/default.cov"
 }
 
 action "Behaviour Codecov" {
@@ -29,12 +29,12 @@ action "Behaviour Codecov" {
 
 action "Check codestyle" {
   needs = ["Composer install"]
-  uses = "./.github/actions/php-action"
+  uses = "docker://php:7.2-alpine"
   runs = "vendor/bin/phpcs"
 }
 
 action "Static code analysis" {
   needs = ["Composer install"]
-  uses = "./.github/actions/php-action"
+  uses = "docker://php:7.2-alpine"
   runs = "vendor/bin/phpstan analyse ."
 }
