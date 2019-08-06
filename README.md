@@ -95,7 +95,9 @@ information.
 
 ### Testing ###
 
-Tests are done as behavior test using Behat. The features are in
+#### Behavior ####
+
+Most tests are done as behavior test using Behat. The features are in
 `tests/features` while the context classes reside in `tests/contexts`.
 
 The context doesn't interact with the application over HTTP, rather
@@ -109,3 +111,24 @@ objects.
 This also makes code coverage collection simpler. Behat writes
 coverage to `coverage`, which can be rendered to HTML with
 `./vendor/bin/phpcov merge --html=./coverage/html ./coverage`.
+
+#### API specification test ####
+
+API specification tests are done by generating requests as documented
+by the specification and testing if the application reacts as
+documented. [Dredd](https://dredd.org/en/latest/) is used for this.
+
+To install Dredd, run: `npm install --global dredd`.
+
+Running Dredd is as simple as `dredd`. Dredd is configured to run
+`scripts/dredd-server.sh` to start the server, which simply runs the
+application using the PHP built-in webserver.
+
+In order to ensure the right conditions for each test, Dredd uses a
+hooks file (`tests/dredd/hooks.php`), which allows for setting
+fixtures or modifying the requests/response.
+
+To get the names of requests (for use in hook file), use `dredd
+--names`. Getting dredd to display any output from the hook file (for
+debugging), you need to run it in verbose mode: `dredd
+--loglevel=debug`.
