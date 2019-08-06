@@ -204,6 +204,21 @@ class MaterialListContext implements Context, SnippetAcceptingContext
     }
 
     /**
+     * Add materials to list.
+     */
+    public function addMaterialsToList(string $guid, string $list, array $materials)
+    {
+        foreach ($materials as $material) {
+            DB::table('materials')->insert([
+                'guid' => $guid,
+                'list' => $list,
+                'material' => $material,
+                'changed_at' => Carbon::now()->format('Y-m-d H:i:s.u'),
+            ]);
+        }
+    }
+
+    /**
      * @Then the list should be emtpy
      */
     public function theListShouldBeEmtpy()
@@ -228,14 +243,10 @@ class MaterialListContext implements Context, SnippetAcceptingContext
      */
     public function theyHaveTheFollowingItemsOnTheList(TableNode $table)
     {
-        foreach ($table as $row) {
-            DB::table('materials')->insert([
-                'guid' => $this->state['token'],
-                'list' => 'default',
-                'material' => $row['material'],
-                'changed_at' => Carbon::now()->format('Y-m-d H:i:s.u'),
-            ]);
-        }
+        $materials = $table->getColumn(0);
+        // Loose header.
+        array_shift($materials);
+        $this->addMaterialsToList($this->state['token'], 'default', $materials);
     }
 
     /**
@@ -289,5 +300,24 @@ class MaterialListContext implements Context, SnippetAcceptingContext
     public function deletingFromTheList($material)
     {
         $this->delete('/list/default/' . $material, [], $this->getHeaders());
+    }
+
+    /**
+     * @Given a migrated list for ouid :ouid:
+     */
+    public function aMigratedListForOuid($ouid, TableNode $table)
+    {
+        $materials = $table->getColumn(0);
+        // Loose header.
+        array_shift($materials);
+        $this->addMaterialsToList('ouid-' . $ouid, 'default', $materials);
+    }
+
+    /**
+     * @When the user runs migrate with :ouid
+     */
+    public function theUserRunsMigrateWith($ouid)
+    {
+        $this->put('/migrate/' . $ouid, [], $this->getHeaders());
     }
 }

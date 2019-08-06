@@ -20,3 +20,5 @@ $router->get('/list/{listId}', 'ListController@get');
 $router->get('/list/{listId}/{materialId}', 'ListController@getMaterial');
 $router->put('/list/{listId}/{materialId}', 'ListController@addMaterial');
 $router->delete('/list/{listId}/{materialId}', 'ListController@removeMaterial');
+
+$router->put('/migrate/{openlistId}', 'MigrateController@migrate');

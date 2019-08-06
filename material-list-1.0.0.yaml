@@ -74,6 +74,16 @@ paths:
           description: 'Unknown list or material.'
         default:
           description: 'Unspecified error.'
+  /migrate/{openlistId}:
+    put:
+      description: 'Migrate list for openlistId to current user.'
+      parameters:
+        - $ref: '#/components/parameters/openlistId'
+      responses:
+        204:
+          description: 'Successfully migrated.'
+        default:
+          description: 'Unspecified error.'
 
 components:
   parameters:
@@ -93,6 +103,14 @@ components:
       example: '870970-basis:54871910'
       schema:
         $ref: '#/components/schemas/MaterialId'
+    openlistId:
+      name: 'openlistId'
+      in: 'path'
+      description: 'Openlist ID of a migrated list.'
+      required: true
+      example: 'anopenlistid'
+      schema:
+        $ref: '#/components/schemas/OpenlistId'
 
   schemas:
     ListId:
@@ -114,3 +132,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/MaterialId'
+    OpenlistId:
+      description: 'Openlist identifier.'
+      type: string
+      example: 'anopenlistid'
