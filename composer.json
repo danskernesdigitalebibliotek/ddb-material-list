@@ -1,7 +1,6 @@
 {
-    "name": "laravel/lumen",
-    "description": "The Laravel Lumen Framework.",
-    "keywords": ["framework", "laravel", "lumen"],
+    "name": "danskernesdigitalebibliotek/material-list",
+    "description": "Service allowing users to create lists of materials. Based on Lumen. Specificed using OpenAPI.",
     "license": "MIT",
     "type": "project",
     "require": {
