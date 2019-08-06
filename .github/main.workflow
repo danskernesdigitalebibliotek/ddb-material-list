@@ -47,17 +47,11 @@ action "Specification tests" {
 action "Unit tests" {
   needs = ["Composer install"]
   uses = "docker://php:7.2-alpine"
-  runs = "phpdbg -qrr ./vendor/bin/phpunit --coverage-php=coverage/unit.cov"
-}
-
-action "Unit test coverage" {
-  needs = ["Unit tests"]
-  uses = "docker://php:7.2-alpine"
-  runs = "phpdbg -qrr vendor/bin/phpcov merge --clover=unit.xml coverage/unit.cov"
+  runs = "phpdbg -qrr ./vendor/bin/phpunit --coverage-clover=unit.xml"
 }
 
 action "Unit Codecov" {
-  needs = ["Unit test coverage"]
+  needs = ["Unit tests"]
   uses = "./.github/actions/codecov"
   args = "-F Unit -f unit.xml"
   secrets = ["CODECOV_TOKEN"]
