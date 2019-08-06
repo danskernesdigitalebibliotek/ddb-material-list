@@ -26,13 +26,14 @@ class ExceptionHandlerTest extends TestCase
      */
     public function testResponseExceptions()
     {
-        $response = new Response('my content', 206);
+        $message = 'my content';
+        $response = new Response($message, 206);
         $exception = new HttpResponseException($response);
         DB::shouldReceive('table')->andThrow($exception);
 
         $this->get('/list/default', ['Authorization' => 'Bearer test']);
 
         $this->assertResponseStatus(206);
-        $this->assertEquals('my content', $this->response->getContent());
+        $this->assertEquals($message, $this->response->getContent());
     }
 }
