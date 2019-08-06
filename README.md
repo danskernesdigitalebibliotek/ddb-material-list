@@ -121,7 +121,7 @@ documented. [Dredd](https://dredd.org/en/latest/) is used for this.
 To install Dredd, run: `npm install --global dredd`.
 
 Running Dredd is as simple as `dredd`. Dredd is configured to run
-`scripts/dredd-server.sh` to start the server, which simply runs the
+`php -S 0.0.0.0:8080 -t public` to start the server, which simply runs the
 application using the PHP built-in webserver.
 
 In order to ensure the right conditions for each test, Dredd uses a
