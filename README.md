@@ -5,8 +5,12 @@
 
 1. Run `composer install` to install dependencies.
 2. Copy `.env.example` to `.env` and adjust the configuration.
-3. Serve using `php -S 0.0.0.0:8000 -t public/` (for testing), FPM, or
+3. Run `./artisan migrate:fresh` to create the database tables.
+4. Serve using `php -S 0.0.0.0:8000 -t public/` (for testing), FPM, or
    Apache.
+
+act
+
 
 ### Configuration ###
 
@@ -14,10 +18,16 @@ The configuration may be passed via environment variables, but the
 `.env` file allows for easy configuration of all variables. See
 `.env.example` for configuration options.
 
-
 ## Development ##
 
-### Overview ###
+### Continuous integration ###
+
+Github Actions runs tests and checks when new code is pushed. The
+[act](https://github.com/nektos/act) tool can be used to run them
+locally. `Act` will ask for a `CODECOV_TOKEN`, just provide an empty
+one.
+
+### Achitecture overview ###
 
 The application code is in the `App` namespace and located in the
 `app` directory.
@@ -98,7 +108,8 @@ information.
 #### Behavior ####
 
 Most tests are done as behavior test using Behat. The features are in
-`tests/features` while the context classes reside in `tests/contexts`.
+`tests/features` while the context classes reside in `tests/contexts`,
+and the tests can be run with `./vendor/bin/behat`.
 
 The context doesn't interact with the application over HTTP, rather
 the application is booted inside the test for each scenario. This is
@@ -132,3 +143,9 @@ To get the names of requests (for use in hook file), use `dredd
 --names`. Getting dredd to display any output from the hook file (for
 debugging), you need to run it in verbose mode: `dredd
 --loglevel=debug`.
+
+#### Unit ####
+
+Unit tests are primarily used to test parts that's difficult to test
+by the previous methods, unexpected exception handling for instance.
+Run `./vendor/bin/phpunit` to run the test suite.
