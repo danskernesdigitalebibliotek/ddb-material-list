@@ -2,7 +2,6 @@
 
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Facades\DB;
-use Prophecy\Argument;
 use Symfony\Component\HttpFoundation\Response;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
