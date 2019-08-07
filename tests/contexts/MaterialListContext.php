@@ -303,7 +303,7 @@ class MaterialListContext implements Context, SnippetAcceptingContext
     }
 
     /**
-     * @Given a migrated list for ouid :ouid:
+     * @Given a migrated list for legacy user id :ouid:
      */
     public function aMigratedListForOuid($ouid, TableNode $table)
     {
@@ -314,7 +314,7 @@ class MaterialListContext implements Context, SnippetAcceptingContext
     }
 
     /**
-     * @When the user runs migrate with :ouid
+     * @When the user runs migrate for legacy user id :ouid
      */
     public function theUserRunsMigrateWith($ouid)
     {

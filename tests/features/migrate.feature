@@ -3,12 +3,12 @@ Feature: List migration
 
   Scenario: Migrated list gets bound to user GUID
     Given a known user
-    And a migrated list for ouid "the ouid":
+    And a migrated list for legacy user id "the ouid":
       | material |
       | first    |
       | second   |
       | third    |
-    When the user runs migrate with "the ouid"
+    When the user runs migrate for legacy user id "the ouid"
     Then fetching the list should return:
       | material |
       | third    |
