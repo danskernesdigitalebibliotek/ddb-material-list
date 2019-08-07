@@ -282,7 +282,10 @@ class MaterialListContext implements Context, SnippetAcceptingContext
      */
     public function checkingIfIsOnTheList($material)
     {
-        $this->get('/list/default/' . $material, $this->getHeaders());
+        // Sadly there's no $this->head.
+        $server = $this->transformHeadersToServerVars($this->getHeaders());
+
+        $this->call('HEAD', '/list/default/' . $material, [], [], [], $server);
     }
 
     /**

@@ -32,7 +32,7 @@ paths:
           description: 'Unspecified error.'
 
   /list/{listId}/{materialId}:
-    get:
+    head:
       tags:
         - List
       description: 'Check existence of material on list.'
@@ -40,7 +40,7 @@ paths:
         - $ref: '#/components/parameters/listId'
         - $ref: '#/components/parameters/materialId'
       responses:
-        201:
+        200:
           description: 'The material exists on the list.'
         404:
           description: 'The list or material does not exist.'
