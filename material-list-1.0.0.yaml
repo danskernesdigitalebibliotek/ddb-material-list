@@ -104,7 +104,7 @@ components:
       schema:
         $ref: '#/components/schemas/MaterialId'
     legacyUserId:
-      name: 'openlistId'
+      name: 'legacyUserId'
       in: 'path'
       description: 'Legacy user identifier of a migrated list.'
       required: true
