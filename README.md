@@ -9,9 +9,6 @@
 4. Serve using `php -S 0.0.0.0:8000 -t public/` (for testing), FPM, or
    Apache.
 
-act
-
-
 ### Configuration ###
 
 The configuration may be passed via environment variables, but the
@@ -146,6 +143,6 @@ debugging), you need to run it in verbose mode: `dredd
 
 #### Unit ####
 
-Unit tests are primarily used to test parts that's difficult to test
+Unit tests are primarily used to test parts that are difficult to test
 by the previous methods, unexpected exception handling for instance.
 Run `./vendor/bin/phpunit` to run the test suite.
