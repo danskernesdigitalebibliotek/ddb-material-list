@@ -1,6 +1,6 @@
 workflow "Run tests" {
   on = "push"
-  resolves = ["Behaviour Codecov", "Specification tests", "Check codestyle", "Static code analysis"]
+  resolves = ["Behaviour Codecov", "Specification tests", "Unit Codecov", "Check codestyle", "Static code analysis"]
 }
 
 action "Composer install" {
@@ -42,6 +42,19 @@ action "Specification tests" {
     DB_CONNECTION = "sqlite"
     DB_DATABASE = "/tmp/db.sqlite"
   }
+}
+
+action "Unit tests" {
+  needs = ["Composer install"]
+  uses = "docker://php:7.2-alpine"
+  runs = "phpdbg -qrr ./vendor/bin/phpunit --coverage-clover=unit.xml"
+}
+
+action "Unit Codecov" {
+  needs = ["Unit tests"]
+  uses = "./.github/actions/codecov"
+  args = "-F Unit -f unit.xml"
+  secrets = ["CODECOV_TOKEN"]
 }
 
 action "Check codestyle" {

@@ -102,7 +102,7 @@ information.
 
 ### Testing ###
 
-#### Behavior ####
+#### Behavior tests ####
 
 Most tests are done as behavior test using Behat. The features are in
 `tests/features` while the context classes reside in `tests/contexts`,
@@ -129,7 +129,7 @@ documented. [Dredd](https://dredd.org/en/latest/) is used for this.
 To install Dredd, run: `npm install --global dredd`.
 
 Running Dredd is as simple as `dredd`. Dredd is configured to run
-`scripts/dredd-server.sh` to start the server, which simply runs the
+`php -S 0.0.0.0:8080 -t public` to start the server, which simply runs the
 application using the PHP built-in webserver.
 
 In order to ensure the right conditions for each test, Dredd uses a
@@ -141,8 +141,14 @@ To get the names of requests (for use in hook file), use `dredd
 debugging), you need to run it in verbose mode: `dredd
 --loglevel=debug`.
 
-#### Unit ####
+#### Unit tests ####
 
 Unit tests are primarily used to test parts that are difficult to test
 by the previous methods, unexpected exception handling for instance.
 Run `./vendor/bin/phpunit` to run the test suite.
+
+## License
+
+Copyright (C) 2019 Danskernes Digitale Bibliotek (DDB)
+
+This project is licensed under the GNU Affero General Public License - see the [LICENSE.md](LICENSE.md) file for details
