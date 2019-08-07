@@ -46,3 +46,21 @@ Feature: Fetching list
       | pid 3    |
     When checking if "pid 4" is on the list
     Then the system should return not found
+
+  Scenario: A user can check that a set of materials is on the list
+    Given a known user
+    And they have the following items on the list:
+      | material |
+      | pid 1    |
+      | pid 2    |
+      | pid 3    |
+      | pid 4    |
+    When checking if the list contains:
+      | material |
+      | pid 2    |
+      | pid 4    |
+      | pid 5    |
+    Then the list should contain:
+      | material |
+      | pid 4    |
+      | pid 2    |
