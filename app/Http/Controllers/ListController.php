@@ -20,6 +20,12 @@ class ListController extends Controller
 
         // Filter to the given materials, if supplied.
         if ($request->has('material_ids')) {
+            // The OpenAPI spec defines the parameter as a comma separated
+            // list. OpenAPI defaults to using "id=1&id=2" for array types,
+            // but PHP expects "id[]=1&id[]=2". So rather than trying to hack
+            // around that, we use the other common option of using a single
+            // comma separated value and just split it up here. Looks nicer in
+            // the URL.
             $ids = explode(',', $request->get('material_ids'));
             $query->whereIn('material', $ids);
         }
