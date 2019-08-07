@@ -36,7 +36,7 @@ paths:
     head:
       tags:
         - List
-      description: 'Check existence of material on list.'
+      description: 'Check existence of material on list. To check multiple materials in one request, see the material_ids query parameter on /list/{listId}.'
       parameters:
         - $ref: '#/components/parameters/listId'
         - $ref: '#/components/parameters/materialId'
