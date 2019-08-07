@@ -17,7 +17,7 @@ $router->get('/', function () use ($router) {
 });
 
 $router->get('/list/{listId}', 'ListController@get');
-$router->get('/list/{listId}/{materialId}', 'ListController@getMaterial');
+$router->head('/list/{listId}/{materialId}', 'ListController@checkMaterial');
 $router->put('/list/{listId}/{materialId}', 'ListController@addMaterial');
 $router->delete('/list/{listId}/{materialId}', 'ListController@removeMaterial');
 

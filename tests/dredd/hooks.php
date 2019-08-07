@@ -42,8 +42,9 @@ Hooks::beforeAll(function (&$transaction) use ($artisan) {
 Hooks::beforeEach(function ($transaction) {
     $transaction->request->headers->Authorization = 'Bearer test-user';
 
-    // Skip internal error responses, we can't trigger those.
-    if (preg_match('/500$/', $transaction->name)) {
+    // Skip internal error responses, we can't trigger those and HEAD requests
+    // which dredd doesn't support.
+    if (preg_match('/(500|HEAD > \d{3})$/', $transaction->name)) {
         $transaction->skip = true;
     }
 });
@@ -51,14 +52,6 @@ Hooks::beforeEach(function ($transaction) {
 // Change list id to trigger 404.
 Hooks::before('/list/{listId} > GET > 404', function (&$transaction) use ($pathReplace) {
     $pathReplace($transaction, 'default', 'bad-value');
-});
-
-// Ensure material exists.
-Hooks::before('/list/{listId}/{materialId} > GET > 201', function (&$transaction) use ($client, $pathReplace) {
-    $client->put('/list/default/870970-basis%3A54871910-test-get', []);
-
-    // Change the path to not clobber other tests.
-    $pathReplace($transaction, '870970-basis%3A54871910', '870970-basis%3A54871910-test-get');
 });
 
 // Make sure list doesn't exist.

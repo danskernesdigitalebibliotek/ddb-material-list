@@ -26,7 +26,7 @@ class ListController extends Controller
         ];
     }
 
-    public function getMaterial(Request $request, string $listId, string $materialId)
+    public function checkMaterial(Request $request, string $listId, string $materialId)
     {
         $this->checkList($listId);
 
@@ -35,7 +35,7 @@ class ListController extends Controller
             ->count();
 
         if ($count > 0) {
-            return new Response('', 201);
+            return new Response('', 200);
         } else {
             throw new NotFoundHttpException('No such material');
         }
