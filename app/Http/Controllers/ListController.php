@@ -15,11 +15,19 @@ class ListController extends Controller
     {
         $this->checkList($listId);
 
-        $materials = DB::table('materials')
-            ->where(['guid' => $request->user(), 'list' => $listId])
-            ->orderBy('changed_at', 'DESC')
+        $query = DB::table('materials')
+            ->where(['guid' => $request->user(), 'list' => $listId]);
+
+        // Filter to the given materials, if supplied.
+        if ($request->has('material_ids')) {
+            $ids = explode(',', $request->get('material_ids'));
+            $query->whereIn('material', $ids);
+        }
+
+        $materials = $query->orderBy('changed_at', 'DESC')
             ->select('material')
             ->pluck('material');
+
         return [
             'id' => $listId,
             'materials' => $materials,

@@ -134,10 +134,14 @@ class MaterialListContext implements Context, SnippetAcceptingContext
     /**
      * @When fetching the :list list
      */
-    public function fetchingTheListNamed($list)
+    public function fetchingTheListNamed($list, $materialIds = [])
     {
+        $query = '';
+        if (!empty($materialIds)) {
+            $query = "?material_ids=" . implode(',', $materialIds);
+        }
         $this->state['list'] = $list;
-        $this->get('/list/' . $list, $this->getHeaders());
+        $this->get('/list/' . $list . $query, $this->getHeaders());
     }
 
     /**
@@ -187,6 +191,7 @@ class MaterialListContext implements Context, SnippetAcceptingContext
      */
     protected function checkListResponse() : array
     {
+        $this->checkStatusCode(200);
         $response = json_decode($this->response->getContent(), true);
         if (empty($response['id'])) {
             throw new Exception('No list id in response');
@@ -322,5 +327,15 @@ class MaterialListContext implements Context, SnippetAcceptingContext
     public function theUserRunsMigrateWith($legacyId)
     {
         $this->put('/migrate/' . $legacyId, [], $this->getHeaders());
+    }
+
+    /**
+     * @When checking if the list contains:
+     */
+    public function checkingIfTheListContains(TableNode $table)
+    {
+        $materials = $table->getColumn(0);
+        array_shift($materials);
+        $this->fetchingTheListNamed('default', $materials);
     }
 }

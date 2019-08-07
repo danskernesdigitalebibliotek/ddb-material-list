@@ -19,6 +19,7 @@ paths:
       description: 'Get list with materials.'
       parameters:
         - $ref: '#/components/parameters/listId'
+        - $ref: '#/components/parameters/materialIds'
       responses:
         200:
           description: 'The list data is returned.'
@@ -103,6 +104,18 @@ components:
       example: '870970-basis:54871910'
       schema:
         $ref: '#/components/schemas/MaterialId'
+    materialIds:
+      name: 'material_ids'
+      in: 'query'
+      description: 'Filter the list reply down to the given material identifiers. This is the recommended way to check for existence of multiple materials on the list.'
+      example:
+        - 870970-basis:54871910
+        - 870970-basis:44791668
+      explode: false
+      schema:
+        type: array
+        items:
+          $ref: '#/components/schemas/MaterialId'
     legacyUserId:
       name: 'legacyUserId'
       in: 'path'
