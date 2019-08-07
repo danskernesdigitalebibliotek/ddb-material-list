@@ -303,21 +303,21 @@ class MaterialListContext implements Context, SnippetAcceptingContext
     }
 
     /**
-     * @Given a migrated list for legacy user id :ouid:
+     * @Given a migrated list for legacy user id :legacyId:
      */
-    public function aMigratedListForOuid($ouid, TableNode $table)
+    public function aMigratedListForOuid($legacyId, TableNode $table)
     {
         $materials = $table->getColumn(0);
         // Loose header.
         array_shift($materials);
-        $this->addMaterialsToList('ouid-' . $ouid, 'default', $materials);
+        $this->addMaterialsToList('legacy-' . $legacyId, 'default', $materials);
     }
 
     /**
-     * @When the user runs migrate for legacy user id :ouid
+     * @When the user runs migrate for legacy user id :legacyId
      */
-    public function theUserRunsMigrateWith($ouid)
+    public function theUserRunsMigrateWith($legacyId)
     {
-        $this->put('/migrate/' . $ouid, [], $this->getHeaders());
+        $this->put('/migrate/' . $legacyId, [], $this->getHeaders());
     }
 }

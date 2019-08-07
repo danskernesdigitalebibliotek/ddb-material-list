@@ -74,11 +74,11 @@ paths:
           description: 'Unknown list or material.'
         default:
           description: 'Unspecified error.'
-  /migrate/{openlistId}:
+  /migrate/{legacyUserId}:
     put:
-      description: 'Migrate list for openlistId to current user.'
+      description: 'Migrate list for the legacy user identifier to current user.'
       parameters:
-        - $ref: '#/components/parameters/openlistId'
+        - $ref: '#/components/parameters/legacyUserId'
       responses:
         204:
           description: 'Successfully migrated.'
@@ -103,14 +103,14 @@ components:
       example: '870970-basis:54871910'
       schema:
         $ref: '#/components/schemas/MaterialId'
-    openlistId:
+    legacyUserId:
       name: 'openlistId'
       in: 'path'
-      description: 'Openlist ID of a migrated list.'
+      description: 'Legacy user identifier of a migrated list.'
       required: true
-      example: 'anopenlistid'
+      example: '29A10F616FE6CA5C6E06EBF507A9FDC5BB89F8EBCF65726BEAC61C646854E83856D3B1D46BE4696EDCFB3C9F57EEBB6941D8654BC1F4B514D6217141AEA1653C'
       schema:
-        $ref: '#/components/schemas/OpenlistId'
+        $ref: '#/components/schemas/LegacyUserId'
 
   schemas:
     ListId:
@@ -132,7 +132,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/MaterialId'
-    OpenlistId:
-      description: 'Openlist identifier.'
+    LegacyUserId:
+      description: 'Legacy user identifier.'
       type: string
-      example: 'anopenlistid'
+      example: '29A10F616FE6CA5C6E06EBF507A9FDC5BB89F8EBCF65726BEAC61C646854E83856D3B1D46BE4696EDCFB3C9F57EEBB6941D8654BC1F4B514D6217141AEA1653C'

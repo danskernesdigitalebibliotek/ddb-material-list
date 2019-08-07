@@ -13,9 +13,9 @@ class MigrateController extends Controller
 {
     public function migrate(Request $request, string $openlistId)
     {
-        // The "ouid-" prefix protects against high-jacking from another GUID.
+        // The "legacy-" prefix protects against high-jacking from another GUID.
         $materials = DB::table('materials')
-            ->where(['guid' => 'ouid-' . $openlistId])
+            ->where(['guid' => 'legacy-' . $openlistId])
             ->update(['guid' => $request->user()]);
 
         // Always return success.
