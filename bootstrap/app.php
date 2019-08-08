@@ -55,10 +55,9 @@ $app->singleton(
 |
 */
 
-$app->middleware([
-    \Adgangsplatformen\Middleware\TokenResourceOwnerMapper::class,
-    \App\Http\Middleware\TokenAccess::class
-]);
+// $app->routeMiddleware([
+//     'auth' => App\Http\Middleware\Authenticate::class,
+// ]);
 
 /*
 |--------------------------------------------------------------------------
@@ -71,12 +70,7 @@ $app->middleware([
 |
 */
 
-$app->register(\App\Providers\AdgangsplatformenServiceProvider::class);
-if (env('APP_TOKENCHECKER') == 'test') {
-    $app->register(\App\Providers\TestServiceProvider::class);
-}
-
-// $app->register(App\Providers\AppServiceProvider::class);
+$app->register(\Adgangsplatformen\Support\Illuminate\AdgangsplatformenServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------

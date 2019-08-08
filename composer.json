@@ -11,9 +11,8 @@
     ],
     "require": {
         "php": ">=7.1.3",
-        "danskernesdigitalebibliotek/oauth2-adgangsplatformen": "dev-master",
-        "laravel/lumen-framework": "5.8.*",
-        "softonic/laravel-psr15-bridge": "^1.0"
+        "danskernesdigitalebibliotek/oauth2-adgangsplatformen": "dev-refactor",
+        "laravel/lumen-framework": "5.8.*"
     },
     "require-dev": {
         "behat/behat": "^3.5",
