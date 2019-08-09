@@ -16,7 +16,7 @@ class MigrateController extends Controller
         // The "legacy-" prefix protects against high-jacking from another GUID.
         $materials = DB::table('materials')
             ->where(['guid' => 'legacy-' . $openlistId])
-            ->update(['guid' => $request->user()]);
+            ->update(['guid' => $request->user()->getId()]);
 
         // Always return success.
         return new Response('', 204);

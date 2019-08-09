@@ -16,7 +16,7 @@ class ListController extends Controller
         $this->checkList($listId);
 
         $query = DB::table('materials')
-            ->where(['guid' => $request->user(), 'list' => $listId]);
+            ->where(['guid' => $request->user()->getId(), 'list' => $listId]);
 
         // Filter to the given materials, if supplied.
         if ($request->has('material_ids')) {
@@ -45,7 +45,7 @@ class ListController extends Controller
         $this->checkList($listId);
 
         $count = DB::table('materials')
-            ->where(['guid' => $request->user(), 'list' => $listId, 'material' => $materialId])
+            ->where(['guid' => $request->user()->getId(), 'list' => $listId, 'material' => $materialId])
             ->count();
 
         if ($count > 0) {
@@ -62,7 +62,7 @@ class ListController extends Controller
         DB::table('materials')
             ->updateOrInsert(
                 [
-                    'guid' => $request->user(),
+                    'guid' => $request->user()->getId(),
                     'list' => $listId,
                     'material' => $materialId,
                 ],
@@ -81,7 +81,7 @@ class ListController extends Controller
 
         $count = DB::table('materials')
             ->where([
-                'guid' => $request->user(),
+                'guid' => $request->user()->getId(),
                 'list' => $listId,
                 'material' => $materialId,
             ])->delete();

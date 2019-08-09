@@ -55,19 +55,9 @@ $app->singleton(
 |
 */
 
-if (env('APP_TOKENCHECKER') == 'test') {
-    $app->middleware([
-        App\Http\Middleware\TestTokenChecker::class
-    ]);
-} else {
-    //$app->middleware([
-    //    App\Http\Middleware\TokenChecker::class
-    //]);
-}
-
-$app->middleware([
-    App\Http\Middleware\TokenAccess::class
-]);
+// $app->routeMiddleware([
+//     'auth' => App\Http\Middleware\Authenticate::class,
+// ]);
 
 /*
 |--------------------------------------------------------------------------
@@ -80,7 +70,7 @@ $app->middleware([
 |
 */
 
-// $app->register(App\Providers\AppServiceProvider::class);
+$app->register(\Adgangsplatformen\Support\Illuminate\AdgangsplatformenServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------

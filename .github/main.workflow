@@ -32,8 +32,6 @@ action "Specification tests" {
   uses = "./.github/actions/spec-test"
   runs = "dredd"
   env = {
-    # Disable the default OAuth token check
-    APP_TOKENCHECKER = "test"
     # Ensure that we get as much information as possible if tests fail.
     APP_DEBUG = "true"
     # In non-production environments we can recreate the database before testing
