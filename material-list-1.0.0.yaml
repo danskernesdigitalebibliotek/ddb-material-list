@@ -14,6 +14,7 @@ security:
 paths:
   /list/{listId}:
     get:
+      operationId: getList
       tags:
         - List
       description: 'Get list with materials.'
@@ -34,6 +35,7 @@ paths:
 
   /list/{listId}/{materialId}:
     head:
+      operationId: checkListMaterial
       tags:
         - List
       description: 'Check existence of material on list. To check multiple materials in one request, see the material_ids query parameter on /list/{listId}.'
@@ -48,6 +50,7 @@ paths:
         default:
           description: 'Unspecified error.'
     put:
+      operationId: addListMaterial
       tags:
         - List
       description: 'Add material to the the list.'
@@ -62,6 +65,7 @@ paths:
         default:
           description: 'Unspecified error.'
     delete:
+      operationId: deleteListMaterial
       tags:
         - List
       description: 'Delete material from list.'
@@ -77,6 +81,9 @@ paths:
           description: 'Unspecified error.'
   /migrate/{legacyUserId}:
     put:
+      operationId: migrateList
+      tags:
+        - Migrate
       description: 'Migrate list for the legacy user identifier to current user.'
       parameters:
         - $ref: '#/components/parameters/legacyUserId'
