@@ -36,6 +36,8 @@ action "Specification tests" {
     APP_DEBUG = "true"
     # In non-production environments we can recreate the database before testing
     APP_ENV="testing"
+    # Do not contact the OAuth endpoint during testing.
+    ADGANGSPLATFORMEN_DRIVER="testing"
     # Use SQLite for testing. Use a file in a directory we know we can write to
     DB_CONNECTION = "sqlite"
     DB_DATABASE = "/tmp/db.sqlite"
