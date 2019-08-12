@@ -58,6 +58,7 @@ class MaterialListContext implements Context, SnippetAcceptingContext
         // Boot the app.
 
         putenv('APP_ENV=testing');
+        putenv('ADGANGSPLATFORMEN_DRIVER=testing');
 
         // Use in-memory db for speed.
         putenv('DB_CONNECTION=sqlite');
