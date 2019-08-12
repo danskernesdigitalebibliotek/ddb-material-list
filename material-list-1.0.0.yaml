@@ -87,6 +87,10 @@ paths:
           description: 'Unspecified error.'
 
 components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
   parameters:
     listId:
       name: 'listId'
