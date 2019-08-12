@@ -17,13 +17,13 @@ action "Behaviour tests" {
 action "Behaviour test coverage" {
   needs = ["Behaviour tests"]
   uses = "docker://php:7.2-alpine"
-  runs = "phpdbg -qrr vendor/bin/phpcov merge --clover=behat.xml coverage/default.cov"
+  runs = "phpdbg -qrr vendor/bin/phpcov merge --clover=coverage/behat.xml coverage/default.cov"
 }
 
 action "Behaviour Codecov" {
   needs = ["Behaviour test coverage"]
   uses = "./.github/actions/codecov"
-  args = "-F Behaviour -f behat.xml"
+  args = "-F Behaviour -f coverage/behat.xml"
   secrets = ["CODECOV_TOKEN"]
 }
 
@@ -47,13 +47,13 @@ action "Specification tests" {
 action "Unit tests" {
   needs = ["Composer install"]
   uses = "docker://php:7.2-alpine"
-  runs = "phpdbg -qrr ./vendor/bin/phpunit --coverage-clover=unit.xml"
+  runs = "phpdbg -qrr ./vendor/bin/phpunit --coverage-clover=coverage/unit.xml"
 }
 
 action "Unit Codecov" {
   needs = ["Unit tests"]
   uses = "./.github/actions/codecov"
-  args = "-F Unit -f unit.xml"
+  args = "-F Unit -f coverage/unit.xml"
   secrets = ["CODECOV_TOKEN"]
 }
 
