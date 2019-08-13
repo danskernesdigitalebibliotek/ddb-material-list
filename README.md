@@ -35,7 +35,7 @@ file.
 
 Routes are defined in `routes/web.php`. They all point to a method in
 a Controller class. See the [Lumen documentation on
-routing](https://lumen.laravel.com/docs/5.3/routing) for more
+routing](https://lumen.laravel.com/docs/routing) for more
 information.
 
 ### Controllers ###
@@ -49,7 +49,7 @@ JSON response), a `Illuminate\Http\Response` (which subclasses
 (which is converted to an appropriate response by the error handler).
 
 See the [Lumen documentation on
-controllers](https://lumen.laravel.com/docs/5.3/controllers) for more
+controllers](https://lumen.laravel.com/docs/controllers) for more
 information.
 
 ### Middleware ###
@@ -82,14 +82,14 @@ debugging.
 The database schema is defined in `databese/migrations`. 
 
 See the [Laravel documentation on
-migrations](https://laravel.com/docs/5.8/migrations) for more
+migrations](https://laravel.com/docs/migrations) for more
 information.
 
 Queries are done with the Laravel query builder. The application does
 not use an ORM.
 
 See the [Lumen documentation on
-databases](https://lumen.laravel.com/docs/5.3/database) for more
+databases](https://lumen.laravel.com/docs/database) for more
 information.
 
 ### Testing ###
