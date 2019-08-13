@@ -123,7 +123,7 @@ coverage to `coverage`, which can be rendered to HTML with
 #### API specification lint ####
 
 To ensure the integrity and quality of the specification we lint it using
-[Speccy][https://github.com/wework/speccy].
+[Speccy](https://github.com/wework/speccy).
 
 To install Speccy, run `npm install --global speccy`
 
