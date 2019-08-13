@@ -30,7 +30,7 @@ action "Behaviour Codecov" {
 action "Specification tests" {
   needs = ["Composer install"]
   uses = "./.github/actions/spec-test"
-  runs = "dredd"
+  runs = "dredd --loglevel=error"
   env = {
     # Ensure that we get as much information as possible if tests fail.
     APP_DEBUG = "true"
