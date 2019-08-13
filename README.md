@@ -143,4 +143,5 @@ Run `./vendor/bin/phpunit` to run the test suite.
 
 Copyright (C) 2019 Danskernes Digitale Bibliotek (DDB)
 
-This project is licensed under the GNU Affero General Public License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the GNU Affero General Public License - see 
+the [LICENSE.md](LICENSE.md) file for details
