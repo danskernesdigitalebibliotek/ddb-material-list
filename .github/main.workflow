@@ -1,6 +1,6 @@
 workflow "Run tests" {
   on = "push"
-  resolves = ["Behaviour Codecov", "Specification tests", "Unit Codecov", "Check codestyle", "Static code analysis"]
+  resolves = ["Behaviour Codecov", "Specification tests", "Unit Codecov", "Check codestyle", "Static code analysis", "Lint specification"]
 }
 
 action "Composer install" {
@@ -67,4 +67,9 @@ action "Static code analysis" {
   needs = ["Composer install"]
   uses = "docker://php:7.2-alpine"
   runs = "vendor/bin/phpstan analyse ."
+}
+
+action "Lint specification" {
+  uses = "docker://wework/speccy"
+  args = "lint material-list.yaml"
 }
