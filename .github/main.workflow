@@ -69,5 +69,5 @@ action "Static code analysis" {
 
 action "Lint specification" {
   uses = "docker://wework/speccy"
-  args = "lint --skip=info-contact material-list.yaml"
+  args = "lint material-list.yaml"
 }
