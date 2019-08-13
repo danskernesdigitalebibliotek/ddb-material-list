@@ -120,6 +120,15 @@ This also makes code coverage collection simpler. Behat writes
 coverage to `coverage`, which can be rendered to HTML with
 `./vendor/bin/phpcov merge --html=./coverage/html ./coverage`.
 
+#### API specification lint ####
+
+To ensure the integrity and quality of the specification we lint it using
+[Speccy][https://github.com/wework/speccy].
+
+To install Speccy, run `npm install --global speccy`
+
+To run Speccy, run `speccy lint material-list.yaml`
+
 #### API specification test ####
 
 API specification tests are done by generating requests as documented
