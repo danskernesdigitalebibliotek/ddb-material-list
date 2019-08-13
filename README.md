@@ -54,22 +54,14 @@ information.
 
 ### Middleware ###
 
-The application defines three middleware classes in
-`App\Http\Middleware`, two "token checkers" and `TokenAccess`.
+The application uses middleware from the `oauth2-adgangsplatformen` 
+package to enforce bearer token authentication for routes.
 
-`TokenChecker` and `TestTokenChecker` both extract the token from the
-`Authorization` header, and sets the user GUID to be returned by the
-`Request::user()` method of the current request. The difference is
-that `TestTokenChecker` just uses the token in the `Authorization`
-header as is (for easier testing), while the `TokenChecker` validates
-it using OAuth.
+This ensures that the return value of the `Request::user()` method of 
+the current request is an instance of an `AdgangsplatformenUser` 
+object corresponding to the token.
 
-The `TokenAccess` middleware simply checks that the GUID has been set
-to a non-empty value, or aborts the request with a 401 response.
-
-See the [Lumen documentation on
-middleware](https://lumen.laravel.com/docs/5.3/middleware) for more
-information.
+Requests without valid tokens are rejected.
 
 ### Error handling ###
 
