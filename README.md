@@ -35,7 +35,7 @@ file.
 
 Routes are defined in `routes/web.php`. They all point to a method in
 a Controller class. See the [Lumen documentation on
-routing](https://lumen.laravel.com/docs/5.3/routing) for more
+routing](https://lumen.laravel.com/docs/routing) for more
 information.
 
 ### Controllers ###
@@ -49,27 +49,19 @@ JSON response), a `Illuminate\Http\Response` (which subclasses
 (which is converted to an appropriate response by the error handler).
 
 See the [Lumen documentation on
-controllers](https://lumen.laravel.com/docs/5.3/controllers) for more
+controllers](https://lumen.laravel.com/docs/controllers) for more
 information.
 
 ### Middleware ###
 
-The application defines three middleware classes in
-`App\Http\Middleware`, two "token checkers" and `TokenAccess`.
+The application uses middleware from the `oauth2-adgangsplatformen` 
+package to enforce bearer token authentication for routes.
 
-`TokenChecker` and `TestTokenChecker` both extract the token from the
-`Authorization` header, and sets the user GUID to be returned by the
-`Request::user()` method of the current request. The difference is
-that `TestTokenChecker` just uses the token in the `Authorization`
-header as is (for easier testing), while the `TokenChecker` validates
-it using OAuth.
+This ensures that the return value of the `Request::user()` method of 
+the current request is an instance of an `AdgangsplatformenUser` 
+object corresponding to the token.
 
-The `TokenAccess` middleware simply checks that the GUID has been set
-to a non-empty value, or aborts the request with a 401 response.
-
-See the [Lumen documentation on
-middleware](https://lumen.laravel.com/docs/5.3/middleware) for more
-information.
+Requests without valid tokens are rejected.
 
 ### Error handling ###
 
@@ -90,14 +82,14 @@ debugging.
 The database schema is defined in `databese/migrations`. 
 
 See the [Laravel documentation on
-migrations](https://laravel.com/docs/5.8/migrations) for more
+migrations](https://laravel.com/docs/migrations) for more
 information.
 
 Queries are done with the Laravel query builder. The application does
 not use an ORM.
 
 See the [Lumen documentation on
-databases](https://lumen.laravel.com/docs/5.3/database) for more
+databases](https://lumen.laravel.com/docs/database) for more
 information.
 
 ### Testing ###
@@ -160,4 +152,5 @@ Run `./vendor/bin/phpunit` to run the test suite.
 
 Copyright (C) 2019 Danskernes Digitale Bibliotek (DDB)
 
-This project is licensed under the GNU Affero General Public License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the GNU Affero General Public License - see 
+the [LICENSE.md](LICENSE.md) file for details
