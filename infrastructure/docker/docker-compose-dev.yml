@@ -1,0 +1,8 @@
+version: '3'
+
+volumes:
+  release-volume:
+    driver_opts:
+      type: none
+      device: $PWD/../../
+      o: bind
