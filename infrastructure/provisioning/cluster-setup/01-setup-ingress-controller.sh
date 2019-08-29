@@ -11,8 +11,6 @@ fi
 
 INGRESS_IP=$1
 
-echo " > Project ID: ${GCP_PROJECT_ID} ..."
-
 echo " > Installing Nginx Ingress Controller in cluster via Helm ..."
 # controller.publishService.enabled=true will set the endpoint records on the
 # ingress objects to those on the GCLB.
