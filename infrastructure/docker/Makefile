@@ -1,6 +1,6 @@
 .DEFAULT_GOAL := help
 .PHONY = help guard-% build-services push-services build-release reset logs
-include ../.env
+include ../infrastructure.env
 export
 
 help: ## Display a list of the public targets
@@ -39,11 +39,12 @@ build-release: guard-REVISION ## Builds a release-image for the specified source
 	  --no-cache \
 	-f release/Dockerfile \
 	--build-arg BUILDER_IMAGE="$(DOCKER_REPO)/php-fpm:$(PHPFPM_BUILD_TAG)" \
-	--build-arg GIT_REPOSITORY="$(GIT_REPOSITORY)" \
-	--build-arg REVISION="$(REVISION)" \
-	release
+	../../ 
 
-RELEASE ?= latest
+push-release: guard-REVISION ## Builds a release-image for the specified source REVISION
+	docker push "$(DOCKER_REPO)/material-list-release:$(REVISION)"
+
+RELEASE?=latest
 reset-release: _compile-reset-release _reset-docker-compose # Bring up a docker-compose project with the specified RELEASE (defaults to latest)
 
 reset-dev: _compile-reset-dev _reset-docker-compose # Bring up a docker-compose project with the specified RELEASE (defaults to latest)
@@ -65,4 +66,5 @@ _reset-docker-compose:
 	docker-compose down -v --remove-orphans || true
 	docker-compose down -v --remove-orphans
 	docker-compose up -d
+	echo "Available via http://${VIRTUAL_HOST}"
 

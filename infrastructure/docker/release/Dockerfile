@@ -9,13 +9,10 @@ FROM ${BUILDER_IMAGE} as builder
 
 # Composer version to build with.
 ARG COMPOSER_VER=1.8.5
-# These argumentes must be passed in at build time.
-ARG REVISION
-ARG GIT_REPOSITORY
 
 # Install requirements.
 RUN apk add --no-cache \
-    ca-certificates git curl patch
+    ca-certificates curl patch
 
 # Install composer using the latest installer.
 # We compare the downloaded installer with a hash from a second source to reduce
@@ -30,7 +27,7 @@ RUN curl -o /tmp/composer-installer https://getcomposer.org/installer && \
 RUN composer global require hirak/prestissimo
 
 # Clone source from Github, fetch minimal history.
-RUN git clone --depth=1 --branch=$REVISION $GIT_REPOSITORY /var/www/release/
+COPY . /var/www/release/
 RUN rm -rf /var/www/release/.git
 
 WORKDIR /var/www/release
@@ -56,7 +53,7 @@ RUN mkdir -p $TARGET_DIR
 COPY --chown=root:root --from=builder /var/www/release $TARGET_DIR
 
 # Copy tools
-COPY tools/init-copy-source.sh /opt/
+COPY infrastructure/docker/release/tools/init-copy-source.sh /opt/
 RUN chmod +x /opt/init-copy-source.sh
 
 WORKDIR $TARGET_DIR
