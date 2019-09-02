@@ -14,7 +14,7 @@ The Google cloud project is provisioned via Terraform.
 
 You provision a project by applying the terraform configuration in the provisioning/terraform directory. You will need to modify backend.tf to point at a remote backend-store of your choosing, and terraform.tfvars to suit your project.
 
-After the project is created, use provisioning/cluster-setup to perform the last configuration of the Kubernetes cluster prior to doing any deployments.
+After the project is created, use provisioning/cluster-setup to perform the last configuration of the Kubernetes cluster prior to doing any deployments. Also, see cluster-setup/README.md for deltails.
 
 ## Material-list hosting docker images
 The solution consists of 3 docker-images
