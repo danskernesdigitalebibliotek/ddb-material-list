@@ -1,7 +1,7 @@
 resource "google_container_cluster" "primary" {
   name           = "primary-cluster"
   location       = "${var.region}"
-  node_locations = ["${var.zone_1}"]
+  node_locations = [ var.zone_1 ]
   provider       = "google-beta"
 
   # We can't create a cluster with no node pool defined, but we want to only use
@@ -10,7 +10,7 @@ resource "google_container_cluster" "primary" {
   remove_default_node_pool = true
   initial_node_count       = 1
 
-  network = "${google_compute_network.private_network.self_link}"
+  network = google_compute_network.private_network.self_link
 
   master_auth {
     username = ""
@@ -57,14 +57,14 @@ resource "google_container_cluster" "primary" {
 }
 
 resource "google_container_node_pool" "primary_preemptible_nodes" {
-  name     = "${var.pool_preemptible_name}"
-  cluster  = "${google_container_cluster.primary.name}"
-  location = "${var.region}"
+  name     = var.pool_preemptible_name
+  cluster  = google_container_cluster.primary.name
+  location = var.region
 
   depends_on = [
     "google_container_cluster.primary"
   ]
-  node_count = "${var.pool_preemptible_node_count}"
+  node_count = var.pool_preemptible_node_count
   provider   = "google-beta"
 
   management {
@@ -74,8 +74,8 @@ resource "google_container_node_pool" "primary_preemptible_nodes" {
 
   node_config {
     preemptible     = true
-    machine_type    = "${var.pool_preemptible_machine_type}"
-    service_account = "${google_service_account.cluster-node.email}"
+    machine_type    = var.pool_preemptible_machine_type
+    service_account = google_service_account.cluster-node.email
     disk_size_gb    = 50
 
 
@@ -100,5 +100,5 @@ resource "google_container_node_pool" "primary_preemptible_nodes" {
 
 
 output "cluster-name" {
-  value = "${google_container_cluster.primary.name}"
+  value = google_container_cluster.primary.name
 }

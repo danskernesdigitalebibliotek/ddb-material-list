@@ -2,7 +2,7 @@ resource "google_sql_database_instance" "master" {
   provider = "google-beta"
 
   name   = "material-list-alpha2"
-  region = "${var.region}"
+  region = var.region
 
   database_version = "MYSQL_5_7"
 
@@ -12,12 +12,12 @@ resource "google_sql_database_instance" "master" {
   settings {
     # Second-generation instance tiers are based on the machine
     # type. See argument reference below.
-    tier            = "${var.db_instance_type}"
+    tier            = var.db_instance_type
     disk_autoresize = true
     disk_size       = 50
     ip_configuration {
       ipv4_enabled    = false
-      private_network = "${google_compute_network.private_network.self_link}"
+      private_network = google_compute_network.private_network.self_link
     }
 
     backup_configuration {
@@ -27,17 +27,17 @@ resource "google_sql_database_instance" "master" {
     }
 
     location_preference {
-      zone = "${var.zone_1}"
+      zone = var.zone_1
     }
   }
 }
 
 resource "google_sql_database_instance" "replica" {
   name   = "material-list-beta2"
-  region = "${var.region}"
+  region = var.region
 
   database_version     = "MYSQL_5_7"  
-  master_instance_name = "${google_sql_database_instance.master.name}"
+  master_instance_name = google_sql_database_instance.master.name
 
   replica_configuration {
     connect_retry_interval = "30"
@@ -45,16 +45,16 @@ resource "google_sql_database_instance" "replica" {
   }
 
   settings {
-    tier            = "${var.db_instance_type}"
+    tier            = var.db_instance_type
     disk_autoresize = true
     disk_size       = 50
     ip_configuration {
       ipv4_enabled    = false
-      private_network = "${google_compute_network.private_network.self_link}"
+      private_network = google_compute_network.private_network.self_link
     }
 
     location_preference {
-      zone = "${var.zone_2}"
+      zone = var.zone_2
     }
 
   }
@@ -62,56 +62,60 @@ resource "google_sql_database_instance" "replica" {
 
 resource "google_sql_database" "ml_prod" {
   name      = "ml_prod"
-  instance  = "${google_sql_database_instance.master.name}"
+  instance  = google_sql_database_instance.master.name
   charset   = "utf8mb4"
   collation = "utf8mb4_general_ci"
 }
 
 resource "google_sql_user" "ml_prod" {
   name     = "ml_prod_user"
-  instance = "${google_sql_database_instance.master.name}"
+  instance = google_sql_database_instance.master.name
+  # The database is on a local network only accessible via the app which also
+  # have the credentials, so we accept having the credentials visible here
+  # for now.
+  # A future improvement would be to set the password via an imperative script.
   password = "oil5aiQuee"
 }
 
 resource "google_sql_database" "ml_test" {
   name      = "ml_test"
-  instance  = "${google_sql_database_instance.master.name}"
+  instance  = google_sql_database_instance.master.name
   charset   = "utf8mb4"
   collation = "utf8mb4_general_ci"
 }
 
 resource "google_sql_user" "ml_test" {
   name     = "ml_test_user"
-  instance = "${google_sql_database_instance.master.name}"
+  instance = google_sql_database_instance.master.name
   password = "ahs2faaFee"
 }
 
 
 output "master_private_ip" {
-  value = "${google_sql_database_instance.master.private_ip_address}"
+  value = google_sql_database_instance.master.private_ip_address
 }
 
 output "master_public_ip" {
-  value       = "${google_sql_database_instance.master.ip_address.0.ip_address}"
+  value       = google_sql_database_instance.master.ip_address.0.ip_address
   description = "The IPv4 address assigned for master"
 }
 
 output "test_sql_user_username" {
-  value       = "${google_sql_user.ml_test.name}"
+  value       = google_sql_user.ml_test.name
   description = "Username for the cloud sql test user"
 }
 
 output "test_sql_user_password" {
-  value       = "${google_sql_user.ml_test.password}"
+  value       = google_sql_user.ml_test.password
   description = "Password for the cloud sql test user"
 }
 
 output "prod_sql_user_username" {
-  value       = "${google_sql_user.ml_prod.name}"
+  value       = google_sql_user.ml_prod.name
   description = "Username for the cloud sql prod user"
 }
 
 output "prod_sql_user_password" {
-  value       = "${google_sql_user.ml_prod.password}"
+  value       = google_sql_user.ml_prod.password
   description = "Password for the cloud sql prod user"
 }

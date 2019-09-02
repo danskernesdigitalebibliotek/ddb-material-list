@@ -14,7 +14,7 @@ variable "organization_id" {
 }
 variable "region" {
   description = "Region the project-resources should be created in"
-  default     = "europe-west1"  
+  default     = "europe-west1"
 }
 variable "db_instance_type" {
   description = "The vm instance type used for hosting cloudsql"
@@ -31,6 +31,11 @@ variable "zone_2" {
 variable "cluster_node_service_account_id" {
   description = "The Id of the service-account the gke cluster nodes will run as"
   default     = "gke-cluster-node"
+}
+
+variable "deployer_service_account_id" {
+  description = "The Id of the service-account that will be used for deployment"
+  default     = "deployer"
 }
 
 variable "pool_preemptible_name" {
