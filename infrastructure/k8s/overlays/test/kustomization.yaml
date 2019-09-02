@@ -1,0 +1,13 @@
+namespace: test
+commonLabels:
+  variant: test
+bases:
+- ../../base
+
+patchesStrategicMerge:
+- ingress.patch.yaml
+
+secretGenerator:
+- name: dot-env-secret
+  files:
+    - .env

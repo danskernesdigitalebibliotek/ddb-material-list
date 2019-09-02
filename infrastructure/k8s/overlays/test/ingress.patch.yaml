@@ -1,0 +1,17 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: material-list-ingress
+spec:
+  tls:
+  - hosts:
+    - test.material-list.reload.dk
+    secretName: test-material-list-cert-api
+  rules:
+    - host: test.material-list.reload.dk
+      http:
+        paths:
+        - path: /
+          backend:
+            serviceName: material-list
+            servicePort: http

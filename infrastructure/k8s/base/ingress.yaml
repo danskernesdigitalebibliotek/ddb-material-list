@@ -1,0 +1,17 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: material-list-ingress
+spec:
+  tls:
+  - hosts:
+    - to.be.kustomized.example.com
+    secretName: to-be-kustomized-example-com
+  rules:
+    - host: to.be.kustomized.example.com
+      http:
+        paths:
+        - path: /
+          backend:
+            serviceName: material-list
+            servicePort: http

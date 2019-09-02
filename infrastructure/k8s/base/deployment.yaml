@@ -1,0 +1,141 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: material-list
+  labels:
+    name: material-list
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: material-list
+  template:
+    metadata:
+      labels:
+        app: material-list
+    spec:
+      # The pod is running all the containers below on localhost, so we map a
+      # few hostnames for inter-container communication inside the pod.
+      hostAliases:
+        - ip: "127.0.0.1"
+          hostnames:
+            - "php-fpm"
+            - "nginx"
+      initContainers:
+      # Prepare the release volume via an init container.
+      - name: init-copy-source
+        image: ${DOCKER_REPO}/material-list-release:${RELEASE_TAG}
+        imagePullPolicy: Always
+        command: ['/opt/init-copy-source.sh']
+        volumeMounts:
+        - name: release
+          mountPath: /release
+      # We run an nginx and php-fpm container inside each pod.
+      containers:
+      - name: php-fpm
+        image: ${DOCKER_REPO}/php-fpm:${PHPFPM_BUILD_TAG}
+        resources:
+          limits:
+            memory: 800Mi
+          requests:
+            cpu: 300m
+            memory: 640Mi
+        volumeMounts:
+        - name: release
+          mountPath: /var/www/web
+        - name: dot-env-volume
+          mountPath: /var/www/web/.env
+          subPath: .env
+        ports:
+        - name: fpm-port
+          containerPort: 9000
+        readinessProbe:
+          exec:
+            command:
+            - /usr/local/bin/php-fpm-healthcheck
+          initialDelaySeconds: 1
+          periodSeconds: 15
+          timeoutSeconds: 1
+        livenessProbe:
+          exec:
+            command:
+            - /usr/local/bin/php-fpm-healthcheck
+            - --accepted-conn=100000 # restart container after 100k connections
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          timeoutSeconds: 1
+      - name: php-fpm-metrics
+        image: hipages/php-fpm_exporter:1
+        imagePullPolicy: Always
+        env:
+        - name: PHP_FPM_SCRAPE_URI
+          value: "tcp://php-fpm:9000/status"
+      - name: prometheus-to-sd
+        image: gcr.io/google-containers/prometheus-to-sd:v0.6.0
+        ports:
+        - name: profiler
+          containerPort: 6060
+        command:
+        - /monitor
+        - --stackdriver-prefix=custom.googleapis.com
+        - --source=php-fpm-metrics:http://localhost:9253
+        - --pod-id=$(POD_NAME)
+        - --namespace-id=$(POD_NAMESPACE)
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+      - name: nginx
+        image: ${DOCKER_REPO}/nginx:${NGINX_BUILD_TAG}
+        resources:
+          limits:
+            cpu: 200m
+            memory: 400Mi
+          requests:
+            cpu: 50m
+            memory: 100Mi
+        volumeMounts:
+        - name: release
+          mountPath: /var/www/web
+        ports:
+        - name: nginx-port
+          containerPort: 80
+        # robots.txt is explicitly allowed in the image's nginx conf and always
+        # present in the application source, so a good test of whether we can
+        # send a 200 OK response back without relying on fpm.
+        readinessProbe:
+          httpGet:
+            path: /robots.txt
+            port: 80
+          initialDelaySeconds: 1
+          periodSeconds: 15
+          timeoutSeconds: 1
+        livenessProbe:
+          httpGet:
+            path: /robots.txt
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          timeoutSeconds: 1
+      # Declare pod volumes.
+      volumes:
+        - name: release
+          emptyDir: {}
+        - name: dot-env-volume
+          secret:
+            secretName: dot-env-secret
+
+      # Soft preference to schedule pods onto preemptible nodes if possible.
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - preference:
+              matchExpressions:
+              - key: cloud.google.com/gke-preemptible
+                operator: Exists
+            weight: 100
