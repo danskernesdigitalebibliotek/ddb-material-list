@@ -1,6 +1,6 @@
 workflow "Run tests" {
   on = "push"
-  resolves = ["Behaviour Codecov", "Specification tests", "Unit Codecov", "Check codestyle", "Static code analysis", "Lint specification", "Build", "Deploy to Test"]
+  resolves = ["Behaviour Codecov", "Specification tests", "Unit Codecov", "Check codestyle", "Static code analysis", "Lint specification", "Build", "Deploy to Prod"]
 }
 
 action "Composer install" {
@@ -84,7 +84,7 @@ action "Build" {
 action "Test env filter" {
   needs = "Build"
   uses = "actions/bin/filter@master"
-  args = "branch feature/hosting"
+  args = "branch master"
 }
 
 action "Setup Google Cloud" {
@@ -105,9 +105,9 @@ action "Push image to GCR" {
   args = ["docker push eu.gcr.io/reload-material-list-3/material-list-release:${GITHUB_SHA}"]
 }
 
-action "Deploy to Test" {
+action "Deploy to Prod" {
   needs = ["Push image to GCR"]
   uses = "./.github/actions/deployer"
-  secrets = ["TEST_DB_PASSWORD", "TEST_APP_KEY", "GCLOUD_AUTH"]
-  args = "test"
+  secrets = ["PROD_DB_PASSWORD", "PROD_APP_KEY", "GCLOUD_AUTH"]
+  args = "prod"
 }
