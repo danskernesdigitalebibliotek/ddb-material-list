@@ -2,3 +2,4 @@
 .env
 /coverage
 .terraform
+secrets.env

@@ -1,6 +1,6 @@
 workflow "Run tests" {
   on = "push"
-  resolves = ["Behaviour Codecov", "Specification tests", "Unit Codecov", "Check codestyle", "Static code analysis", "Lint specification", "Build"]
+  resolves = ["Behaviour Codecov", "Specification tests", "Unit Codecov", "Check codestyle", "Static code analysis", "Lint specification", "Build", "Deploy to Test"]
 }
 
 action "Composer install" {
@@ -79,4 +79,35 @@ action "Build" {
   uses = "actions/docker/cli@master"
   args = "build --build-arg=BUILDER_IMAGE=\"eu.gcr.io/reload-material-list-3/php-fpm:0.2.0\" -t \"eu.gcr.io/reload-material-list-3/material-list-release:${GITHUB_SHA}\" -f infrastructure/docker/release/Dockerfile  ."
   needs = ["Specification tests"]
+}
+
+action "Test env filter" {
+  needs = "Build"
+  uses = "actions/bin/filter@master"
+  args = "branch feature/hosting"
+}
+
+action "Setup Google Cloud" {
+  uses = "actions/gcloud/auth@master"
+  secrets = ["GCLOUD_AUTH"]
+}
+
+action "Set Credential Helper for Docker" {
+  needs = ["Setup Google Cloud"]
+  uses = "actions/gcloud/cli@master"
+  args = ["auth", "configure-docker", "--quiet"]
+}
+
+action "Push image to GCR" {
+  needs = ["Setup Google Cloud", "Set Credential Helper for Docker", "Test env filter"]
+  uses = "actions/gcloud/cli@master"
+  runs = "sh -c"
+  args = ["docker push eu.gcr.io/reload-material-list-3/material-list-release:${GITHUB_SHA}"]
+}
+
+action "Deploy to Test" {
+  needs = ["Push image to GCR"]
+  uses = "./.github/actions/deployer"
+  secrets = ["TEST_DB_PASSWORD", "TEST_APP_KEY", "GCLOUD_AUTH"]
+  args = "test"
 }
