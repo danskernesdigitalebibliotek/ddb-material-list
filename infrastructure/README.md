@@ -16,6 +16,23 @@ You provision a project by applying the terraform configuration in the provision
 
 After the project is created, use provisioning/cluster-setup to perform the last configuration of the Kubernetes cluster prior to doing any deployments.
 
+## Material-list hosting docker images
+The solution consists of 3 docker-images
+* nginx: services all static requests for assets, and passes all php-requests on to php-fpm.
+* php-fpm: serves php-requests via a number of worker-processes
+* release: contains a build of the project, on boot-up a copy of the release-code is passed on to nginx and php-fpm, the release-container then exists.
+
+All docker-related files can be found in infrastructure/docker.
+
+### Building services-images
+Service-images (nginx, php-fpm) are build manually (ie. not via continuous integration). You build the service-images by first bumping the relevant service-image tags in infrastructure/.env, and then running `make build-service-images` in the docker directory.
+
+You can then test your modifications via `make reset-release`, and when everything is as you want it, publish the images via `make publish-service-images`.
+
+### Building release-images
+Release-images are build automatically during CI.
+TODO
+
 ## Creating environments
 TODO
 
