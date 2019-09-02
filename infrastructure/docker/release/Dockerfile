@@ -1,28 +1,10 @@
 # Dir to put release into in target image.
 ARG TARGET_DIR=/var/www/web
-ARG BUILDER_IMAGE
 
 # -----------------------------------------------------------------------------
 # Build a release using the FPM image and add required build tools on top
 # of it.
-FROM ${BUILDER_IMAGE} as builder
-
-# Composer version to build with.
-ARG COMPOSER_VER=1.8.5
-
-# Install requirements.
-RUN apk add --no-cache \
-    ca-certificates curl patch
-
-# Install composer using the latest installer.
-# We compare the downloaded installer with a hash from a second source to reduce
-# the risk of downloading a compromised installer.
-RUN curl -o /tmp/composer-installer https://getcomposer.org/installer && \
-  curl -o /tmp/composer-installer.sig https://composer.github.io/installer.sig &&  \
-  /usr/local/bin/php -r "if (hash('SHA384', file_get_contents('/tmp/composer-installer')) !== trim(file_get_contents('/tmp/composer-installer.sig'))) { unlink('/tmp/composer-installer'); echo 'Invalid installer' . PHP_EOL; exit(1); }" && \
-  /usr/local/bin/php /tmp/composer-installer --version=$COMPOSER_VER --filename=composer --install-dir=/usr/local/bin && \
-  /usr/local/bin/php -r "unlink('/tmp/composer-installer');" && \
-  /usr/local/bin/php -r "unlink('/tmp/composer-installer.sig');"
+FROM composer:1.8 as builder
 
 RUN composer global require hirak/prestissimo
 

@@ -38,7 +38,6 @@ build-release: guard-REVISION ## Builds a release-image for the specified source
 	  -t "$(DOCKER_REPO)/material-list-release:latest" \
 	  --no-cache \
 	-f release/Dockerfile \
-	--build-arg BUILDER_IMAGE="$(DOCKER_REPO)/php-fpm:$(PHPFPM_BUILD_TAG)" \
 	../../ 
 
 push-release: guard-REVISION ## Builds a release-image for the specified source REVISION

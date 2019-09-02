@@ -1,6 +1,4 @@
-FROM php:7.3-fpm-alpine
-
-ARG COMPOSER_VER=1.8.6
+FROM php:7.2-fpm-alpine
 
 # Use the default production configuration
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
@@ -17,16 +15,8 @@ COPY ./config/90-materiallist.ini $PHP_INI_DIR/conf.d/
 COPY ./config/zz-access-log.conf /usr/local/etc/php-fpm.d/
 COPY ./config/zz-pm.conf /usr/local/etc/php-fpm.d/
 
-# Install composer using the latest installer.
-# We compare the downloaded installer with a hash from a second source to reduce
-# the risk of downloading a compromised installer.
-RUN set -eux \
-    && curl -o /tmp/composer-installer https://getcomposer.org/installer \
-    && curl -o /tmp/composer-installer.sig https://composer.github.io/installer.sig \
-    && php -r "if (hash('SHA384', file_get_contents('/tmp/composer-installer')) !== trim(file_get_contents('/tmp/composer-installer.sig'))) { unlink('/tmp/composer-installer'); echo 'Invalid installer' . PHP_EOL; exit(1); }" \
-    && php /tmp/composer-installer --version=$COMPOSER_VER --filename=composer --install-dir=/usr/local/bin \
-    && php -r "unlink('/tmp/composer-installer');" \
-    && php -r "unlink('/tmp/composer-installer.sig');"
+# Add composer in from the official composer image (also alpine).
+COPY --from=composer:1.8 /usr/bin/composer /usr/bin/composer
 
 # Install POSIX-compliant wait-for-command application
 # See https://github.com/ettore26/wait-for-command

@@ -77,7 +77,7 @@ action "Lint specification" {
 # TODO - use the build we've already done in "Composer install"
 action "Build" {
   uses = "actions/docker/cli@master"
-  args = "build --build-arg=BUILDER_IMAGE=\"eu.gcr.io/reload-material-list-3/php-fpm:0.2.0\" -t \"eu.gcr.io/reload-material-list-3/material-list-release:${GITHUB_SHA}\" -f infrastructure/docker/release/Dockerfile  ."
+  args = "build -t \"eu.gcr.io/reload-material-list-3/material-list-release:${GITHUB_SHA}\" -f infrastructure/docker/release/Dockerfile  ."
   needs = ["Specification tests"]
 }
 
