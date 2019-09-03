@@ -10,13 +10,13 @@ action "Composer install" {
 
 action "Behaviour tests" {
   needs = ["Composer install"]
-  uses = "docker://php:7.2-alpine"
+  uses = "docker://php:7.3-alpine"
   runs = "phpdbg -qrr vendor/bin/behat --strict"
 }
 
 action "Behaviour test coverage" {
   needs = ["Behaviour tests"]
-  uses = "docker://php:7.2-alpine"
+  uses = "docker://php:7.3-alpine"
   runs = "phpdbg -qrr vendor/bin/phpcov merge --clover=coverage/behat.xml coverage/default.cov"
 }
 
@@ -46,7 +46,7 @@ action "Specification tests" {
 
 action "Unit tests" {
   needs = ["Composer install"]
-  uses = "docker://php:7.2-alpine"
+  uses = "docker://php:7.3-alpine"
   runs = "phpdbg -qrr ./vendor/bin/phpunit --coverage-clover=coverage/unit.xml"
 }
 
@@ -59,13 +59,13 @@ action "Unit Codecov" {
 
 action "Check codestyle" {
   needs = ["Composer install"]
-  uses = "docker://php:7.2-alpine"
+  uses = "docker://php:7.3-alpine"
   runs = "vendor/bin/phpcs"
 }
 
 action "Static code analysis" {
   needs = ["Composer install"]
-  uses = "docker://php:7.2-alpine"
+  uses = "docker://php:7.3-alpine"
   runs = "vendor/bin/phpstan analyse ."
 }
 
