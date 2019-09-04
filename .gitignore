@@ -1,3 +1,5 @@
 /vendor
 .env
 /coverage
+.terraform
+secrets.env

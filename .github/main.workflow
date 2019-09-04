@@ -1,6 +1,6 @@
 workflow "Run tests" {
   on = "push"
-  resolves = ["Behaviour Codecov", "Specification tests", "Unit Codecov", "Check codestyle", "Static code analysis", "Lint specification"]
+  resolves = ["Behaviour Codecov", "Specification tests", "Unit Codecov", "Check codestyle", "Static code analysis", "Lint specification", "Build", "Deploy to Prod"]
 }
 
 action "Composer install" {
@@ -10,13 +10,13 @@ action "Composer install" {
 
 action "Behaviour tests" {
   needs = ["Composer install"]
-  uses = "docker://php:7.2-alpine"
+  uses = "docker://php:7.3-alpine"
   runs = "phpdbg -qrr vendor/bin/behat --strict"
 }
 
 action "Behaviour test coverage" {
   needs = ["Behaviour tests"]
-  uses = "docker://php:7.2-alpine"
+  uses = "docker://php:7.3-alpine"
   runs = "phpdbg -qrr vendor/bin/phpcov merge --clover=coverage/behat.xml coverage/default.cov"
 }
 
@@ -46,7 +46,7 @@ action "Specification tests" {
 
 action "Unit tests" {
   needs = ["Composer install"]
-  uses = "docker://php:7.2-alpine"
+  uses = "docker://php:7.3-alpine"
   runs = "phpdbg -qrr ./vendor/bin/phpunit --coverage-clover=coverage/unit.xml"
 }
 
@@ -59,17 +59,55 @@ action "Unit Codecov" {
 
 action "Check codestyle" {
   needs = ["Composer install"]
-  uses = "docker://php:7.2-alpine"
+  uses = "docker://php:7.3-alpine"
   runs = "vendor/bin/phpcs"
 }
 
 action "Static code analysis" {
   needs = ["Composer install"]
-  uses = "docker://php:7.2-alpine"
+  uses = "docker://php:7.3-alpine"
   runs = "vendor/bin/phpstan analyse ."
 }
 
 action "Lint specification" {
   uses = "docker://wework/speccy"
   args = "lint material-list.yaml"
+}
+
+# TODO - use the build we've already done in "Composer install"
+action "Build" {
+  uses = "actions/docker/cli@master"
+  args = "build -t \"eu.gcr.io/reload-material-list-3/material-list-release:${GITHUB_SHA}\" -f infrastructure/docker/release/Dockerfile  ."
+  needs = ["Specification tests"]
+}
+
+action "Prod env filter" {
+  needs = "Build"
+  uses = "actions/bin/filter@master"
+  args = "branch master"
+}
+
+action "Setup Google Cloud" {
+  uses = "actions/gcloud/auth@master"
+  secrets = ["GCLOUD_AUTH"]
+}
+
+action "Set Credential Helper for Docker" {
+  needs = ["Setup Google Cloud"]
+  uses = "actions/gcloud/cli@master"
+  args = ["auth", "configure-docker", "--quiet"]
+}
+
+action "Push image to GCR" {
+  needs = ["Setup Google Cloud", "Set Credential Helper for Docker", "Prod env filter"]
+  uses = "actions/gcloud/cli@master"
+  runs = "sh -c"
+  args = ["docker push eu.gcr.io/reload-material-list-3/material-list-release:${GITHUB_SHA}"]
+}
+
+action "Deploy to Prod" {
+  needs = ["Push image to GCR"]
+  uses = "./.github/actions/deployer"
+  secrets = ["PROD_DB_PASSWORD", "PROD_APP_KEY", "GCLOUD_AUTH"]
+  args = "prod"
 }

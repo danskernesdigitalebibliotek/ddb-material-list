@@ -2,7 +2,6 @@
 
 ## Installation ##
 
-
 1. Run `composer install` to install dependencies.
 2. Copy `.env.example` to `.env` and adjust the configuration.
 3. Run `./artisan migrate:fresh` to create the database tables.
@@ -147,6 +146,9 @@ debugging), you need to run it in verbose mode: `dredd
 Unit tests are primarily used to test parts that are difficult to test
 by the previous methods, unexpected exception handling for instance.
 Run `./vendor/bin/phpunit` to run the test suite.
+
+## Hosting ##
+The project ships with an full hosting-setup based on Google Kubernetes Engine. See the [infrastructure documentation](infrastructure/README.md)
 
 ## License
 

@@ -1,0 +1,13 @@
+namespace: prod
+commonLabels:
+  variant: prod
+bases:
+- ../../base
+
+patchesStrategicMerge:
+- ingress.patch.yaml
+
+secretGenerator:
+- name: dot-env-secret
+  files:
+    - .env
