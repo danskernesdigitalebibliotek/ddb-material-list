@@ -4,7 +4,7 @@ This directory contains configuration, scripts and tools for hosting Material Li
 ## Requirements
 Material-list requires a host with the following software:
 - Nginx 1.17
-- PHP 7.2
+- PHP 7.3
 - Mysql 5.7+ compatible database
 Individual components can be swapped for relevant alternatives. Apache can be used instead of Nginx. Any [database supported by Laravel](https://laravel.com/docs/5.8/database) such as PostgresSQL, SQLite and SQL Server can replace MariaDB.
 
