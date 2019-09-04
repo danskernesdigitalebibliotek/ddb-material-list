@@ -2,8 +2,7 @@
 ARG TARGET_DIR=/var/www/web
 
 # -----------------------------------------------------------------------------
-# Build a release using the FPM image and add required build tools on top
-# of it.
+# Build a release using the offical composer image.
 FROM composer:1.8 as builder
 
 RUN composer global require hirak/prestissimo
