@@ -81,7 +81,7 @@ action "Build" {
   needs = ["Specification tests"]
 }
 
-action "Test env filter" {
+action "Prod env filter" {
   needs = "Build"
   uses = "actions/bin/filter@master"
   args = "branch master"
@@ -99,7 +99,7 @@ action "Set Credential Helper for Docker" {
 }
 
 action "Push image to GCR" {
-  needs = ["Setup Google Cloud", "Set Credential Helper for Docker", "Test env filter"]
+  needs = ["Setup Google Cloud", "Set Credential Helper for Docker", "Prod env filter"]
   uses = "actions/gcloud/cli@master"
   runs = "sh -c"
   args = ["docker push eu.gcr.io/reload-material-list-3/material-list-release:${GITHUB_SHA}"]
