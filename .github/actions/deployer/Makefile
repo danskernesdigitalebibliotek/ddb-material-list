@@ -23,7 +23,7 @@ deploy-dry-run: guard-ENVIRONMENT build ## Go through the motions of a deploy, b
 	  --env-file=secrets.env \
 	  -e DRY_RUN="true" \
 	  -e GCLOUD_AUTH \
-	  -e GITHUB_SHA="non-existing-release-sha" \
+	  -e RELEASE_TAG="non-existing-release-sha" \
 	  -v $(shell pwd)/../../../:/github/workspace \
 	  -w /github/workspace \
 	  $(deployer_docker_tag) \

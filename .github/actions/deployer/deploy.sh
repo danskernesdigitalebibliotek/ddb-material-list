@@ -21,12 +21,6 @@ if [[ -z "${GCLOUD_AUTH:-}" ]] ; then
     exit 1
 fi
 
-if [[ -z "${GITHUB_SHA:-}" ]] ; then
-    echo "Missing GITHUB_SHA environment variable"
-    exit 1
-fi
-
-RELEASE_TAG=${GITHUB_SHA}
 ENVIRONMENT=$1
 
 INFRASTRUCTURE_DOT_ENV="infrastructure/infrastructure.env"
@@ -46,7 +40,7 @@ set -a
 source "${INFRASTRUCTURE_DOT_ENV}"
 set +a
 
-SUBTITUTIONS=("${ENVIRONMENT^^}_APP_KEY" "${ENVIRONMENT^^}_DB_PASSWORD" DOCKER_REPO PHPFPM_BUILD_TAG NGINX_BUILD_TAG)
+SUBTITUTIONS=(APP_KEY DB_PASSWORD DOCKER_REPO PHPFPM_BUILD_TAG NGINX_BUILD_TAG)
 for var in "${SUBTITUTIONS[@]}"
 do
     if [[ -z $(eval "echo \${$var:-}") ]] ; then
@@ -54,12 +48,6 @@ do
         exit
     fi
 done
-
-# Move secret-name from env-specific to general for easier templating.
-APP_KEY=$(eval echo "\$${ENVIRONMENT^^}_APP_KEY")
-DB_PASSWORD=$(eval echo "\$${ENVIRONMENT^^}_DB_PASSWORD")
-export APP_KEY
-export DB_PASSWORD
 
 # Generate .env, it's going into a secret, so we can't envsubst directly on the manifests
 if [[ ! -f "${ENVIRONMENT_PATH}/.env.template" ]] ; then

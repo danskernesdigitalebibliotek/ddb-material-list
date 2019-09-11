@@ -16,12 +16,19 @@ The configuration may be passed via environment variables, but the
 
 ## Development ##
 
+### Branching strategy ###
+
+The project uses the [Git
+Flow](https://nvie.com/posts/a-successful-git-branching-model/) model
+for branching.
+
 ### Continuous integration ###
 
-Github Actions runs tests and checks when new code is pushed. The
-[act](https://github.com/nektos/act) tool can be used to run them
-locally. `Act` will ask for a `CODECOV_TOKEN`, just provide an empty
-one.
+GitHub Actions runs tests and checks when new code is pushed.
+
+Pushes to `master` and `develop` deploys the version to the `prod` and
+`test` environments respectively. The deploys are also handle by
+GitHub Actions.
 
 ### Achitecture overview ###
 
