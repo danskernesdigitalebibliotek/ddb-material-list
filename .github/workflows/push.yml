@@ -122,6 +122,18 @@ jobs:
       with:
         entrypoint: dredd
         args: --loglevel=error
+  test_build_release_image:
+    name: Test build of a release image
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+      if: '!github.event.deleted'
+    - name: Build release Docker image
+      if: '!github.event.deleted'
+      uses: actions/docker/cli@master
+      with:
+        args: build -t "eu.gcr.io/reload-material-list-3/material-list-release:${{ github.sha }}"
+          -f infrastructure/docker/release/Dockerfile .
   deploy:
     name: Deploy
     needs:
@@ -131,21 +143,22 @@ jobs:
     - behaviour_tests
     - specification_lint
     - specification_tests
+    - test_build_release_image
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
       if: (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop') && !github.event.deleted
-    - name: Set Credential Helper for Docker
-      if: (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop') && !github.event.deleted
-      uses: actions/gcloud/cli@master
-      with:
-        args: auth configure-docker --quiet
     - name: Build release Docker image
       if: (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop') && !github.event.deleted
       uses: actions/docker/cli@master
       with:
         args: build -t "eu.gcr.io/reload-material-list-3/material-list-release:${{ github.sha }}"
           -f infrastructure/docker/release/Dockerfile .
+    - name: Set Credential Helper for Docker
+      if: (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop') && !github.event.deleted
+      uses: actions/gcloud/cli@master
+      with:
+        args: auth configure-docker --quiet
     - name: Setup Google Cloud
       if: (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop') && !github.event.deleted
       uses: actions/gcloud/auth@master
