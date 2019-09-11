@@ -18,10 +18,7 @@ The configuration may be passed via environment variables, but the
 
 ### Continuous integration ###
 
-Github Actions runs tests and checks when new code is pushed. The
-[act](https://github.com/nektos/act) tool can be used to run them
-locally. `Act` will ask for a `CODECOV_TOKEN`, just provide an empty
-one.
+Github Actions runs tests and checks when new code is pushed.
 
 ### Achitecture overview ###
 

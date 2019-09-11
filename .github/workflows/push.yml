@@ -1,0 +1,124 @@
+on: push
+name: Build, test, and deploy
+jobs:
+  build_and_test:
+    name: Build and test
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+      if: '!github.event.deleted'
+    - name: Lint specification
+      if: '!github.event.deleted'
+      uses: docker://wework/speccy
+      with:
+        args: lint material-list.yaml
+    - name: Composer install
+      if: '!github.event.deleted'
+      uses: MilesChou/composer-action@master
+      with:
+        args: install
+    - name: Check codestyle
+      if: '!github.event.deleted'
+      uses: docker://php:7.3-alpine
+      with:
+        entrypoint: vendor/bin/phpcs
+    - name: Static code analysis
+      if: '!github.event.deleted'
+      uses: docker://php:7.3-alpine
+      with:
+        entrypoint: vendor/bin/phpstan
+        args: analyse .
+    - name: Unit tests
+      if: '!github.event.deleted'
+      uses: docker://php:7.3-alpine
+      with:
+        entrypoint: phpdbg
+        args: -qrr ./vendor/bin/phpunit --coverage-clover=coverage/unit.xml
+    - name: Unit Codecov
+      if: '!github.event.deleted'
+      uses: ./.github/actions/codecov
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      with:
+        args: -F Unit -f coverage/unit.xml
+    - name: Behaviour tests
+      if: '!github.event.deleted'
+      uses: docker://php:7.3-alpine
+      with:
+        entrypoint: phpdbg
+        args: -qrr vendor/bin/behat --strict
+    - name: Behaviour test coverage
+      if: '!github.event.deleted'
+      uses: docker://php:7.3-alpine
+      with:
+        entrypoint: phpdbg
+        args: -qrr vendor/bin/phpcov merge --clover=coverage/behat.xml coverage/default.cov
+    - name: Behaviour Codecov
+      if: '!github.event.deleted'
+      uses: ./.github/actions/codecov
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      with:
+        args: -F Behaviour -f coverage/behat.xml
+    - name: Specification tests
+      if: '!github.event.deleted'
+      uses: ./.github/actions/spec-test
+      env:
+        ADGANGSPLATFORMEN_DRIVER: testing
+        APP_DEBUG: "true"
+        APP_ENV: testing
+        DB_CONNECTION: sqlite
+        DB_DATABASE: /tmp/db.sqlite
+      with:
+        entrypoint: dredd
+        args: --loglevel=error
+  deploy:
+    name: Deploy
+    needs:
+    - build_and_test
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+      if: (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop') && !github.event.deleted
+    - name: Set Credential Helper for Docker
+      if: (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop') && !github.event.deleted
+      uses: actions/gcloud/cli@master
+      with:
+        args: auth configure-docker --quiet
+    - name: Build release Docker image
+      if: (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop') && !github.event.deleted
+      uses: actions/docker/cli@master
+      with:
+        args: build -t "eu.gcr.io/reload-material-list-3/material-list-release:${{ github.sha }}"
+          -f infrastructure/docker/release/Dockerfile .
+    - name: Setup Google Cloud
+      if: (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop') && !github.event.deleted
+      uses: actions/gcloud/auth@master
+      env:
+        GCLOUD_AUTH: ${{ secrets.GCLOUD_AUTH }}
+    - name: Push image to GCR
+      if: (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop') && !github.event.deleted
+      uses: actions/gcloud/cli@master
+      with:
+        entrypoint: sh
+        args: -c "docker push eu.gcr.io/reload-material-list-3/material-list-release:${{ github.sha }}"
+    - name: Deploy to Test
+      if: github.ref == 'refs/heads/develop' && !github.event.deleted
+      uses: ./.github/actions/deployer
+      env:
+        GCLOUD_AUTH: ${{ secrets.GCLOUD_AUTH }}
+        APP_KEY: ${{ secrets.TEST_APP_KEY }}
+        DB_PASSWORD: ${{ secrets.TEST_DB_PASSWORD }}
+        RELEASE_TAG: ${{ github.sha }}
+      with:
+        args: test
+    - name: Deploy to Prod
+      if: github.ref == 'refs/heads/master' && !github.event.deleted
+      uses: ./.github/actions/deployer
+      env:
+        GCLOUD_AUTH: ${{ secrets.GCLOUD_AUTH }}
+        APP_KEY: ${{ secrets.PROD_APP_KEY }}
+        DB_PASSWORD: ${{ secrets.PROD_DB_PASSWORD }}
+        RELEASE_TAG: ${{ github.sha }}
+      with:
+        args: prod
