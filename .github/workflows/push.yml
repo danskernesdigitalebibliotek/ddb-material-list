@@ -1,17 +1,12 @@
 on: push
 name: Build, test, and deploy
 jobs:
-  build_and_test:
-    name: Build and test
+  check_codestyle:
+    name: Codestyle
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
       if: '!github.event.deleted'
-    - name: Lint specification
-      if: '!github.event.deleted'
-      uses: docker://wework/speccy
-      with:
-        args: lint material-list.yaml
     - name: Composer install
       if: '!github.event.deleted'
       uses: MilesChou/composer-action@master
@@ -22,12 +17,34 @@ jobs:
       uses: docker://php:7.3-alpine
       with:
         entrypoint: vendor/bin/phpcs
+  static_code_analysis:
+    name: Static Code Analysis
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+      if: '!github.event.deleted'
+    - name: Composer install
+      if: '!github.event.deleted'
+      uses: MilesChou/composer-action@master
+      with:
+        args: install
     - name: Static code analysis
       if: '!github.event.deleted'
       uses: docker://php:7.3-alpine
       with:
         entrypoint: vendor/bin/phpstan
         args: analyse .
+  unit_tests:
+    name: Unit tests
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+      if: '!github.event.deleted'
+    - name: Composer install
+      if: '!github.event.deleted'
+      uses: MilesChou/composer-action@master
+      with:
+        args: install
     - name: Unit tests
       if: '!github.event.deleted'
       uses: docker://php:7.3-alpine
@@ -41,6 +58,17 @@ jobs:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       with:
         args: -F Unit -f coverage/unit.xml
+  behaviour_tests:
+    name: Behaviour tests
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+      if: '!github.event.deleted'
+    - name: Composer install
+      if: '!github.event.deleted'
+      uses: MilesChou/composer-action@master
+      with:
+        args: install
     - name: Behaviour tests
       if: '!github.event.deleted'
       uses: docker://php:7.3-alpine
@@ -60,6 +88,28 @@ jobs:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       with:
         args: -F Behaviour -f coverage/behat.xml
+  specification_lint:
+    name: Specification linting
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+      if: '!github.event.deleted'
+    - name: Lint specification
+      if: '!github.event.deleted'
+      uses: docker://wework/speccy
+      with:
+        args: lint material-list.yaml
+  specification_tests:
+    name: Specification tests
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+      if: '!github.event.deleted'
+    - name: Composer install
+      if: '!github.event.deleted'
+      uses: MilesChou/composer-action@master
+      with:
+        args: install
     - name: Specification tests
       if: '!github.event.deleted'
       uses: ./.github/actions/spec-test
@@ -75,7 +125,12 @@ jobs:
   deploy:
     name: Deploy
     needs:
-    - build_and_test
+    - check_codestyle
+    - static_code_analysis
+    - unit_tests
+    - behaviour_tests
+    - specification_lint
+    - specification_tests
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
