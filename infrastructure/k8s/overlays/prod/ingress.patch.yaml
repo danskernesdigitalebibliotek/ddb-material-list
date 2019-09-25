@@ -5,10 +5,10 @@ metadata:
 spec:
   tls:
   - hosts:
-    - prod.material-list.reload.dk
+    - prod.materiallist.dandigbib.org
     secretName: prod-material-list-cert-api
   rules:
-    - host: prod.material-list.reload.dk
+    - host: prod.materiallist.dandigbib.org
       http:
         paths:
         - path: /
