@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# 
+#
 # Deploy a specific release to a specific environment.
-# 
+#
 # Executed with the root of the repo as working directory.
 # The deployer pulls in a number of environment-variables, and then
 # - Authenticates against the kubernetes cluster using the gcloud cli
@@ -40,7 +40,7 @@ set -a
 source "${INFRASTRUCTURE_DOT_ENV}"
 set +a
 
-SUBTITUTIONS=(APP_KEY DB_PASSWORD DOCKER_REPO PHPFPM_BUILD_TAG NGINX_BUILD_TAG)
+SUBTITUTIONS=(APP_KEY APP_CLIENT_ID APP_CLIENT_SECRET DB_PASSWORD DOCKER_REPO PHPFPM_BUILD_TAG NGINX_BUILD_TAG)
 for var in "${SUBTITUTIONS[@]}"
 do
     if [[ -z $(eval "echo \${$var:-}") ]] ; then

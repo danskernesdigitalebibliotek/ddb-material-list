@@ -5,10 +5,10 @@ metadata:
 spec:
   tls:
   - hosts:
-    - test.material-list.reload.dk
+    - test.materiallist.dandigbib.org
     secretName: test-material-list-cert-api
   rules:
-    - host: test.material-list.reload.dk
+    - host: test.materiallist.dandigbib.org
       http:
         paths:
         - path: /
