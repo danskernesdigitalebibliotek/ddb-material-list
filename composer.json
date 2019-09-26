@@ -7,13 +7,17 @@
         {
             "type": "vcs",
             "url": "https://github.com/reload/oauth2-adgangsplatformen"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/reload/laravel-psr15-bridge"
         }
     ],
     "require": {
-        "php": ">=7.1.3",
+        "php": "^7.2",
         "danskernesdigitalebibliotek/oauth2-adgangsplatformen": "dev-master",
-        "laravel/lumen-framework": "5.8.*",
-        "softonic/laravel-psr15-bridge": "^1.0"
+        "laravel/lumen-framework": "^6.0",
+        "softonic/laravel-psr15-bridge": "dev-laravel-6"
     },
     "require-dev": {
         "behat/behat": "^3.5",

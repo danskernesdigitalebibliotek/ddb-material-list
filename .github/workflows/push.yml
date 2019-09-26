@@ -15,6 +15,7 @@ jobs:
       uses: docker://php:7.3-alpine
       with:
         entrypoint: vendor/bin/phpcs
+
   static_code_analysis:
     name: Static Code Analysis
     if: '!github.event.deleted'
@@ -30,6 +31,7 @@ jobs:
       with:
         entrypoint: vendor/bin/phpstan
         args: analyse .
+
   unit_tests:
     name: Unit tests
     if: '!github.event.deleted'
@@ -51,6 +53,7 @@ jobs:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       with:
         args: -F Unit -f coverage/unit.xml
+
   behaviour_tests:
     name: Behaviour tests
     if: '!github.event.deleted'
@@ -77,6 +80,7 @@ jobs:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       with:
         args: -F Behaviour -f coverage/behat.xml
+
   specification_lint:
     name: Specification linting
     if: '!github.event.deleted'
@@ -87,6 +91,7 @@ jobs:
       uses: docker://wework/speccy
       with:
         args: lint material-list.yaml
+
   specification_tests:
     name: Specification tests
     if: '!github.event.deleted'
@@ -108,6 +113,7 @@ jobs:
       with:
         entrypoint: dredd
         args: --loglevel=error
+
   test_build_release_image:
     name: Test build of a release image
     if: '!github.event.deleted'
