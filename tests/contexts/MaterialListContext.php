@@ -191,7 +191,11 @@ class MaterialListContext implements Context, SnippetAcceptingContext
     protected function checkListResponse() : array
     {
         $this->checkStatusCode(200);
-        $response = json_decode($this->response->getContent(), true);
+        $json = $this->response->getContent();
+        if (!$json) {
+            throw new Exception('Empty response');
+        }
+        $response = json_decode($json, true);
         if (empty($response['id'])) {
             throw new Exception('No list id in response');
         }
