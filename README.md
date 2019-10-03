@@ -85,7 +85,7 @@ debugging.
 
 ### Database ###
 
-The database schema is defined in `databese/migrations`. 
+The database schema is defined in `database/migrations`.
 
 See the [Laravel documentation on
 migrations](https://laravel.com/docs/migrations) for more
