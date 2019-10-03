@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8f129b677e47b3e1b8a52e4d86062ac3",
+    "content-hash": "5b99749657a47c9a46800e7ddc9184cc",
     "packages": [
         {
             "name": "danskernesdigitalebibliotek/oauth2-adgangsplatformen",
@@ -2474,16 +2474,16 @@
         },
         {
             "name": "softonic/laravel-psr15-bridge",
-            "version": "dev-laravel-6",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/reload/laravel-psr15-bridge.git",
-                "reference": "6c9b8a422841001f1c48b0934edfb521e51ad526"
+                "url": "https://github.com/softonic/laravel-psr15-bridge.git",
+                "reference": "dbb719d90b3963c228c10d639a75b2e63bc4329e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/reload/laravel-psr15-bridge/zipball/6c9b8a422841001f1c48b0934edfb521e51ad526",
-                "reference": "6c9b8a422841001f1c48b0934edfb521e51ad526",
+                "url": "https://api.github.com/repos/softonic/laravel-psr15-bridge/zipball/dbb719d90b3963c228c10d639a75b2e63bc4329e",
+                "reference": "dbb719d90b3963c228c10d639a75b2e63bc4329e",
                 "shasum": ""
             },
             "require": {
@@ -2503,25 +2503,7 @@
                     "Softonic\\Laravel\\Middleware\\Psr15Bridge\\": "src/"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "Softonic\\Laravel\\Middleware\\Psr15Bridge\\": "tests/"
-                }
-            },
-            "scripts": {
-                "test": [
-                    "phpunit --coverage-text; php-cs-fixer fix -v --diff --dry-run --allow-risky=yes;"
-                ],
-                "phpunit": [
-                    "phpunit --coverage-text"
-                ],
-                "phpcs": [
-                    "php-cs-fixer fix -v --diff --dry-run --allow-risky=yes;"
-                ],
-                "fix-cs": [
-                    "php-cs-fixer fix -v --diff --allow-risky=yes;"
-                ]
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "Apache-2.0"
             ],
@@ -2532,11 +2514,7 @@
                 "middleware",
                 "psr"
             ],
-            "support": {
-                "issues": "https://github.com/softonic//issues",
-                "source": "https://github.com/reload/laravel-psr15-bridge/tree/laravel-6"
-            },
-            "time": "2019-09-26T08:53:24+00:00"
+            "time": "2019-09-29T08:26:40+00:00"
         },
         {
             "name": "symfony/console",
@@ -5196,18 +5174,18 @@
             "authors": [
                 {
                     "name": "Arne Blankerts",
-                    "email": "arne@blankerts.de",
-                    "role": "Developer"
+                    "role": "Developer",
+                    "email": "arne@blankerts.de"
                 },
                 {
                     "name": "Sebastian Heuer",
-                    "email": "sebastian@phpeople.de",
-                    "role": "Developer"
+                    "role": "Developer",
+                    "email": "sebastian@phpeople.de"
                 },
                 {
                     "name": "Sebastian Bergmann",
-                    "email": "sebastian@phpunit.de",
-                    "role": "Developer"
+                    "role": "Developer",
+                    "email": "sebastian@phpunit.de"
                 }
             ],
             "description": "Component for reading phar.io manifest information from a PHP Archive (PHAR)",
@@ -5243,18 +5221,18 @@
             "authors": [
                 {
                     "name": "Arne Blankerts",
-                    "email": "arne@blankerts.de",
-                    "role": "Developer"
+                    "role": "Developer",
+                    "email": "arne@blankerts.de"
                 },
                 {
                     "name": "Sebastian Heuer",
-                    "email": "sebastian@phpeople.de",
-                    "role": "Developer"
+                    "role": "Developer",
+                    "email": "sebastian@phpeople.de"
                 },
                 {
                     "name": "Sebastian Bergmann",
-                    "email": "sebastian@phpunit.de",
-                    "role": "Developer"
+                    "role": "Developer",
+                    "email": "sebastian@phpunit.de"
                 }
             ],
             "description": "Library for handling version information and constraints",
@@ -5757,8 +5735,8 @@
             "authors": [
                 {
                     "name": "Sebastian Bergmann",
-                    "email": "sebastian@phpunit.de",
-                    "role": "lead"
+                    "role": "lead",
+                    "email": "sebastian@phpunit.de"
                 }
             ],
             "description": "Library that provides collection, processing, and rendering functionality for PHP code coverage information.",
@@ -5808,8 +5786,8 @@
             "authors": [
                 {
                     "name": "Sebastian Bergmann",
-                    "email": "sebastian@phpunit.de",
-                    "role": "lead"
+                    "role": "lead",
+                    "email": "sebastian@phpunit.de"
                 }
             ],
             "description": "FilterIterator implementation that filters files based on a list of suffixes.",
@@ -5850,8 +5828,8 @@
             "authors": [
                 {
                     "name": "Sebastian Bergmann",
-                    "email": "sebastian@phpunit.de",
-                    "role": "lead"
+                    "role": "lead",
+                    "email": "sebastian@phpunit.de"
                 }
             ],
             "description": "Simple template engine.",
@@ -5899,8 +5877,8 @@
             "authors": [
                 {
                     "name": "Sebastian Bergmann",
-                    "email": "sebastian@phpunit.de",
-                    "role": "lead"
+                    "role": "lead",
+                    "email": "sebastian@phpunit.de"
                 }
             ],
             "description": "Utility class for timing",
@@ -6003,8 +5981,8 @@
             "authors": [
                 {
                     "name": "Sebastian Bergmann",
-                    "email": "sebastian@phpunit.de",
-                    "role": "lead"
+                    "role": "lead",
+                    "email": "sebastian@phpunit.de"
                 }
             ],
             "description": "CLI frontend for php-code-coverage",
@@ -6411,8 +6389,8 @@
             "authors": [
                 {
                     "name": "Sebastian Bergmann",
-                    "email": "sebastian@phpunit.de",
-                    "role": "lead"
+                    "role": "lead",
+                    "email": "sebastian@phpunit.de"
                 }
             ],
             "description": "FinderFacade is a convenience wrapper for Symfony's Finder component.",
@@ -6692,8 +6670,8 @@
             "authors": [
                 {
                     "name": "Sebastian Bergmann",
-                    "email": "sebastian@phpunit.de",
-                    "role": "lead"
+                    "role": "lead",
+                    "email": "sebastian@phpunit.de"
                 }
             ],
             "description": "Library that helps with managing the version number of Git-hosted PHP projects",
@@ -7085,8 +7063,8 @@
             "authors": [
                 {
                     "name": "Arne Blankerts",
-                    "email": "arne@blankerts.de",
-                    "role": "lead"
+                    "role": "lead",
+                    "email": "arne@blankerts.de"
                 }
             ],
             "description": "The classes contained within this repository extend the standard DOM to use exceptions at all occasions of errors instead of PHP warnings or notices. They also add various custom methods and shortcuts for convenience and to simplify the usage of DOM.",
@@ -7187,13 +7165,12 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "danskernesdigitalebibliotek/oauth2-adgangsplatformen": 20,
-        "softonic/laravel-psr15-bridge": 20
+        "danskernesdigitalebibliotek/oauth2-adgangsplatformen": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=7.1.3"
+        "php": "^7.2"
     },
     "platform-dev": []
 }
