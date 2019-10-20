@@ -3,4 +3,6 @@
     <file>.</file>
     <exclude-pattern>*/vendor/*</exclude-pattern>
     <rule ref="PSR2"/>
+    <config name="installed_paths" value="../../slevomat/coding-standard"/>
+    <rule ref="SlevomatCodingStandard.Namespaces.UnusedUses"/>
 </ruleset>
