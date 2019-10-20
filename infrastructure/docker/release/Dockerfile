@@ -14,7 +14,7 @@ RUN rm -rf /var/www/release/.git
 WORKDIR /var/www/release
 
 RUN cd /var/www/release && \
-    composer install --no-ansi --no-interaction --no-progress --no-suggest --prefer-dist --optimize-autoloader
+    composer install --no-dev --no-ansi --no-interaction --no-progress --no-suggest --prefer-dist --optimize-autoloader
 
 # Set release info.
 RUN echo "Build time: $(date -u)" > /var/www/release/.release && \
