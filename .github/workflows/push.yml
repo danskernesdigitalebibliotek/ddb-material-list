@@ -121,9 +121,7 @@ jobs:
     steps:
     - uses: actions/checkout@master
     - name: Build release Docker image
-      uses: actions/docker/cli@master
-      with:
-        args: build -t "eu.gcr.io/reload-material-list-3/material-list-release:${{ github.sha }}"
+      run: docker build -t "eu.gcr.io/reload-material-list-3/material-list-release:${{ github.sha }}"
           -f infrastructure/docker/release/Dockerfile .
   deploy:
     name: Deploy
@@ -140,9 +138,7 @@ jobs:
     steps:
     - uses: actions/checkout@master
     - name: Build release Docker image
-      uses: actions/docker/cli@master
-      with:
-        args: build -t "eu.gcr.io/reload-material-list-3/material-list-release:${{ github.sha }}"
+      run: docker build -t "eu.gcr.io/reload-material-list-3/material-list-release:${{ github.sha }}"
           -f infrastructure/docker/release/Dockerfile .
     - name: Set Credential Helper for Docker
       uses: actions/gcloud/cli@master
