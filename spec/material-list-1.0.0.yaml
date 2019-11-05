@@ -149,7 +149,7 @@ components:
       description: 'List identifier. In the initial version, this can only be "default".'
       type: string
     MaterialId:
-      description: 'A material identifier.'
+      description: 'A material identifier in the form of a PID.'
       type: string
     List:
       type: object
