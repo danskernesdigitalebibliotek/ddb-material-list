@@ -6,6 +6,12 @@ info:
     name: 'GNU General Public License v3.0'
     url: 'https://www.gnu.org/licenses/gpl-3.0.html'
 
+servers:
+  - url: https://prod.materiallist.dandigbib.org
+    description: Production server (uses live data)
+  - url: https://test.materiallist.dandigbib.org
+    description: Test server (uses test data)
+
 tags:
   - name: 'List'
     description: List handling
