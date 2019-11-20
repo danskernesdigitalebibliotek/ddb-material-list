@@ -7,21 +7,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
-    - name: Composer install
-      uses: MilesChou/composer-action@master
+    - name: Setup PHP, with composer and extensions
+      uses: shivammathur/setup-php@master
       with:
-        args: install
+        php-version: 7.3
+        # We're using phpdbg, we don't need a coverage extension.
+        coverage: none
+    - name: Install Dependencies
+      run: |
+        composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
     - name: Unit tests
-      uses: docker://php:7.3-alpine
-      with:
-        entrypoint: phpdbg
-        args: -qrr ./vendor/bin/phpunit --coverage-clover=coverage/unit.xml
-    - name: Unit Codecov
-      uses: ./.github/actions/codecov
+      run: |
+        phpdbg -qrr ./vendor/bin/phpunit --coverage-clover=coverage/unit.xml
+    - name: Report coverage to Codecov
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-      with:
-        args: -F Unit -f coverage/unit.xml
+      run: |
+        bash <(curl -s https://codecov.io/bash) -F Unit -f coverage/unit.xml
 
   behaviour_tests:
     name: Behaviour tests
@@ -29,26 +31,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
-    - name: Composer install
-      uses: MilesChou/composer-action@master
+    - name: Setup PHP, with composer and extensions
+      uses: shivammathur/setup-php@master
       with:
-        args: install
+        php-version: 7.3
+        coverage: none
+    - name: Install Dependencies
+      run: |
+        composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
     - name: Behaviour tests
-      uses: docker://php:7.3-alpine
-      with:
-        entrypoint: phpdbg
-        args: -qrr vendor/bin/behat --strict
+      run: |
+        phpdbg -qrr vendor/bin/behat
     - name: Behaviour test coverage
-      uses: docker://php:7.3-alpine
-      with:
-        entrypoint: phpdbg
-        args: -qrr vendor/bin/phpcov merge --clover=coverage/behat.xml coverage/default.cov
-    - name: Behaviour Codecov
-      uses: ./.github/actions/codecov
+      run: |
+        phpdbg -qrr vendor/bin/phpcov merge --clover=coverage/behat.xml coverage/default.cov
+    - name: Report coverage to Codecov
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-      with:
-        args: -F Behaviour -f coverage/behat.xml
+      run: |
+        bash <(curl -s https://codecov.io/bash) -F Behaviour -f coverage/behat.xml
 
   specification_lint:
     name: Specification linting
@@ -67,21 +68,26 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
-    - name: Composer install
-      uses: MilesChou/composer-action@master
+    - name: Setup PHP, with composer and extensions
+      uses: shivammathur/setup-php@master
       with:
-        args: install
+        php-version: 7.3
+        coverage: none
+    - name: Install Dependencies
+      run: |
+        composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
+    - name: Install Dredd
+      run: |
+        npm install dredd --no-optional
     - name: Specification tests
-      uses: ./.github/actions/spec-test
       env:
         ADGANGSPLATFORMEN_DRIVER: testing
         APP_DEBUG: "true"
         APP_ENV: testing
         DB_CONNECTION: sqlite
         DB_DATABASE: /tmp/db.sqlite
-      with:
-        entrypoint: dredd
-        args: --loglevel=error
+      run: |
+        node_modules/.bin/dredd --loglevel=error
 
   test_build_release_image:
     name: Test build of a release image
