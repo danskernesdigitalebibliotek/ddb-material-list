@@ -1,37 +1,6 @@
 on: push
 name: Build, test, and deploy
 jobs:
-  check_codestyle:
-    name: Codestyle
-    if: '!github.event.deleted'
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@master
-    - name: Composer install
-      uses: MilesChou/composer-action@master
-      with:
-        args: install
-    - name: Check codestyle
-      uses: docker://php:7.3-alpine
-      with:
-        entrypoint: vendor/bin/phpcs
-
-  static_code_analysis:
-    name: Static Code Analysis
-    if: '!github.event.deleted'
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@master
-    - name: Composer install
-      uses: MilesChou/composer-action@master
-      with:
-        args: install
-    - name: Static code analysis
-      uses: docker://php:7.3-alpine
-      with:
-        entrypoint: vendor/bin/phpstan
-        args: analyse .
-
   unit_tests:
     name: Unit tests
     if: '!github.event.deleted'
@@ -127,8 +96,6 @@ jobs:
     name: Deploy
     if: (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop') && !github.event.deleted
     needs:
-    - check_codestyle
-    - static_code_analysis
     - unit_tests
     - behaviour_tests
     - specification_lint
