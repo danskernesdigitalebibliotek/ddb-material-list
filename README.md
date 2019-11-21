@@ -1,4 +1,93 @@
-[![](https://img.shields.io/codecov/c/github/reload/material-list.svg?style=for-the-badge)](https://codecov.io/gh/reload/material-list)
+# Material list service for DDB
+
+[![](https://github.com/reload/material-list/workflows/Build,%20test,%20and%20deploy/badge.svg)](https://github.com/reload/material-list/actions?query=workflow%3A%22Build%2C+test%2C+and+deploy%22)
+[![](https://github.com/reload/material-list/workflows/Code%20style%20review/badge.svg)](https://github.com/reload/material-list/actions?query=workflow%3A%22Code+style+review%22)
+[![codecov](https://codecov.io/gh/reload/material-list/branch/master/graph/badge.svg)](https://codecov.io/gh/reload/material-list)
+
+Material list is a system that stores material identifiers on behalf
+of library patrons. This allows patrons to build a check list of
+materials they want to remember or are particularily interested in.
+
+Data can be accessed through [a public API documented in OpenAPI 3 format](spec/material-list-1.0.0.yaml).
+
+Access to the API is
+controlled by [Adgangsplatformen](https://github.com/DBCDK/hejmdal) -
+a single sign-on solution for public libraries in Denmark.
+
+## Usage example
+
+#### Retrieve an access token for the library patron
+
+The access token must be retrieved from Adgangsplatformen by using one of two
+types of grant:
+
+1. [Authorization code](https://github.com/DBCDK/hejmdal/blob/master/docs/oauth2.md#11-authentication-code-grant)
+2. [Password](https://github.com/DBCDK/hejmdal/blob/master/docs/oauth2.md#12-password-grant)
+
+Usage of Adgangsplatform requires a valid client id and secret which must be
+obtained from your library partner or directly from DBC, the company responsible
+for running Adgangsplatfomen.
+
+Example for retrieving an access token using password grant:
+
+```
+curl -X POST https://login.bib.dk/oauth/token -d 'grant_type=password&password=[patron-password]&username=[patron-username]&agency=[patron-library-agency-id]&client_id=[client-id]&client_secret=[client-secret]'
+```
+
+This will return a data structure containing the access token:
+
+```json
+{
+    "access_token":"abcd1234",
+    "token_type":"Bearer",
+    "expires_in":2591999
+}
+```
+
+The access token must be provided as a
+[Bearer token in the Authorization header](https://tools.ietf.org/html/rfc6750#section-2.1)
+in requests to the Material List API. When accessing the API Material List will 
+validate tokens by retrieving the corresponding
+[user data from Adgangsplaformen](https://github.com/DBCDK/hejmdal/blob/master/docs/oauth2.md#2-get-userinfo).
+
+Token validity can be tested separately by trying to retrieve user data manually:
+
+```
+curl https://login.bib.dk/userinfo -H 'Authorization: Bearer [access-token]'
+```
+
+If a token cannot be used to retrieve user data this way it cannot be used to access Material List either.
+
+#### Add a material to a list
+
+Materials are added to the list in the form of a PID.
+
+```
+curl -X PUT https://test.materiallist.dandigbib.org/list/default/870970-basis:50936155 -H 'Authorization: Bearer abcd1234'
+```
+
+Requests should return HTTP response code 201 indicating that the material has 
+been added to the list.
+
+If the token is not valid then HTTP response code 401 is returned.
+
+#### Retrieve the materials a list
+
+```
+curl -X GET https://test.materiallist.dandigbib.org/list/default  -H 'Authorization: Bearer abcd1234'
+```
+
+This should return a data structure containing all materials on the
+list:
+
+```json
+{
+    "id": "default",
+    "materials": [
+        "870970-basis:50936155"
+    ]
+}
+```
 
 ## Installation ##
 
@@ -85,7 +174,7 @@ debugging.
 
 ### Database ###
 
-The database schema is defined in `databese/migrations`. 
+The database schema is defined in `database/migrations`.
 
 See the [Laravel documentation on
 migrations](https://laravel.com/docs/migrations) for more

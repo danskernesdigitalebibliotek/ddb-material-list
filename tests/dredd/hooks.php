@@ -7,9 +7,7 @@
  */
 
 use Dredd\Hooks;
-use Guzzle\Client;
 use Illuminate\Contracts\Console\Kernel as ConsoleKernel;
-use Illuminate\Support\Facades\Artisan;
 
 $client = new GuzzleHttp\Client([
     'base_uri' => 'http://0.0.0.0:8080',
