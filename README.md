@@ -1,4 +1,8 @@
-[![](https://img.shields.io/codecov/c/github/reload/material-list.svg?style=for-the-badge)](https://codecov.io/gh/reload/material-list)
+# Material list service for DDB
+
+[![](https://github.com/reload/material-list/workflows/Build,%20test,%20and%20deploy/badge.svg)](https://github.com/reload/material-list/actions?query=workflow%3A%22Build%2C+test%2C+and+deploy%22)
+[![](https://github.com/reload/material-list/workflows/Code%20style%20review/badge.svg)](https://github.com/reload/material-list/actions?query=workflow%3A%22Code+style+review%22)
+[![codecov](https://codecov.io/gh/reload/material-list/branch/master/graph/badge.svg)](https://codecov.io/gh/reload/material-list)
 
 Material list is a system that stores material identifiers on behalf
 of library patrons. This allows patrons to build a check list of
