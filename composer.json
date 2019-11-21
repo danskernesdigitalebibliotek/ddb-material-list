@@ -11,7 +11,7 @@
     ],
     "require": {
         "php": "^7.2",
-        "danskernesdigitalebibliotek/oauth2-adgangsplatformen": "dev-master",
+        "danskernesdigitalebibliotek/oauth2-adgangsplatformen": "^1.0",
         "laravel/lumen-framework": "^6.0",
         "softonic/laravel-psr15-bridge": "^1.1",
         "spatie/laravel-cors": "^1.6"
