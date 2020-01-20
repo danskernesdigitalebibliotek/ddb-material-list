@@ -15,52 +15,52 @@ Feature: Fetching list
   Scenario: User can fetch their list
     Given a known user
     And they have the following items on the list:
-      | material |
-      | pid-1    |
-      | pid-2    |
-      | pid-3    |
+      | material  |
+      | 123-kat:1 |
+      | 123-kat:2 |
+      | 123-kat:3 |
     When fetching the list
     Then the system should return success
     And the list should contain:
-      | material |
-      | pid-3    |
-      | pid-2    |
-      | pid-1    |
+        | material  |
+        | 123-kat:3 |
+        | 123-kat:2 |
+        | 123-kat:1 |
 
   Scenario: A user can check that a material is on the list
     Given a known user
     And they have the following items on the list:
-      | material |
-      | pid-1    |
-      | pid-2    |
-      | pid-3    |
-    When checking if "pid-2" is on the list
+      | material  |
+      | 123-kat:1 |
+      | 123-kat:2 |
+      | 123-kat:3 |
+    When checking if "123-kat:2" is on the list
     Then the system should return success
 
   Scenario: A user can check that a material is not on the list
     Given a known user
     And they have the following items on the list:
-      | material |
-      | pid-1    |
-      | pid-2    |
-      | pid-3    |
-    When checking if "pid-4" is on the list
+      | material  |
+      | 123-kat:1 |
+      | 123-kat:2 |
+      | 123-kat:3 |
+    When checking if "123-kat:4" is on the list
     Then the system should return not found
 
   Scenario: A user can check that a set of materials is on the list
     Given a known user
     And they have the following items on the list:
-      | material |
-      | pid-1    |
-      | pid-2    |
-      | pid-3    |
-      | pid-4    |
+        | material  |
+        | 123-kat:1 |
+        | 123-kat:2 |
+        | 123-kat:3 |
+        | 123-kat:4 |
     When checking if the list contains:
-      | material |
-      | pid-2    |
-      | pid-4    |
-      | pid-5    |
+      | material  |
+      | 123-kat:2 |
+      | 123-kat:4 |
+      | 123-kat:5 |
     Then the list should contain:
-      | material |
-      | pid-4    |
-      | pid-2    |
+      | material  |
+      | 123-kat:4 |
+      | 123-kat:2 |
