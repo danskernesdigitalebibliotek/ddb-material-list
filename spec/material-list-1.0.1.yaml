@@ -1,0 +1,179 @@
+openapi: 3.0.0
+info:
+  version: '1.0.0'
+  title: 'Material list'
+  license:
+    name: 'GNU General Public License v3.0'
+    url: 'https://www.gnu.org/licenses/gpl-3.0.html'
+
+servers:
+  - url: https://prod.materiallist.dandigbib.org
+    description: Production server (uses live data)
+  - url: https://test.materiallist.dandigbib.org
+    description: Test server (uses test data)
+
+tags:
+  - name: 'List'
+    description: List handling
+  - name: 'Migrate'
+    description: Data migration
+security:
+  - BearerAuth: []
+paths:
+  /list/{listId}:
+    get:
+      operationId: getList
+      tags:
+        - List
+      description: 'Get list with materials.'
+      parameters:
+        - $ref: '#/components/parameters/listId'
+        - $ref: '#/components/parameters/materialIds'
+      responses:
+        200:
+          description: 'The list data is returned.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/List'
+        404:
+          description: 'Unknown list.'
+        422:
+          description: 'Invalid material id.'
+        default:
+          description: 'Unspecified error.'
+
+  /list/{listId}/{materialId}:
+    head:
+      operationId: checkListMaterial
+      tags:
+        - List
+      description: 'Check existence of material on list. To check multiple materials in one request, see the material_ids query parameter on /list/{listId}.'
+      parameters:
+        - $ref: '#/components/parameters/listId'
+        - $ref: '#/components/parameters/materialId'
+      responses:
+        200:
+          description: 'The material exists on the list.'
+        404:
+          description: 'The list or material does not exist.'
+        422:
+          description: 'Invalid material id.'
+        default:
+          description: 'Unspecified error.'
+    put:
+      operationId: addListMaterial
+      tags:
+        - List
+      description: 'Add material to the the list.'
+      parameters:
+        - $ref: '#/components/parameters/listId'
+        - $ref: '#/components/parameters/materialId'
+      responses:
+        201:
+          description: 'The material was successfully added to the list.'
+        404:
+          description: 'Unknown list.'
+        422:
+          description: 'Invalid material id.'
+        default:
+          description: 'Unspecified error.'
+    delete:
+      operationId: deleteListMaterial
+      tags:
+        - List
+      description: 'Delete material from list.'
+      parameters:
+        - $ref: '#/components/parameters/listId'
+        - $ref: '#/components/parameters/materialId'
+      responses:
+        204:
+          description: 'Successfully removed.'
+        404:
+          description: 'Unknown list or material.'
+        422:
+          description: 'Invalid material id.'
+        default:
+          description: 'Unspecified error.'
+  /migrate/{legacyUserId}:
+    put:
+      operationId: migrateList
+      tags:
+        - Migrate
+      description: 'Migrate list for the legacy user identifier to current user.'
+      parameters:
+        - $ref: '#/components/parameters/legacyUserId'
+      responses:
+        204:
+          description: 'Successfully migrated.'
+        default:
+          description: 'Unspecified error.'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+  parameters:
+    listId:
+      name: 'listId'
+      in: 'path'
+      description: 'The identifier of the list to return. Use "default" for the default list.'
+      required: true
+      example: 'default'
+      schema:
+        $ref: '#/components/schemas/ListId'
+    materialId:
+      name: 'materialId'
+      in: 'path'
+      description: 'The identifier of the material.'
+      required: true
+      example: '870970-basis:54871910'
+      schema:
+        $ref: '#/components/schemas/MaterialId'
+    materialIds:
+      name: 'material_ids'
+      in: 'query'
+      description: 'Filter the list reply down to the given material identifiers. This is the recommended way to check for existence of multiple materials on the list.'
+      example:
+        - 870970-basis:54871910
+        - 870970-basis:44791668
+      explode: false
+      schema:
+        type: array
+        items:
+          $ref: '#/components/schemas/MaterialId'
+    legacyUserId:
+      name: 'legacyUserId'
+      in: 'path'
+      description: 'Legacy user identifier of a migrated list.'
+      required: true
+      example: '29A10F616FE6CA5C6E06EBF507A9FDC5BB89F8EBCF65726BEAC61C646854E83856D3B1D46BE4696EDCFB3C9F57EEBB6941D8654BC1F4B514D6217141AEA1653C'
+      schema:
+        $ref: '#/components/schemas/LegacyUserId'
+
+  schemas:
+    ListId:
+      description: 'List identifier. In the initial version, this can only be "default".'
+      type: string
+    MaterialId:
+      description: 'A material identifier in the form <digits>-<alphanum>:<digits>.'
+      type: string
+      pattern: '^\d+-\w+:\d+$'
+    List:
+      type: object
+      required:
+        - id
+        - materials
+      additionalProperties: false
+      properties:
+        id:
+          $ref: '#/components/schemas/ListId'
+        materials:
+          type: array
+          items:
+            $ref: '#/components/schemas/MaterialId'
+    LegacyUserId:
+      description: 'Legacy user identifier.'
+      type: string
+      example: '29A10F616FE6CA5C6E06EBF507A9FDC5BB89F8EBCF65726BEAC61C646854E83856D3B1D46BE4696EDCFB3C9F57EEBB6941D8654BC1F4B514D6217141AEA1653C'

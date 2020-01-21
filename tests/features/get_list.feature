@@ -37,6 +37,16 @@ Feature: Fetching list
     When checking if "123-kat:2" is on the list
     Then the system should return success
 
+  Scenario: Checking a material requires an valid pid
+    Given a known user
+    And they have the following items on the list:
+      | material  |
+      | 123-kat:1 |
+      | 123-kat:2 |
+      | 123-kat:3 |
+    When checking if "banana" is on the list
+    Then the system should return validation error
+
   Scenario: A user can check that a material is not on the list
     Given a known user
     And they have the following items on the list:
@@ -64,3 +74,26 @@ Feature: Fetching list
       | material  |
       | 123-kat:4 |
       | 123-kat:2 |
+
+  Scenario: Checking a list of materials requires valid pids
+    Given a known user
+    And they have the following items on the list:
+        | material  |
+        | 123-kat:1 |
+        | 123-kat:2 |
+        | 123-kat:3 |
+    When checking if the list contains:
+      | material  |
+      | 123-kat:2 |
+      | banana    |
+    Then the system should return validation error
+
+  Scenario: A user can check that a material is on the list, with another agency
+    Given a known user
+    And they have the following items on the list:
+      | material      |
+      | 123-katalog:1 |
+      | 123-katalog:2 |
+      | 123-katalog:3 |
+    When checking if "321-basis:2" is on the list
+    Then the system should return success

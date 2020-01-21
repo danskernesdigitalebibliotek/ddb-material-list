@@ -56,3 +56,18 @@ Hooks::before('/list/{listId} > GET > 404', function (&$transaction) use ($pathR
 Hooks::before('/list/{listId}/{materialId} > PUT > 404', function (&$transaction) use ($pathReplace) {
     $pathReplace($transaction, 'default', 'bad-value');
 });
+
+// Change to bad material id.
+Hooks::before('/list/{listId} > GET > 422', function (&$transaction) use ($pathReplace) {
+    $pathReplace($transaction, '870970-basis%3A54871910', 'bad-materialId');
+});
+
+// Change to bad material id.
+Hooks::before('/list/{listId}/{materialId} > PUT > 422', function (&$transaction) use ($pathReplace) {
+    $pathReplace($transaction, '870970-basis%3A54871910', 'bad-materialId');
+});
+
+// Change to bad material id.
+Hooks::before('/list/{listId}/{materialId} > DELETE > 422', function (&$transaction) use ($pathReplace) {
+    $pathReplace($transaction, '870970-basis%3A54871910', 'bad-materialId');
+});
