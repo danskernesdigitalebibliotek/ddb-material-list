@@ -29,13 +29,17 @@ Feature: Add to list
         | material  |
         | 123-kat:1 |
 
-  Scenario: Adding a material requires a valid pid
+  Scenario Outline: Adding a material requires a valid pid
     Given a known user
-    And they have the following items on the list:
-      | material  |
-      | 123-kat:1 |
-    When "banana" is added to the list
-    Then the system should return validation error
+    When "<material>" is added to the list
+    Then the system should return <response>
+
+    Examples:
+      | material                   | response         |
+      | 870970-basis:50710270      | success          |
+      | 775100-katalog:50966399    | success          |
+      | 159014-lokalbibl:ADL142808 | success          |
+      | banana                     | validation error |
 
   Scenario: Materials in katalog/basis should only be added once, even if it has another agency
     Given a known user

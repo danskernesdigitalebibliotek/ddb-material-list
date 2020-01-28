@@ -108,7 +108,7 @@ class ListController extends Controller
 
     protected function checkMaterialId(string $materialId): array
     {
-        if (!preg_match('/(\d+)-(\w+):(\d+)/', $materialId, $matches)) {
+        if (!preg_match('/(\d+)-(\w+):(\w+)/', $materialId, $matches)) {
             throw new UnprocessableEntityHttpException('Invalid pid: ' . $materialId);
         }
         return [$matches[1], $matches[2], $matches[3]];
