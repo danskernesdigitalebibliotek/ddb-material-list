@@ -166,6 +166,14 @@ class MaterialListContext implements Context, SnippetAcceptingContext
     }
 
     /**
+     * @Then the system should return validation error
+     */
+    public function theSystemShouldReturnValidationError()
+    {
+        $this->checkStatusCode(422);
+    }
+
+    /**
      * Check that status code is the expected.
      */
     protected function checkStatusCode($expected)

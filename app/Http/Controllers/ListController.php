@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 use Laravel\Lumen\Routing\Controller;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
 class ListController extends Controller
 {
@@ -27,7 +29,11 @@ class ListController extends Controller
             // comma separated value and just split it up here. Looks nicer in
             // the URL.
             $ids = explode(',', $request->get('material_ids'));
-            $query->whereIn('material', $ids);
+            $query->where(function ($query) use ($ids) {
+                foreach ($ids as $id) {
+                    $this->materialQuery($query, $id, true);
+                }
+            });
         }
 
         $materials = $query->orderBy('changed_at', 'DESC')
@@ -43,9 +49,10 @@ class ListController extends Controller
     public function checkMaterial(Request $request, string $listId, string $materialId)
     {
         $this->checkList($listId);
+        $this->checkMaterialId($materialId);
 
-        $count = DB::table('materials')
-            ->where(['guid' => $request->user()->getId(), 'list' => $listId, 'material' => $materialId])
+        $count = $this->materialQuery(DB::table('materials'), $materialId)
+            ->where(['guid' => $request->user()->getId(), 'list' => $listId])
             ->count();
 
         if ($count > 0) {
@@ -59,18 +66,21 @@ class ListController extends Controller
     {
         $this->checkList($listId);
 
+        $this->materialQuery(DB::table('materials'), $materialId)
+            ->where([
+                'guid' => $request->user()->getId(),
+                'list' => $listId,
+            ])
+            ->delete();
+
         DB::table('materials')
-            ->updateOrInsert(
-                [
-                    'guid' => $request->user()->getId(),
-                    'list' => $listId,
-                    'material' => $materialId,
-                ],
-                [
-                    // We need to format the date ourselves to add microseconds.
-                    'changed_at' => Carbon::now()->format('Y-m-d H:i:s.u'),
-                ]
-            );
+            ->insert([
+                'guid' => $request->user()->getId(),
+                'list' => $listId,
+                'material' => urldecode($materialId),
+                // We need to format the date ourselves to add microseconds.
+                'changed_at' => Carbon::now()->format('Y-m-d H:i:s.u'),
+            ]);
 
         return new Response('', 201);
     }
@@ -79,20 +89,44 @@ class ListController extends Controller
     {
         $this->checkList($listId);
 
-        $count = DB::table('materials')
+        $count = $this->materialQuery(DB::table('materials'), $materialId)
             ->where([
                 'guid' => $request->user()->getId(),
                 'list' => $listId,
-                'material' => $materialId,
-            ])->delete();
+            ])
+            ->delete();
 
         return new Response('', $count > 0 ? 204 : 404);
     }
 
-    protected function checkList($listId)
+    protected function checkList(string $listId): void
     {
         if ($listId != 'default') {
             throw new NotFoundHttpException('No such list');
         }
+    }
+
+    protected function checkMaterialId(string $materialId): array
+    {
+        if (!preg_match('/(\d+)-(\w+):(\w+)/', $materialId, $matches)) {
+            throw new UnprocessableEntityHttpException('Invalid pid: ' . $materialId);
+        }
+        return [$matches[1], $matches[2], $matches[3]];
+    }
+
+    /**
+     * Create a query that deals properly with basis/katalog materials.
+     */
+    protected function materialQuery(Builder $query, string $materialId, $useOr = true): Builder
+    {
+        [$agency, $base, $id] = $this->checkMaterialId(urldecode($materialId));
+
+        $materialWhere = ['material', '=', $agency . '-' . $base . ':' . $id];
+
+        if (\in_array($base, ['katalog', 'basis'])) {
+            $materialWhere = ['material', 'LIKE', '%:' . $id];
+        }
+
+        return $useOr ? $query->orWhere([$materialWhere]) : $query->where([$materialWhere]);
     }
 }
