@@ -11,14 +11,14 @@ output "ingress_address" {
 # kubernetes cluster.
 # Create the network.
 resource "google_compute_network" "private_network" {
-  provider                = "google-beta"
+  provider                = google-beta
   auto_create_subnetworks = "true"
   name                    = "private-db-network"
 }
 
 # Configure ips.
 resource "google_compute_global_address" "private_ip_address" {
-  provider = "google-beta"
+  provider = google-beta
 
   name          = "private-ip-address"
   purpose       = "VPC_PEERING"
@@ -29,7 +29,7 @@ resource "google_compute_global_address" "private_ip_address" {
 
 # Setup a connection the users of the network can access.
 resource "google_service_networking_connection" "private_vpc_connection" {
-  provider = "google-beta"
+  provider = google-beta
 
   network                 = google_compute_network.private_network.self_link
   service                 = "servicenetworking.googleapis.com"

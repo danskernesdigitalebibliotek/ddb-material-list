@@ -1,14 +1,12 @@
 resource "google_sql_database_instance" "master" {
-  provider = "google-beta"
+  provider = google-beta
 
   name   = "material-list-alpha2"
   region = var.region
 
   database_version = "MYSQL_5_7"
 
-  depends_on = [
-    "google_service_networking_connection.private_vpc_connection"
-  ]
+  depends_on = [google_service_networking_connection.private_vpc_connection]
   settings {
     # Second-generation instance tiers are based on the machine
     # type. See argument reference below.
@@ -36,7 +34,7 @@ resource "google_sql_database_instance" "replica" {
   name   = "material-list-beta2"
   region = var.region
 
-  database_version     = "MYSQL_5_7"  
+  database_version     = "MYSQL_5_7"
   master_instance_name = google_sql_database_instance.master.name
 
   replica_configuration {
@@ -89,7 +87,6 @@ resource "google_sql_user" "ml_test" {
   instance = google_sql_database_instance.master.name
   password = "ahs2faaFee"
 }
-
 
 output "master_private_ip" {
   value = google_sql_database_instance.master.private_ip_address

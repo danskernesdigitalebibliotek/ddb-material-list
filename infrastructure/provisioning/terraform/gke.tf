@@ -1,8 +1,8 @@
 resource "google_container_cluster" "primary" {
   name           = "primary-cluster"
-  location       = "${var.region}"
-  node_locations = [ var.zone_1 ]
-  provider       = "google-beta"
+  location       = var.region
+  node_locations = [var.zone_1]
+  provider       = google-beta
 
   # We can't create a cluster with no node pool defined, but we want to only use
   # separately managed node pools. So we create the smallest possible default
@@ -62,10 +62,10 @@ resource "google_container_node_pool" "primary_preemptible_nodes" {
   location = var.region
 
   depends_on = [
-    "google_container_cluster.primary"
+    google_container_cluster.primary
   ]
   node_count = var.pool_preemptible_node_count
-  provider   = "google-beta"
+  provider   = google-beta
 
   management {
     auto_repair  = true
@@ -82,12 +82,6 @@ resource "google_container_node_pool" "primary_preemptible_nodes" {
     metadata = {
       disable-legacy-endpoints = "true"
     }
-
-    # Not stable yet
-    # image_type      = "COS_CONTAINERD"
-    # sandbox_config {
-    #   sandbox_type = "gvisor"
-    # }
 
     oauth_scopes = [
       "https://www.googleapis.com/auth/cloud-platform",
