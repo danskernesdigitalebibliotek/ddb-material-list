@@ -21,10 +21,10 @@ module "project-factory" {
   ]
 }
 
-# Grant reload developers editor access to the project, k8s and storage.
-resource "google_project_iam_member" "grant-developer-editor" {
+# Grant reload developers owner access to the project, k8s and storage.
+resource "google_project_iam_member" "grant-developer-owner" {
   project = module.project-factory.project_id
-  role    = "roles/editor"
+  role    = "roles/owner"
   member  = "group:developers@reload.dk"
 }
 resource "google_project_iam_member" "grant-developer-gke" {
