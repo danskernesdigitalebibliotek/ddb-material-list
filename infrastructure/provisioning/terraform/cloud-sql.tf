@@ -65,16 +65,6 @@ resource "google_sql_database" "ml_prod" {
   collation = "utf8mb4_general_ci"
 }
 
-resource "google_sql_user" "ml_prod" {
-  name     = "ml_prod_user"
-  instance = google_sql_database_instance.master.name
-  # The database is on a local network only accessible via the app which also
-  # have the credentials, so we accept having the credentials visible here
-  # for now.
-  # A future improvement would be to set the password via an imperative script.
-  password = "oil5aiQuee"
-}
-
 resource "google_sql_database" "ml_test" {
   name      = "ml_test"
   instance  = google_sql_database_instance.master.name
@@ -107,12 +97,4 @@ output "test_sql_user_password" {
   description = "Password for the cloud sql test user"
 }
 
-output "prod_sql_user_username" {
-  value       = google_sql_user.ml_prod.name
-  description = "Username for the cloud sql prod user"
-}
 
-output "prod_sql_user_password" {
-  value       = google_sql_user.ml_prod.password
-  description = "Password for the cloud sql prod user"
-}
