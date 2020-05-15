@@ -222,7 +222,7 @@ API specification tests are done by generating requests as documented
 by the specification and testing if the application reacts as
 documented. [Dredd](https://dredd.org/en/latest/) is used for this.
 
-To install Dredd, run: `npm install --global dredd`.
+To install Dredd, run: `npm install --global dredd@12`.
 
 Running Dredd is as simple as `dredd`. Dredd is configured to run
 `php -S 0.0.0.0:8080 -t public` to start the server, which simply runs the

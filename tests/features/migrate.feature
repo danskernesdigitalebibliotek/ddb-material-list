@@ -14,3 +14,15 @@ Feature: List migration
       | third    |
       | second   |
       | first    |
+
+  Scenario: Migration can handle duplicates
+    Given a known user
+    And they have the following items on the list:
+      | material |
+      | first    |
+    And a migrated list for legacy user id "the-ouid":
+      | material |
+      | first    |
+      | second   |
+    When the user runs migrate for legacy user id "the-ouid"
+    Then the system should return success
