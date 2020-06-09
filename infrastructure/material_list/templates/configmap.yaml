@@ -13,7 +13,7 @@ data:
   APP_URL: {{ .Values.app.url | quote }}
   APP_TIMEZONE: {{ .Values.app.timezone | quote }}
   APP_CACHE_DRIVER: {{ .Values.app.cacheDriver | quote }}
-  APP_QUEUE_CONNECTION: {{ .Values.app.queueConnection | quite}}
+  APP_QUEUE_CONNECTION: {{ .Values.app.queueConnection | quote }}
   PHP_PM_MAX_CHILDREN: {{ .Values.app.php.max_children | quote }}
   PHP_PM_START_SERVERS: {{ .Values.app.php.start_servers | quote }}
   PHP_PM_MIN_SPARE_SERVERS: {{ .Values.app.php.min_spare_servers | quote }}
