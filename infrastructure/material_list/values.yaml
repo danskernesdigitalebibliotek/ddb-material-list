@@ -1,0 +1,48 @@
+# Default values for cover-service.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+env: "prod"
+
+ingress:
+  enabled: true
+  enableAuth: false
+  enableTLS: true
+  cert: "letsencrypt"
+  path: "/"
+
+hpa:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 5
+  cpuTargetAverageUtilization: 70
+  memoryTargetAverageUtilization: 80
+
+app:
+  image:
+    version: "latest"
+    imagePullPolicy: "IfNotPresent"
+  db:
+    host: 'material-list-prod-database.mariadb.database.azure.com'
+    port: '3306'
+    database: 'material_list'
+  adgangsplatformen:
+    driver: 'production'
+  log_channel: 'stderr'
+  url: 'prod.materiallist.dandigbib.org'
+  timezone: 'UTC'
+  cacheDriver: 'file'
+  queueConnection: 'sync'
+  cors_allow_origin: "*"
+  php:
+    max_children: "80"
+    start_servers: "15"
+    min_spare_servers: "15"
+    max_spare_servers: "30"
+    slowlog_timeout: "1"
+
+nginx:
+  exporter:
+    image:
+      version: 0.6.0
+
