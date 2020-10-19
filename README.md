@@ -242,6 +242,64 @@ Unit tests are primarily used to test parts that are difficult to test
 by the previous methods, unexpected exception handling for instance.
 Run `./vendor/bin/phpunit` to run the test suite.
 
+## Deployment
+
+This repository comes with helm chats for deployment to kubernetes cluster in `infrastructure/material_list` which
+requires that you have a local `secrets.yml` file with the following content (sensitive information removed here) in
+the templates folder in the helm chart.
+
+```yaml
+{{- if eq .Values.env "prod" }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  namespace: {{ .Release.Namespace }}
+  name: {{ .Release.Name }}-secret
+type: Opaque
+stringData:
+  APP_KEY: ''
+  APP_ADGANGSPLATFORMEN_CLIENT_ID: ''
+  APP_ADGANGSPLATFORMEN_CLIENT_SECRET: ''
+  APP_DB_USERNAME: ''
+  APP_DB_PASSWORD: ''
+{{- end }}
+
+{{- if eq .Values.env "stg" }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  namespace: {{ .Release.Namespace }}
+  name: {{ .Release.Name }}-secret
+type: Opaque
+stringData:
+  APP_KEY: ''
+  APP_ADGANGSPLATFORMEN_CLIENT_ID: ''
+  APP_ADGANGSPLATFORMEN_CLIENT_SECRET: ''
+  APP_DB_USERNAME: ''
+  APP_DB_PASSWORD: ''
+
+{{- if .Values.ingress.enableAuth }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  namespace: {{ .Release.Namespace }}
+  name: {{ .Release.Name }}-basic-auth
+type: Opaque
+data:
+  auth: ''
+{{- end }}
+{{- end }}
+```
+
+The following command can be used to install the chart
+
+```sh
+helm upgrade --install material-list infrastructure/material_list/ --set ingress.domain=prod.materiallist.dandigbib.org
+```
+
 ## License
 
 Copyright (C) 2019 Danskernes Digitale Bibliotek (DDB)
