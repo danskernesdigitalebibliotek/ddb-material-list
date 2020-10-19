@@ -59,6 +59,16 @@ spec:
               secretKeyRef:
                 name: {{ .Release.Name }}-secret
                 key: APP_ADGANGSPLATFORMEN_CLIENT_SECRET
+          - name: APP_DB_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Release.Name }}-secret
+                key: APP_DB_USERNAME
+          - name: APP_DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Release.Name }}-secret
+                key: APP_DB_PASSWORD
         envFrom:
           - configMapRef:
               name: {{ .Release.Name }}-configmap

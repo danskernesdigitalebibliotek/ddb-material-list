@@ -23,9 +23,10 @@ app:
     version: "latest"
     imagePullPolicy: "IfNotPresent"
   db:
-    host: 'material-list-prod-database.mariadb.database.azure.com'
+    host: 'material-list-database.mariadb.database.azure.com'
     port: '3306'
     database: 'material_list'
+    ssl: 'true'
   adgangsplatformen:
     driver: 'production'
   log_channel: 'stderr'
