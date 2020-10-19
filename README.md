@@ -10,8 +10,7 @@ materials they want to remember or are particularily interested in.
 
 Data can be accessed through [a public API documented in OpenAPI 3 format](spec/material-list-1.0.0.yaml).
 
-Access to the API is
-controlled by [Adgangsplatformen](https://github.com/DBCDK/hejmdal) -
+Access to the API is controlled by [Adgangsplatformen](https://github.com/DBCDK/hejmdal) -
 a single sign-on solution for public libraries in Denmark.
 
 ## Usage example
@@ -89,7 +88,7 @@ list:
 }
 ```
 
-## Installation ##
+## Installation
 
 1. Run `composer install` to install dependencies.
 2. Copy `.env.example` to `.env` and adjust the configuration.
@@ -97,21 +96,21 @@ list:
 4. Serve using `php -S 0.0.0.0:8000 -t public/` (for testing), FPM, or
    Apache.
 
-### Configuration ###
+### Configuration
 
 The configuration may be passed via environment variables, but the
 `.env` file allows for easy configuration of all variables. See
 `.env.example` for configuration options.
 
-## Development ##
+## Development
 
-### Branching strategy ###
+### Branching strategy
 
 The project uses the [Git
 Flow](https://nvie.com/posts/a-successful-git-branching-model/) model
 for branching.
 
-### Continuous integration ###
+### Continuous integration 
 
 GitHub Actions runs tests and checks when new code is pushed.
 
@@ -119,7 +118,7 @@ Pushes to `master` and `develop` deploys the version to the `prod` and
 `test` environments respectively. The deploys are also handle by
 GitHub Actions.
 
-### Achitecture overview ###
+### Architecture overview
 
 The application code is in the `App` namespace and located in the
 `app` directory.
@@ -133,7 +132,7 @@ a Controller class. See the [Lumen documentation on
 routing](https://lumen.laravel.com/docs/routing) for more
 information.
 
-### Controllers ###
+### Controllers
 
 The controller classes is defined in `App\Http\Controllers`. The
 controller methods handling requests gets the URL path placeholders as
@@ -147,7 +146,7 @@ See the [Lumen documentation on
 controllers](https://lumen.laravel.com/docs/controllers) for more
 information.
 
-### Middleware ###
+### Middleware
 
 The application uses middleware from the `oauth2-adgangsplatformen` 
 package to enforce bearer token authentication for routes.
@@ -158,7 +157,7 @@ object corresponding to the token.
 
 Requests without valid tokens are rejected.
 
-### Error handling ###
+### Error handling
 
 The `App\Exceptions\Handler` handles exceptions thrown by the
 controllers. It converts
@@ -172,7 +171,7 @@ response, unless the `APP_DEBUG` environment variable is true, in
 which case it serves the exception message as `text/plain` to ease
 debugging.
 
-### Database ###
+### Database
 
 The database schema is defined in `database/migrations`.
 
@@ -187,9 +186,9 @@ See the [Lumen documentation on
 databases](https://lumen.laravel.com/docs/database) for more
 information.
 
-### Testing ###
+### Testing
 
-#### Behavior tests ####
+#### Behavior tests
 
 Most tests are done as behavior test using Behat. The features are in
 `tests/features` while the context classes reside in `tests/contexts`,
@@ -207,7 +206,7 @@ This also makes code coverage collection simpler. Behat writes
 coverage to `coverage`, which can be rendered to HTML with
 `./vendor/bin/phpcov merge --html=./coverage/html ./coverage`.
 
-#### API specification lint ####
+#### API specification lint
 
 To ensure the integrity and quality of the specification we lint it using
 [Speccy](https://github.com/wework/speccy).
@@ -216,7 +215,7 @@ To install Speccy, run `npm install --global speccy`
 
 To run Speccy, run `speccy lint material-list.yaml`
 
-#### API specification test ####
+#### API specification test
 
 API specification tests are done by generating requests as documented
 by the specification and testing if the application reacts as
@@ -237,14 +236,11 @@ To get the names of requests (for use in hook file), use `dredd
 debugging), you need to run it in verbose mode: `dredd
 --loglevel=debug`.
 
-#### Unit tests ####
+#### Unit tests
 
 Unit tests are primarily used to test parts that are difficult to test
 by the previous methods, unexpected exception handling for instance.
 Run `./vendor/bin/phpunit` to run the test suite.
-
-## Hosting ##
-The project ships with an full hosting-setup based on Google Kubernetes Engine. See the [infrastructure documentation](infrastructure/README.md)
 
 ## License
 
