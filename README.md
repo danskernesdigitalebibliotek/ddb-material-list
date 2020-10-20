@@ -244,6 +244,14 @@ Run `./vendor/bin/phpunit` to run the test suite.
 
 ## Deployment
 
+Create namespace with labels to allow traffic.
+
+```sh
+kubectl create namespace material-list
+kubectl label namespaces/ingress networking/namespace=ingress
+kubectl label namespaces/material-list networking/namespace=material-list
+```
+
 This repository comes with helm chats for deployment to kubernetes cluster in `infrastructure/material_list` which
 requires that you have a local `secrets.yml` file with the following content (sensitive information removed here) in
 the templates folder in the helm chart.
@@ -297,7 +305,7 @@ data:
 The following command can be used to install the chart
 
 ```sh
-helm upgrade --install material-list infrastructure/material_list/ --set ingress.domain=prod.materiallist.dandigbib.org
+helm upgrade --install --namespace=material-list material-list infrastructure/material_list/ --set ingress.domain=prod.materiallist.dandigbib.org
 ```
 
 ## License
