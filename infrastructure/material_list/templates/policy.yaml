@@ -75,3 +75,6 @@ spec:
         # Allow SQL connections to the outside. It's not possible to use named external services in egress.
         - protocol: TCP
           port: 3306
+        # Need to communicate with open-platform and adgangsplatformen.
+        - protocol: TCP
+          port: 443
