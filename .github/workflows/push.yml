@@ -11,6 +11,7 @@ jobs:
       uses: shivammathur/setup-php@master
       with:
         php-version: 7.3
+        tools: composer:v1
         # We're using phpdbg, we don't need a coverage extension.
         coverage: none
     - name: Install Dependencies
@@ -35,6 +36,7 @@ jobs:
       uses: shivammathur/setup-php@master
       with:
         php-version: 7.3
+        tools: composer:v1
         coverage: none
     - name: Install Dependencies
       run: |
@@ -72,6 +74,7 @@ jobs:
       uses: shivammathur/setup-php@master
       with:
         php-version: 7.3
+        tools: composer:v1
         coverage: none
     - name: Install Dependencies
       run: |

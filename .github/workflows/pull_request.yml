@@ -10,6 +10,7 @@ jobs:
       uses: shivammathur/setup-php@master
       with:
         php-version: 7.3
+        tools: composer:v1
         coverage: none
     - name: Install Reviewdog
       run: |
@@ -32,6 +33,7 @@ jobs:
       uses: shivammathur/setup-php@master
       with:
         php-version: 7.3
+        tools: composer:v1
         coverage: none
     - name: Install Reviewdog
       run: |
