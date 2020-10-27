@@ -27,10 +27,10 @@ return [
             'strict' => env('DB_STRICT_MODE', true),
             'engine' => env('DB_ENGINE', null),
             'timezone' => env('DB_TIMEZONE', '+00:00'),
-            'options' => env('DB_SSL', false) ? array(
+            'options' => env('DB_SSL', false) ? [
                 PDO::MYSQL_ATTR_SSL_KEY => base_path() . '/certs/DigiCertGlobalRootG2.crt.pem',
                 PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => true,
-            ) : array(),
+            ] : [],
         ],
     ],
     'migrations' => 'migrations',
