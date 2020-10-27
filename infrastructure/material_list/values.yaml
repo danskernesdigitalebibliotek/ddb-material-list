@@ -35,11 +35,11 @@ app:
   queueConnection: 'sync'
   cors_allow_origin: "*"
   php:
-    max_children: "80"
-    start_servers: "15"
-    min_spare_servers: "15"
-    max_spare_servers: "30"
-    slowlog_timeout: "1"
+    memory_limit: "64M"
+    max_children: "10"
+    start_servers: "2"
+    min_spare_servers: "1"
+    max_spare_servers: "3"
 
 nginx:
   exporter:
