@@ -1,14 +1,12 @@
 resource "google_sql_database_instance" "master" {
-  provider = "google-beta"
+  provider = google-beta
 
   name   = "material-list-alpha2"
   region = var.region
 
   database_version = "MYSQL_5_7"
 
-  depends_on = [
-    "google_service_networking_connection.private_vpc_connection"
-  ]
+  depends_on = [google_service_networking_connection.private_vpc_connection]
   settings {
     # Second-generation instance tiers are based on the machine
     # type. See argument reference below.
@@ -36,7 +34,7 @@ resource "google_sql_database_instance" "replica" {
   name   = "material-list-beta2"
   region = var.region
 
-  database_version     = "MYSQL_5_7"  
+  database_version     = "MYSQL_5_7"
   master_instance_name = google_sql_database_instance.master.name
 
   replica_configuration {
@@ -67,16 +65,6 @@ resource "google_sql_database" "ml_prod" {
   collation = "utf8mb4_general_ci"
 }
 
-resource "google_sql_user" "ml_prod" {
-  name     = "ml_prod_user"
-  instance = google_sql_database_instance.master.name
-  # The database is on a local network only accessible via the app which also
-  # have the credentials, so we accept having the credentials visible here
-  # for now.
-  # A future improvement would be to set the password via an imperative script.
-  password = "oil5aiQuee"
-}
-
 resource "google_sql_database" "ml_test" {
   name      = "ml_test"
   instance  = google_sql_database_instance.master.name
@@ -89,7 +77,6 @@ resource "google_sql_user" "ml_test" {
   instance = google_sql_database_instance.master.name
   password = "ahs2faaFee"
 }
-
 
 output "master_private_ip" {
   value = google_sql_database_instance.master.private_ip_address
@@ -110,12 +97,4 @@ output "test_sql_user_password" {
   description = "Password for the cloud sql test user"
 }
 
-output "prod_sql_user_username" {
-  value       = google_sql_user.ml_prod.name
-  description = "Username for the cloud sql prod user"
-}
 
-output "prod_sql_user_password" {
-  value       = google_sql_user.ml_prod.password
-  description = "Password for the cloud sql prod user"
-}
