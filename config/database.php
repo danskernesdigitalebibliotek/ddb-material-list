@@ -28,6 +28,9 @@ return [
             'engine' => env('DB_ENGINE', null),
             'timezone' => env('DB_TIMEZONE', '+00:00'),
             'options' => env('DB_SSL', false) ? [
+                // This certificate is Microsoft Azure root cert for managed databases. See
+                // https://docs.microsoft.com/en-us/azure/mariadb/howto-configure-ssl for more information. It will be
+                // maintained by the hosting provider.
                 PDO::MYSQL_ATTR_SSL_KEY => base_path() . '/certs/DigiCertGlobalRootG2.crt.pem',
                 PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => true,
             ] : [],

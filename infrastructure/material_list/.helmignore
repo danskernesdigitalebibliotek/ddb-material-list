@@ -21,3 +21,6 @@
 .idea/
 *.tmproj
 .vscode/
+
+# Filter out the example files.
+*.example.yaml

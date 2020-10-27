@@ -10,11 +10,11 @@ RUN tar -zxf /tmp/app.tar --strip-components=1 -C ${APP_PATH} \
     && rm /tmp/app.tar
 
 # Add composer in from the official composer image (also alpine).
-COPY --from=composer:1.9.1 /usr/bin/composer /usr/bin/composer
+COPY --from=composer:1 /usr/bin/composer /usr/bin/composer
 
 WORKDIR ${APP_PATH}
 
-## Install assets, which requires a HACK as redis is not available (should be removed later on).
+## Install assets
 RUN composer install --no-dev --no-ansi --no-interaction --no-progress --no-suggest --prefer-dist --optimize-autoloader \
     && composer clear-cache
 

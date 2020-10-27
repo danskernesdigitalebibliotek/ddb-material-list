@@ -13,6 +13,17 @@ Data can be accessed through [a public API documented in OpenAPI 3 format](spec/
 Access to the API is controlled by [Adgangsplatformen](https://github.com/DBCDK/hejmdal) -
 a single sign-on solution for public libraries in Denmark.
 
+## Requirements
+Material-list requires a host with the following software:
+
+- Nginx 1.17
+- PHP 7.3
+- Mysql 5.7+ compatible database
+
+Individual components can be swapped for relevant alternatives. Apache can be used instead of Nginx. Any 
+[database supported by Laravel](https://laravel.com/docs/5.8/database) such as PostgresSQL, SQLite and SQL Server can 
+replace MariaDB.
+
 ## Usage example
 
 #### Retrieve an access token for the library patron
@@ -253,57 +264,10 @@ kubectl label namespaces/material-list networking/namespace=material-list
 ```
 
 This repository comes with helm chats for deployment to kubernetes cluster in `infrastructure/material_list` which
-requires that you have a local `secrets.yml` file with the following content (sensitive information removed here) in
-the templates folder in the helm chart.
-
-```yaml
-{{- if eq .Values.env "prod" }}
----
-apiVersion: v1
-kind: Secret
-metadata:
-  namespace: {{ .Release.Namespace }}
-  name: {{ .Release.Name }}-secret
-type: Opaque
-stringData:
-  APP_KEY: ''
-  APP_ADGANGSPLATFORMEN_CLIENT_ID: ''
-  APP_ADGANGSPLATFORMEN_CLIENT_SECRET: ''
-  APP_DB_USERNAME: ''
-  APP_DB_PASSWORD: ''
-{{- end }}
-
-{{- if eq .Values.env "stg" }}
----
-apiVersion: v1
-kind: Secret
-metadata:
-  namespace: {{ .Release.Namespace }}
-  name: {{ .Release.Name }}-secret
-type: Opaque
-stringData:
-  APP_KEY: ''
-  APP_ADGANGSPLATFORMEN_CLIENT_ID: ''
-  APP_ADGANGSPLATFORMEN_CLIENT_SECRET: ''
-  APP_DB_USERNAME: ''
-  APP_DB_PASSWORD: ''
-
-{{- if .Values.ingress.enableAuth }}
----
-apiVersion: v1
-kind: Secret
-metadata:
-  namespace: {{ .Release.Namespace }}
-  name: {{ .Release.Name }}-basic-auth
-type: Opaque
-data:
-  auth: ''
-{{- end }}
-{{- end }}
-```
+requires that you have a local `secrets.yml` in the templates folder. As this file contains sensitive information
+you can use the `secrects.example.yaml` file as a template for the required values.
 
 The following command can be used to install the chart
-
 ```sh
 helm upgrade --install --namespace=material-list material-list infrastructure/material_list/ --set ingress.domain=prod.materiallist.dandigbib.org
 ```

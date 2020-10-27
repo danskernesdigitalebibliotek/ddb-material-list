@@ -58,12 +58,6 @@ server {
         rewrite ^/(.*)$ /index.php?q=$1;
     }
 
-    # Don't allow direct access to PHP files in the vendor directory.
-    location ~ /vendor/.*\.php$ {
-        deny all;
-        return 404;
-    }
-
     error_page 404 /index.php;
 
     location ~ \.php(/|$) {
