@@ -1,0 +1,88 @@
+# Based on https://www.nginx.com/resources/wiki/start/topics/recipes/drupal/
+# and https://laravel.com/docs/5.8/deployment
+# and https://github.com/rpayanm/drupal/blob/master/nginx/default
+# and https://blog.john-pfeiffer.com/drupal-with-docker-compose-and-nginx-and-php-fpm-and-mariadb/
+server {
+    listen 80;
+    server_name localhost;
+    root /var/www/html/public;
+
+    disable_symlinks off;
+
+    client_max_body_size 100m;
+    fastcgi_read_timeout 300s;
+    fastcgi_buffers 16 8k;
+    proxy_buffers 16 16k;
+    proxy_buffer_size 16k;
+
+    add_header X-Frame-Options "SAMEORIGIN";
+    add_header X-XSS-Protection "1; mode=block";
+    add_header X-Content-Type-Options "nosniff";
+
+    charset utf-8;
+
+    location = /favicon.ico {
+        log_not_found off;
+        access_log off;
+    }
+
+    location = /robots.txt {
+        allow all;
+        log_not_found off;
+        access_log off;
+    }
+
+    location ~* \.(txt|log)$ {
+        deny all;
+    }
+
+    location ~ \..*/.*\.php$ {
+        return 403;
+    }
+
+    # Allow "Well-Known URIs" as per RFC 5785
+    location ~* ^/.well-known/ {
+        allow all;
+    }
+
+    # Block access to "hidden" files and directories
+    location ~ (^|/)\. {
+        return 403;
+    }
+
+    location / {
+        try_files $uri /index.php?$query_string;
+    }
+
+    location @rewrite {
+        rewrite ^/(.*)$ /index.php?q=$1;
+    }
+
+    error_page 404 /index.php;
+
+    location ~ \.php(/|$) {
+        fastcgi_split_path_info ^(.+?\.php)(|/.*)$;
+        include fastcgi_params;
+        # Block httpoxy attacks. See https://httpoxy.org/.
+        fastcgi_param HTTP_PROXY "";
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_param PATH_INFO $fastcgi_path_info;
+        fastcgi_param QUERY_STRING $query_string;
+        fastcgi_param REMOTE_ADDR $realip_remote_addr;
+        fastcgi_intercept_errors on;
+        fastcgi_pass {{ getenv "PHP_FPM_SERVER" "phpfpm" }}:{{ getenv "PHP_FPM_SERVER_PORT" "9000" }};
+    }
+}
+
+server {
+    listen 8080;
+    server_name localhost;
+    root /var/www/html/public;
+
+    error_log off;
+    access_log off;
+
+    location /stub_status {
+        stub_status;
+    }
+}
