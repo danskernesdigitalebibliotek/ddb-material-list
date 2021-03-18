@@ -30,6 +30,7 @@ return [
             'PUT',
             'PATCH',
             'DELETE',
+            'HEAD'
         ],
 
         'allow_headers' => [
