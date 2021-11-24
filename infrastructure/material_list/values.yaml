@@ -35,11 +35,12 @@ app:
   queueConnection: 'sync'
   cors_allow_origin: "*"
   php:
+    type: "static"
+    max_children: "14"
     memory_limit: "64M"
-    max_children: "10"
-    start_servers: "2"
-    min_spare_servers: "1"
-    max_spare_servers: "3"
+    opcache_memory_consumption: "32"
+    opcache_max_accelerated_files: "20000"
+    opcache_validate_timestamps: "0"
 
 nginx:
   exporter:
