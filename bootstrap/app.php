@@ -1,5 +1,7 @@
 <?php
 
+use Fruitcake\Cors\HandleCors;
+
 require_once __DIR__.'/../vendor/autoload.php';
 
 (new Laravel\Lumen\Bootstrap\LoadEnvironmentVariables(
@@ -58,7 +60,7 @@ $app->configure('api');
 $app->configure('cors');
 
 $app->middleware([
-    Spatie\Cors\Cors::class,
+    HandleCors::class,
 ]);
 
 // Middleware that selects controller

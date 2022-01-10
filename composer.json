@@ -13,9 +13,9 @@
         "php": "^7.2",
         "composer/package-versions-deprecated": "^1.11",
         "danskernesdigitalebibliotek/oauth2-adgangsplatformen": "^1.0",
+        "fruitcake/laravel-cors": "^2.0",
         "laravel/lumen-framework": "^6.0",
-        "softonic/laravel-psr15-bridge": "^1.1",
-        "spatie/laravel-cors": "^1.6"
+        "softonic/laravel-psr15-bridge": "^1.1"
     },
     "require-dev": {
         "behat/behat": "^3.5",
@@ -54,7 +54,11 @@
     "config": {
         "preferred-install": "dist",
         "sort-packages": true,
-        "optimize-autoloader": true
+        "optimize-autoloader": true,
+        "allow-plugins": {
+            "phpstan/extension-installer": true,
+            "composer/package-versions-deprecated": true
+        }
     },
     "minimum-stability": "dev",
     "prefer-stable": true
