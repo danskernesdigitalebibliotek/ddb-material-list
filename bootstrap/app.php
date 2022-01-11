@@ -1,5 +1,6 @@
 <?php
 
+use Fruitcake\Cors\CorsServiceProvider;
 use Fruitcake\Cors\HandleCors;
 
 require_once __DIR__.'/../vendor/autoload.php';
@@ -80,7 +81,7 @@ $app->routeMiddleware([
 */
 
 $app->register(\Adgangsplatformen\Support\Illuminate\AdgangsplatformenServiceProvider::class);
-$app->register(Spatie\Cors\CorsServiceProvider::class);
+$app->register(CorsServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------
