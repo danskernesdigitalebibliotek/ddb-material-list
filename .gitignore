@@ -3,3 +3,4 @@
 /coverage
 .terraform
 secrets.env
+docker-compose.override.yml
