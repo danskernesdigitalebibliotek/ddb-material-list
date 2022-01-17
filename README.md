@@ -20,8 +20,8 @@ Material-list requires a host with the following software:
 - PHP 7.3
 - Mysql 5.7+ compatible database
 
-Individual components can be swapped for relevant alternatives. Apache can be used instead of Nginx. Any 
-[database supported by Laravel](https://laravel.com/docs/5.8/database) such as PostgresSQL, SQLite and SQL Server can 
+Individual components can be swapped for relevant alternatives. Apache can be used instead of Nginx. Any
+[database supported by Laravel](https://laravel.com/docs/5.8/database) such as PostgresSQL, SQLite and SQL Server can
 replace MariaDB.
 
 ## Usage example
@@ -56,7 +56,7 @@ This will return a data structure containing the access token:
 
 The access token must be provided as a
 [Bearer token in the Authorization header](https://tools.ietf.org/html/rfc6750#section-2.1)
-in requests to the Material List API. When accessing the API Material List will 
+in requests to the Material List API. When accessing the API Material List will
 validate tokens by retrieving the corresponding
 [user data from Adgangsplaformen](https://github.com/DBCDK/hejmdal/blob/master/docs/oauth2.md#2-get-userinfo).
 
@@ -76,7 +76,7 @@ Materials are added to the list in the form of a PID.
 curl -X PUT https://test.materiallist.dandigbib.org/list/default/870970-basis:50936155 -H 'Authorization: Bearer abcd1234'
 ```
 
-Requests should return HTTP response code 201 indicating that the material has 
+Requests should return HTTP response code 201 indicating that the material has
 been added to the list.
 
 If the token is not valid then HTTP response code 401 is returned.
@@ -99,13 +99,37 @@ list:
 }
 ```
 
+## Development prerequisites
+
+In order to run local development you need:
+
+* Docker
+* Preferably support for `VIRTUAL_HOST` environment variables for Docker
+  containers. Examples: [Dory (OSX)](https://github.com/FreedomBen/dory) or
+  [`nginx-proxy`](https://github.com/nginx-proxy/nginx-proxy).
+
+## Other initial steps
+
+If you are using a mac/OSX it is recommended to use nfs on the mounted volumes
+in docker-compose.
+
+Copy the docker-compose.mac-nfs.yml:
+
+```sh
+$ cp docker-compose.mac-nfs.yml docker-compose.override.yml
+```
+
+And follow this [guide](https://github.com/danskernesdigitalebibliotek/dpl-cms/blob/main/mac-nfs.readme.md) in order to set it up.
+
 ## Installation
 
-1. Run `composer install` to install dependencies.
+1. Run docker-compose up
 2. Copy `.env.example` to `.env` and adjust the configuration.
-3. Run `./artisan migrate:fresh` to create the database tables.
-4. Serve using `php -S 0.0.0.0:8000 -t public/` (for testing), FPM, or
-   Apache.
+3. Enter the app container by running: `docker-compose exec app sh`
+4. Run `composer install` to install dependencies.
+5. Run `./artisan migrate:fresh` to create the database tables.
+6. The application is now ready to be tested.
+7. The application can be reached on the host at: http://ddb-material-list.docker
 
 ### Configuration
 
@@ -121,7 +145,7 @@ The project uses the [Git
 Flow](https://nvie.com/posts/a-successful-git-branching-model/) model
 for branching.
 
-### Continuous integration 
+### Continuous integration
 
 GitHub Actions runs tests and checks when new code is pushed.
 
@@ -159,11 +183,11 @@ information.
 
 ### Middleware
 
-The application uses middleware from the `oauth2-adgangsplatformen` 
+The application uses middleware from the `oauth2-adgangsplatformen`
 package to enforce bearer token authentication for routes.
 
-This ensures that the return value of the `Request::user()` method of 
-the current request is an instance of an `AdgangsplatformenUser` 
+This ensures that the return value of the `Request::user()` method of
+the current request is an instance of an `AdgangsplatformenUser`
 object corresponding to the token.
 
 Requests without valid tokens are rejected.
@@ -276,5 +300,5 @@ helm upgrade --install --namespace=material-list material-list infrastructure/ma
 
 Copyright (C) 2019 Danskernes Digitale Bibliotek (DDB)
 
-This project is licensed under the GNU Affero General Public License - see 
+This project is licensed under the GNU Affero General Public License - see
 the [LICENSE.md](LICENSE.md) file for details
