@@ -54,17 +54,18 @@ $app->singleton(
 | route or middleware that'll be assigned to some specific routes.
 |
 */
+$app->configure('api');
 $app->configure('cors');
 
 $app->middleware([
     Spatie\Cors\Cors::class,
 ]);
 
-// Route middleware can be inserted like this:
-// $app->routeMiddleware([
-//     'auth' => App\Http\Middleware\Authenticate::class,
-// ]);
-
+// Middleware that selects controller
+// depending on the version set in the "Accept-Version" header.
+$app->routeMiddleware([
+    'version-switcher' => App\Http\Middleware\VersionSwitcher::class,
+]);
 /*
 |--------------------------------------------------------------------------
 | Register Service Providers

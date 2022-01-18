@@ -16,7 +16,7 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
-$router->group(['middleware' => 'auth'], function () use ($router) {
+$router->group(['middleware' => ['auth', 'version-switcher']], function () use ($router) {
     $router->get('/list/{listId}', 'ListController@get');
     $router->head('/list/{listId}/{materialId}', 'ListController@checkMaterial');
     $router->put('/list/{listId}/{materialId}', 'ListController@addMaterial');
