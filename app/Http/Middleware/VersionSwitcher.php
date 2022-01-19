@@ -22,8 +22,6 @@ class VersionSwitcher
             return array_map(function ($routeComponent) use ($version) {
                 // Only handle routes that has a controller defined.
                 if ($uses = $routeComponent['uses'] ?? null) {
-                    // Only handle controller registrations
-                    // with the pattern: [class]@[method].
                     if (preg_match('/^([^@]+)@(.*)$/', $uses, $m)) {
                         list(, $classFrom, $method) = $m;
 
