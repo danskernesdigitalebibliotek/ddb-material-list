@@ -13,32 +13,13 @@ use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
 class ListController extends Controller
 {
-    public function get(Request $request, string $listId)
+    protected $tableName = 'materials';
+    protected $idColumn = 'material';
+    protected $idFilterName = 'material_ids';
+
+    public function get(Request $request, string $listId): array
     {
-        $this->checkList($listId);
-
-        $query = DB::table('materials')
-            ->where(['guid' => $request->user()->getId(), 'list' => $listId]);
-
-        // Filter to the given materials, if supplied.
-        if ($request->has('material_ids')) {
-            // The OpenAPI spec defines the parameter as a comma separated
-            // list. OpenAPI defaults to using "id=1&id=2" for array types,
-            // but PHP expects "id[]=1&id[]=2". So rather than trying to hack
-            // around that, we use the other common option of using a single
-            // comma separated value and just split it up here. Looks nicer in
-            // the URL.
-            $ids = explode(',', $request->get('material_ids'));
-            $query->where(function ($query) use ($ids) {
-                foreach ($ids as $id) {
-                    $this->materialQuery($query, $id, true);
-                }
-            });
-        }
-
-        $materials = $query->orderBy('changed_at', 'DESC')
-            ->select('material')
-            ->pluck('material');
+        [$listId, $materials] = $this->getItems($request, $listId);
 
         return [
             'id' => $listId,
@@ -46,38 +27,68 @@ class ListController extends Controller
         ];
     }
 
-    public function checkMaterial(Request $request, string $listId, string $materialId)
+    protected function getItems(Request $request, string $listId): array
     {
         $this->checkList($listId);
-        $this->checkMaterialId($materialId);
 
-        $count = $this->materialQuery(DB::table('materials'), $materialId)
+        $query = DB::table($this->tableName)
+            ->where(['guid' => $request->user()->getId(), 'list' => $listId]);
+
+        // Filter to the given items, if supplied.
+        $itemIds = $this->commaSeparatedQueryParamToArray($this->idFilterName, $request);
+        if (count($itemIds)) {
+            // The OpenAPI spec defines the parameter as a comma separated
+            // list. OpenAPI defaults to using "id=1&id=2" for array types,
+            // but PHP expects "id[]=1&id[]=2". So rather than trying to hack
+            // around that, we use the other common option of using a single
+            // comma separated value and just split it up here. Looks nicer in
+            // the URL.
+            $query->where(function ($query) use ($itemIds) {
+                foreach ($itemIds as $itemId) {
+                    $this->idQuery($query, $itemId, true);
+                }
+            });
+        }
+
+        $items = $query->orderBy('changed_at', 'DESC')
+            ->select($this->idColumn)
+            ->pluck($this->idColumn);
+
+        return [$listId, $items];
+    }
+
+    public function itemAvailability(Request $request, string $listId, string $itemId): Response
+    {
+        $this->checkList($listId);
+        $this->checkId($itemId);
+
+        $count = $this->idQuery(DB::table($this->tableName), $itemId)
             ->where(['guid' => $request->user()->getId(), 'list' => $listId])
             ->count();
 
         if ($count > 0) {
             return new Response('', 200);
         } else {
-            throw new NotFoundHttpException('No such material');
+            throw new NotFoundHttpException('No such item');
         }
     }
 
-    public function addMaterial(Request $request, string $listId, string $materialId)
+    public function addItem(Request $request, string $listId, string $itemId): Response
     {
         $this->checkList($listId);
 
-        $this->materialQuery(DB::table('materials'), $materialId)
+        $this->idQuery(DB::table($this->tableName), $itemId)
             ->where([
                 'guid' => $request->user()->getId(),
                 'list' => $listId,
             ])
             ->delete();
 
-        DB::table('materials')
+        DB::table($this->tableName)
             ->insert([
                 'guid' => $request->user()->getId(),
                 'list' => $listId,
-                'material' => urldecode($materialId),
+                $this->idColumn => urldecode($itemId),
                 // We need to format the date ourselves to add microseconds.
                 'changed_at' => Carbon::now()->format('Y-m-d H:i:s.u'),
             ]);
@@ -85,11 +96,11 @@ class ListController extends Controller
         return new Response('', 201);
     }
 
-    public function removeMaterial(Request $request, string $listId, string $materialId)
+    public function removeItem(Request $request, string $listId, string $itemId): Response
     {
         $this->checkList($listId);
 
-        $count = $this->materialQuery(DB::table('materials'), $materialId)
+        $count = $this->idQuery(DB::table($this->tableName), $itemId)
             ->where([
                 'guid' => $request->user()->getId(),
                 'list' => $listId,
@@ -106,27 +117,36 @@ class ListController extends Controller
         }
     }
 
-    protected function checkMaterialId(string $materialId): array
+    protected function checkId(string $itemId): array
     {
-        if (!preg_match('/(\d+)-(\w+):(\w+)/', $materialId, $matches)) {
-            throw new UnprocessableEntityHttpException('Invalid pid: ' . $materialId);
+        if (!preg_match('/(\d+)-(\w+):(\w+)/', $itemId, $matches)) {
+            throw new UnprocessableEntityHttpException('Invalid pid: ' . $itemId);
         }
         return [$matches[1], $matches[2], $matches[3]];
     }
 
     /**
-     * Create a query that deals properly with basis/katalog materials.
+     * Create a query that deals properly with basis/katalog items.
      */
-    protected function materialQuery(Builder $query, string $materialId, $useOr = true): Builder
+    protected function idQuery(Builder $query, string $itemId, $useOr = true): Builder
     {
-        [$agency, $base, $id] = $this->checkMaterialId(urldecode($materialId));
+        [$agency, $base, $itemId] = $this->checkId(urldecode($itemId));
 
-        $materialWhere = ['material', '=', $agency . '-' . $base . ':' . $id];
+        $idWhere = [$this->idColumn, '=', $agency . '-' . $base . ':' . $itemId];
 
         if (\in_array($base, ['katalog', 'basis'])) {
-            $materialWhere = ['material', 'LIKE', '%:' . $id];
+            $idWhere = [$this->idColumn, 'LIKE', '%:' . $itemId];
         }
 
-        return $useOr ? $query->orWhere([$materialWhere]) : $query->where([$materialWhere]);
+        return $useOr ? $query->orWhere([$idWhere]) : $query->where([$idWhere]);
+    }
+
+    protected function commaSeparatedQueryParamToArray(string $param, Request $request): array
+    {
+        if ($request->has($param)) {
+            return explode(',', $request->get($param)) ?? [];
+        }
+
+        return [];
     }
 }

@@ -2,17 +2,21 @@
 
 namespace App\Http\Controllers\v2;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\ListController as DefaultListController;
+use Illuminate\Http\Request;
 
-/**
- * A demonstration controller for demoing that should be used
- * when pointing the "Accept-Version" header to: "2".
- */
 class ListController extends DefaultListController
 {
-    public function get(Request $request, string $listId)
+    protected $idColumn = 'collection';
+    protected $idFilterName = 'collection_ids';
+
+    public function get(Request $request, string $listId): array
     {
-        return ['it' => 'works!'];
+        [$id, $collections] = $this->getItems($request, $listId);
+
+        return [
+            'id' => $id,
+            'collections' => $collections,
+        ];
     }
 }
