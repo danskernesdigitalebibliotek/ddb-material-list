@@ -1,5 +1,8 @@
 <?php
 
+use Fruitcake\Cors\CorsServiceProvider;
+use Fruitcake\Cors\HandleCors;
+
 require_once __DIR__.'/../vendor/autoload.php';
 
 (new Laravel\Lumen\Bootstrap\LoadEnvironmentVariables(
@@ -54,17 +57,18 @@ $app->singleton(
 | route or middleware that'll be assigned to some specific routes.
 |
 */
+$app->configure('api');
 $app->configure('cors');
 
 $app->middleware([
-    Spatie\Cors\Cors::class,
+    HandleCors::class,
 ]);
 
-// Route middleware can be inserted like this:
-// $app->routeMiddleware([
-//     'auth' => App\Http\Middleware\Authenticate::class,
-// ]);
-
+// Middleware that selects controller
+// depending on the version set in the "Accept-Version" header.
+$app->routeMiddleware([
+    'version-switcher' => App\Http\Middleware\VersionSwitcher::class,
+]);
 /*
 |--------------------------------------------------------------------------
 | Register Service Providers
@@ -77,7 +81,7 @@ $app->middleware([
 */
 
 $app->register(\Adgangsplatformen\Support\Illuminate\AdgangsplatformenServiceProvider::class);
-$app->register(Spatie\Cors\CorsServiceProvider::class);
+$app->register(CorsServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------
