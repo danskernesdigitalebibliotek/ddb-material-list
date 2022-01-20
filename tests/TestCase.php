@@ -1,7 +1,10 @@
 <?php
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-abstract class TestCase extends Laravel\Lumen\Testing\TestCase
+namespace Tests;
+
+use Laravel\Lumen\Testing\TestCase as BaseTestCase;
+
+abstract class TestCase extends BaseTestCase
 {
     /**
      * Creates the application.

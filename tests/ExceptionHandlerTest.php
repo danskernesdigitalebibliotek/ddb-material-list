@@ -1,10 +1,12 @@
 <?php
 
+namespace Tests;
+
+use Exception;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class ExceptionHandlerTest extends TestCase
 {
     /**
