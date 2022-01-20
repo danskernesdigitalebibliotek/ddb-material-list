@@ -20,6 +20,7 @@
     "require-dev": {
         "behat/behat": "^3.10",
         "ddelnano/dredd-hooks-php": "^1.1",
+        "flipbox/lumen-generator": "^8.2",
         "fzaninotto/faker": "^1.4",
         "guzzlehttp/guzzle": "^7.0.1",
         "matthiasnoback/behat-local-code-coverage-extension": "^0.5",
