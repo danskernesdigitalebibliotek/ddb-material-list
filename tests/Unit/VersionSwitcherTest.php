@@ -2,9 +2,10 @@
 
 namespace Tests\Feature;
 
-use App\Http\Middleware\VersionSwitcher;
-use Illuminate\Http\Request;
 use Tests\TestCase;
+use Illuminate\Http\Request;
+use App\Http\Middleware\VersionSwitcher;
+use App\Exceptions\AcceptHeaderWrongFormatException;
 
 class VersionSwitcherTest extends TestCase
 {
@@ -41,6 +42,22 @@ class VersionSwitcherTest extends TestCase
         $middleware->handle($request, function ($request) use ($expectedRoute) {
             $manipulatedRoute = $request->getRouteResolver()();
             $this->assertSame($expectedRoute, $manipulatedRoute);
+        });
+    }
+
+    public function testThatMiddlewareThrowsExceptionWhenAcceptVersionIsWronglyFormatted(): void
+    {
+        $this->expectException(AcceptHeaderWrongFormatException::class);
+        $this->expectExceptionMessage('The Accept-Version header should be an integer as a string');
+
+        $request = $this->getMockBuilder(Request::class)
+            ->onlyMethods([])
+            ->getMock();
+        $request->headers->set('Accept-Version', 'shouldbeanumber');
+
+        $middleware = new VersionSwitcher();
+        $middleware->handle($request, function () {
+        //
         });
     }
 

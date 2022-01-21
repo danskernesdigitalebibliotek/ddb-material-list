@@ -2,6 +2,9 @@
 
 namespace App\Http\Middleware;
 
+use Exception;
+use App\Exceptions\AcceptHeaderWrongFormatException;
+
 /**
  * Router middleware that switches the controller registered to current route
  * depending on "Accept-Version" header.
@@ -10,8 +13,15 @@ class VersionSwitcher
 {
     public function handle($request, $next)
     {
+        // If a version has been specified in the header validate it.
+        if ($headerVersion = $request->header('Accept-Version')) {
+            if (!is_string($headerVersion) || !intval($headerVersion)) {
+                throw new AcceptHeaderWrongFormatException('The Accept-Version header should be an integer as a string');
+            }
+        }
+
         // If no version has been specified either in header or config do nothing.
-        if (!$version = $request->header('Accept-Version') ?? config(('api.version'))) {
+        if (!$version = $headerVersion ?? config(('api.version'))) {
             return $next($request);
         }
 
