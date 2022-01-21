@@ -31,14 +31,19 @@ $pathReplace = function ($transaction, $from, $to) {
 $app = require __DIR__ . '/../../bootstrap/app.php';
 $artisan = $app->make(ConsoleKernel::class);
 
+if (!$specVersion = config('api.version_specification')) {
+    throw(new Exception('Could not resolve current API specification version'));
+}
+
 Hooks::beforeAll(function (&$transaction) use ($artisan) {
     $artisan->call('migrate:fresh');
     // Print the resulting output so it is picked out by Dredd for debugging.
     echo $artisan->output();
 });
 
-Hooks::beforeEach(function ($transaction) {
+Hooks::beforeEach(function ($transaction) use ($specVersion) {
     $transaction->request->headers->Authorization = 'Bearer test-user';
+    $transaction->request->headers->{"Accept-Version"} = $specVersion;
 
     // Skip internal error responses, we can't trigger those and HEAD requests
     // which dredd doesn't support.
@@ -53,21 +58,21 @@ Hooks::before('/list/{listId} > GET > 404', function (&$transaction) use ($pathR
 });
 
 // Make sure list doesn't exist.
-Hooks::before('/list/{listId}/{materialId} > PUT > 404', function (&$transaction) use ($pathReplace) {
+Hooks::before('/list/{listId}/{itemId} > PUT > 404', function (&$transaction) use ($pathReplace) {
     $pathReplace($transaction, 'default', 'bad-value');
 });
 
 // Change to bad material id.
 Hooks::before('/list/{listId} > GET > 422', function (&$transaction) use ($pathReplace) {
-    $pathReplace($transaction, '870970-basis%3A54871910', 'bad-materialId');
+    $pathReplace($transaction, '870970-basis%3A54871910', 'bad-itemId');
 });
 
 // Change to bad material id.
-Hooks::before('/list/{listId}/{materialId} > PUT > 422', function (&$transaction) use ($pathReplace) {
-    $pathReplace($transaction, '870970-basis%3A54871910', 'bad-materialId');
+Hooks::before('/list/{listId}/{itemId} > PUT > 422', function (&$transaction) use ($pathReplace) {
+    $pathReplace($transaction, '870970-basis%3A54871910', 'bad-itemId');
 });
 
 // Change to bad material id.
-Hooks::before('/list/{listId}/{materialId} > DELETE > 422', function (&$transaction) use ($pathReplace) {
-    $pathReplace($transaction, '870970-basis%3A54871910', 'bad-materialId');
+Hooks::before('/list/{listId}/{itemId} > DELETE > 422', function (&$transaction) use ($pathReplace) {
+    $pathReplace($transaction, '870970-basis%3A54871910', 'bad-itemId');
 });
