@@ -2,33 +2,40 @@
 
 namespace Tests\Feature;
 
+use Laravel\Lumen\Testing\DatabaseMigrations;
 use Tests\TestCase;
 
 class SwitchVersionTest extends TestCase
 {
+    use DatabaseMigrations;
 
-    public function testThatWeGetOutputFromDifferentControllersDependingOnVersion()
+    /**
+     * @dataProvider versionResponses
+     */
+    public function testThatWeGetOutputFromDifferentControllersDependingOnVersion(string $version, array $jsonResponse)
     {
-        $testVersion = function (string $version, array $json) {
-            $request = $this->get('/list/default', [
-                'Authorization' => 'Bearer test',
-                'Accept-Version' => $version,
-            ]);
-            $request->response
-            ->assertStatus(200)
-            ->assertJson($json);
-        };
-
-        // Confirm that if we switch between the two different versions
+        // Confirm that if we switch between different versions
         // in the request header we get different output.
-        $testVersion('1', [
-            'id' => "default",
-            'materials' => [],
+        $request = $this->get('/list/default', [
+            'Authorization' => 'Bearer test',
+            'Accept-Version' => $version,
         ]);
+        $request->response
+        ->assertStatus(200)
+        ->assertJson($jsonResponse);
+    }
 
-         $testVersion('2', [
-            'id' => "default",
-            'collections' => [],
-         ]);
+    public function versionResponses(): array
+    {
+        return [
+            ['1', [
+                'id' => "default",
+                'materials' => [],
+            ]],
+            ['2', [
+                'id' => "default",
+                'collections' => [],
+            ]],
+        ];
     }
 }
