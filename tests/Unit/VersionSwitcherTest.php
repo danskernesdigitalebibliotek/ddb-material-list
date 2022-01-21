@@ -26,7 +26,7 @@ class VersionSwitcherTest extends TestCase
     /**
      * @dataProvider versionRoutes
      */
-    public function testThatMiddlewareSwapsControllerPathDependingOnVersion($version, $expectedRoute)
+    public function testThatMiddlewareSwapsControllerPathDependingOnVersion(string $version, array $expectedRoute): void
     {
         $request = $this->getMockBuilder(Request::class)
             ->onlyMethods(['route'])
@@ -44,7 +44,7 @@ class VersionSwitcherTest extends TestCase
         });
     }
 
-    public function versionRoutes()
+    public function versionRoutes(): array
     {
         return [
             // If we are using version 1 we should get the configured route
