@@ -10,11 +10,13 @@
         }
     ],
     "require": {
+        "bensampo/laravel-enum": "^4.1",
         "composer/package-versions-deprecated": "^1.11",
         "danskernesdigitalebibliotek/oauth2-adgangsplatformen": "^1.0",
         "doctrine/dbal": "^3.3",
         "fruitcake/laravel-cors": "^2.0",
         "laravel/lumen-framework": "^8.0",
+        "mmghv/lumen-route-binding": "^1.5",
         "softonic/laravel-psr15-bridge": "^2.0"
     },
     "require-dev": {
