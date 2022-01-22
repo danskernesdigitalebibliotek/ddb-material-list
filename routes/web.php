@@ -17,10 +17,10 @@ $router->get('/', function () use ($router) {
 });
 
 $router->group(['middleware' => ['auth', 'version-switcher']], function () use ($router) {
-    $router->get('/list/{listId}', 'ListController@get');
-    $router->head('/list/{listId}/{itemId}', 'ListController@itemAvailability');
-    $router->put('/list/{listId}/{itemId}', 'ListController@addItem');
-    $router->delete('/list/{listId}/{itemId}', 'ListController@removeItem');
+    $router->get('/list/{list}', 'ListController@get');
+    $router->head('/list/{list}/{item}', 'ListController@itemAvailability');
+    $router->put('/list/{list}/{item}', 'ListController@addItem');
+    $router->delete('/list/{list}/{item}', 'ListController@removeItem');
 
     $router->put('/migrate/{openlistId}', 'MigrateController@migrate');
 });

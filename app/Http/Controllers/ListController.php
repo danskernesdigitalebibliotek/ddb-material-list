@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\ItemList;
+use App\ListItem;
 use Carbon\Carbon;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Laravel\Lumen\Routing\Controller;
+use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Collection;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
 class ListController extends Controller
 {
@@ -17,22 +19,18 @@ class ListController extends Controller
     protected $idColumn = 'material';
     protected $idFilterName = 'material_ids';
 
-    public function get(Request $request, string $listId): array
+    public function get(Request $request, ItemList $list): array
     {
-        [$listId, $materials] = $this->getItems($request, $listId);
-
         return [
-            'id' => $listId,
-            'materials' => $materials,
+            'id' => $list->id,
+            'materials' => $this->getItems($request, $list),
         ];
     }
 
-    protected function getItems(Request $request, string $listId): array
+    protected function getItems(Request $request, ItemList $list): Collection
     {
-        $this->checkList($listId);
-
         $query = DB::table($this->tableName)
-            ->where(['guid' => $request->user()->getId(), 'list' => $listId]);
+            ->where(['guid' => $request->user()->getId(), 'list' => $list->id]);
 
         // Filter to the given items, if supplied.
         $itemIds = $this->commaSeparatedQueryParamToArray($this->idFilterName, $request);
@@ -45,7 +43,8 @@ class ListController extends Controller
             // the URL.
             $query->where(function ($query) use ($itemIds) {
                 foreach ($itemIds as $itemId) {
-                    $this->idQuery($query, $itemId, true);
+                    $item = ListItem::createFromUrlParameter($itemId);
+                    $this->idQuery($query, $item, true);
                 }
             });
         }
@@ -54,16 +53,13 @@ class ListController extends Controller
             ->select($this->idColumn)
             ->pluck($this->idColumn);
 
-        return [$listId, $items];
+        return $items;
     }
 
-    public function itemAvailability(Request $request, string $listId, string $itemId): Response
+    public function itemAvailability(Request $request, ItemList $list, ListItem $item): Response
     {
-        $this->checkList($listId);
-        $this->checkId($itemId);
-
-        $count = $this->idQuery(DB::table($this->tableName), $itemId)
-            ->where(['guid' => $request->user()->getId(), 'list' => $listId])
+        $count = $this->idQuery(DB::table($this->tableName), $item)
+            ->where(['guid' => $request->user()->getId(), 'list' => $list->id])
             ->count();
 
         if ($count > 0) {
@@ -73,22 +69,20 @@ class ListController extends Controller
         }
     }
 
-    public function addItem(Request $request, string $listId, string $itemId): Response
+    public function addItem(Request $request, ItemList $list, ListItem $item): Response
     {
-        $this->checkList($listId);
-
-        $this->idQuery(DB::table($this->tableName), $itemId)
+        $this->idQuery(DB::table($this->tableName), $item)
             ->where([
                 'guid' => $request->user()->getId(),
-                'list' => $listId,
+                'list' => $list->id,
             ])
             ->delete();
 
         DB::table($this->tableName)
             ->insert([
                 'guid' => $request->user()->getId(),
-                'list' => $listId,
-                $this->idColumn => urldecode($itemId),
+                'list' => $list->id,
+                $this->idColumn => urldecode($item->fullId),
                 // We need to format the date ourselves to add microseconds.
                 'changed_at' => Carbon::now()->format('Y-m-d H:i:s.u'),
             ]);
@@ -96,46 +90,27 @@ class ListController extends Controller
         return new Response('', 201);
     }
 
-    public function removeItem(Request $request, string $listId, string $itemId): Response
+    public function removeItem(Request $request, ItemList $list, ListItem $item): Response
     {
-        $this->checkList($listId);
-
-        $count = $this->idQuery(DB::table($this->tableName), $itemId)
+        $count = $this->idQuery(DB::table($this->tableName), $item)
             ->where([
                 'guid' => $request->user()->getId(),
-                'list' => $listId,
+                'list' => $list->id,
             ])
             ->delete();
 
         return new Response('', $count > 0 ? 204 : 404);
     }
 
-    protected function checkList(string $listId): void
-    {
-        if ($listId != 'default') {
-            throw new NotFoundHttpException('No such list');
-        }
-    }
-
-    protected function checkId(string $itemId): array
-    {
-        if (!preg_match('/(\d+)-(\w+):(\w+)/', $itemId, $matches)) {
-            throw new UnprocessableEntityHttpException('Invalid pid: ' . $itemId);
-        }
-        return [$matches[1], $matches[2], $matches[3]];
-    }
-
     /**
      * Create a query that deals properly with basis/katalog items.
      */
-    protected function idQuery(Builder $query, string $itemId, $useOr = true): Builder
+    protected function idQuery(Builder $query, ListItem $item, $useOr = true): Builder
     {
-        [$agency, $base, $itemId] = $this->checkId(urldecode($itemId));
+        $idWhere = [$this->idColumn, '=', $item->agency . '-' . $item->base . ':' . $item->id];
 
-        $idWhere = [$this->idColumn, '=', $agency . '-' . $base . ':' . $itemId];
-
-        if (\in_array($base, ['katalog', 'basis'])) {
-            $idWhere = [$this->idColumn, 'LIKE', '%:' . $itemId];
+        if (\in_array($item->base, ['katalog', 'basis'])) {
+            $idWhere = [$this->idColumn, 'LIKE', '%:' . $item->id];
         }
 
         return $useOr ? $query->orWhere([$idWhere]) : $query->where([$idWhere]);
