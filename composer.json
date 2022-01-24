@@ -10,7 +10,6 @@
         }
     ],
     "require": {
-        "bensampo/laravel-enum": "^4.1",
         "composer/package-versions-deprecated": "^1.11",
         "danskernesdigitalebibliotek/oauth2-adgangsplatformen": "^1.0",
         "doctrine/dbal": "^3.3",

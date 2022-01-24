@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\v2;
 
-use App\Enums\ListType;
+use App\ListId;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ListController as DefaultListController;
 
@@ -11,11 +11,11 @@ class ListController extends DefaultListController
     protected $idColumn = 'collection';
     protected $idFilterName = 'collection_ids';
 
-    public function get(Request $request, ListType $type): array
+    public function get(Request $request, string $listId): array
     {
         return [
-            'id' => $type,
-            'collections' => $this->getItems($request, $type),
+            'id' => $listId,
+            'collections' => $this->getItems($request, $listId),
         ];
     }
 }

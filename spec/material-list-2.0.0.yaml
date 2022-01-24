@@ -45,7 +45,7 @@ paths:
 
   /list/{listId}/{itemId}:
     head:
-      operationId: itemAvailability
+      operationId: hasItem
       tags:
         - List
       description: 'Check existence of a collection on a list. To check multiple collections in one request, see the collection_ids query parameter on /list/{listId}.'
@@ -95,19 +95,6 @@ paths:
           description: 'Invalid collection id.'
         default:
           description: 'Unspecified error.'
-  /migrate/{legacyUserId}:
-    put:
-      operationId: migrateList
-      tags:
-        - Migrate
-      description: 'Migrate list for the legacy user identifier to current user.'
-      parameters:
-        - $ref: '#/components/parameters/legacyUserId'
-      responses:
-        204:
-          description: 'Successfully migrated.'
-        default:
-          description: 'Unspecified error.'
 
 components:
   securitySchemes:
@@ -143,14 +130,6 @@ components:
         type: array
         items:
           $ref: '#/components/schemas/itemId'
-    legacyUserId:
-      name: 'legacyUserId'
-      in: 'path'
-      description: 'Legacy user identifier of a migrated list.'
-      required: true
-      example: '29A10F616FE6CA5C6E06EBF507A9FDC5BB89F8EBCF65726BEAC61C646854E83856D3B1D46BE4696EDCFB3C9F57EEBB6941D8654BC1F4B514D6217141AEA1653C'
-      schema:
-        $ref: '#/components/schemas/LegacyUserId'
 
   schemas:
     ListId:

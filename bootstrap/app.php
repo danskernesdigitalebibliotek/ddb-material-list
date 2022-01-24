@@ -1,8 +1,5 @@
 <?php
 
-use App\ItemList;
-use Illuminate\Support\Facades\Route;
-
 require_once __DIR__.'/../vendor/autoload.php';
 
 (new Laravel\Lumen\Bootstrap\LoadEnvironmentVariables(

@@ -6,6 +6,8 @@ use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
 class ListItem
 {
+    const DEFAULT_LIST_ID = 'default';
+
     public $agency;
     public $base;
     public $id;

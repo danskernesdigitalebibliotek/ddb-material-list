@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\ListType;
+use App\ListId;
 use App\ListItem;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -19,18 +19,18 @@ class ListController extends Controller
     protected $idColumn = 'material';
     protected $idFilterName = 'material_ids';
 
-    public function get(Request $request, ListType $type): array
+    public function get(Request $request, string $listId): array
     {
         return [
-            'id' => $type,
-            'materials' => $this->getItems($request, $type),
+            'id' => $listId,
+            'materials' => $this->getItems($request, $listId),
         ];
     }
 
-    protected function getItems(Request $request, ListType $type): Collection
+    protected function getItems(Request $request, string $listId): Collection
     {
         $query = DB::table($this->tableName)
-            ->where(['guid' => $request->user()->getId(), 'list' => $type]);
+            ->where(['guid' => $request->user()->getId(), 'list' => $listId]);
 
         // Filter to the given items, if supplied.
         $itemIds = $this->commaSeparatedQueryParamToArray($this->idFilterName, $request);
@@ -56,10 +56,10 @@ class ListController extends Controller
         return $items;
     }
 
-    public function itemAvailability(Request $request, ListType $type, ListItem $item): Response
+    public function hasItem(Request $request, string $listId, ListItem $item): Response
     {
         $count = $this->idQuery(DB::table($this->tableName), $item)
-            ->where(['guid' => $request->user()->getId(), 'list' => $type])
+            ->where(['guid' => $request->user()->getId(), 'list' => $listId])
             ->count();
 
         if ($count > 0) {
@@ -69,19 +69,19 @@ class ListController extends Controller
         }
     }
 
-    public function addItem(Request $request, ListType $type, ListItem $item): Response
+    public function addItem(Request $request, string $listId, ListItem $item): Response
     {
         $this->idQuery(DB::table($this->tableName), $item)
             ->where([
                 'guid' => $request->user()->getId(),
-                'list' => $type,
+                'list' => $listId,
             ])
             ->delete();
 
         DB::table($this->tableName)
             ->insert([
                 'guid' => $request->user()->getId(),
-                'list' => $type,
+                'list' => $listId,
                 $this->idColumn => urldecode($item->fullId),
                 // We need to format the date ourselves to add microseconds.
                 'changed_at' => Carbon::now()->format('Y-m-d H:i:s.u'),
@@ -90,12 +90,12 @@ class ListController extends Controller
         return new Response('', 201);
     }
 
-    public function removeItem(Request $request, ListType $type, ListItem $item): Response
+    public function removeItem(Request $request, string $listId, ListItem $item): Response
     {
         $count = $this->idQuery(DB::table($this->tableName), $item)
             ->where([
                 'guid' => $request->user()->getId(),
-                'list' => $type,
+                'list' => $listId,
             ])
             ->delete();
 
@@ -118,10 +118,10 @@ class ListController extends Controller
 
     protected function commaSeparatedQueryParamToArray(string $param, Request $request): array
     {
-        if ($request->has($param)) {
-            return explode(',', $request->get($param)) ?? [];
+        if (!$request->has($param)) {
+            return [];
         }
 
-        return [];
+        return explode(',', $request->get($param)) ?? [];
     }
 }

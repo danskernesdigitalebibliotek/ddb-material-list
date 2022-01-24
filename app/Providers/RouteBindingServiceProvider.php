@@ -3,9 +3,7 @@
 namespace App\Providers;
 
 use App\ListItem;
-use App\Enums\ListType;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use mmghv\LumenRouteBinding\RouteBindingServiceProvider as BaseServiceProvider;
 
 class RouteBindingServiceProvider extends BaseServiceProvider
@@ -17,8 +15,12 @@ class RouteBindingServiceProvider extends BaseServiceProvider
     {
         $binder = $this->binder;
 
-        $binder->bind('type', function ($value): ListType {
-            return ListType::createFromUrlParameter($value);
+        $binder->bind('listId', function ($value): string {
+            if ($value != ListItem::DEFAULT_LIST_ID) {
+                throw new NotFoundHttpException('No such list');
+            }
+
+            return $value;
         });
 
         $binder->bind('item', function ($value): ListItem {
