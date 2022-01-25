@@ -21,6 +21,4 @@ $router->group(['middleware' => ['auth', 'version-switcher']], function () use (
     $router->head('/list/{listId}/{item}', 'ListController@hasItem');
     $router->put('/list/{listId}/{item}', 'ListController@addItem');
     $router->delete('/list/{listId}/{item}', 'ListController@removeItem');
-
-    $router->put('/migrate/{openlistId}', 'MigrateController@migrate');
 });
