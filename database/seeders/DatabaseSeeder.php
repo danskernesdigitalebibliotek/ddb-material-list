@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class DatabaseSeeder extends Seeder
 {
     /**

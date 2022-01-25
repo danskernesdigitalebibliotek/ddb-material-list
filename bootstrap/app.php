@@ -1,8 +1,5 @@
 <?php
 
-use Fruitcake\Cors\CorsServiceProvider;
-use Fruitcake\Cors\HandleCors;
-
 require_once __DIR__.'/../vendor/autoload.php';
 
 (new Laravel\Lumen\Bootstrap\LoadEnvironmentVariables(
@@ -61,7 +58,7 @@ $app->configure('api');
 $app->configure('cors');
 
 $app->middleware([
-    HandleCors::class,
+    Fruitcake\Cors\HandleCors::class,
 ]);
 
 // Middleware that selects controller
@@ -81,7 +78,9 @@ $app->routeMiddleware([
 */
 
 $app->register(\Adgangsplatformen\Support\Illuminate\AdgangsplatformenServiceProvider::class);
-$app->register(CorsServiceProvider::class);
+$app->register(Fruitcake\Cors\CorsServiceProvider::class);
+$app->register(App\Providers\RouteBindingServiceProvider::class);
+$app->register(Flipbox\LumenGenerator\LumenGeneratorServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------

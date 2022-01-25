@@ -12,13 +12,16 @@
     "require": {
         "composer/package-versions-deprecated": "^1.11",
         "danskernesdigitalebibliotek/oauth2-adgangsplatformen": "^1.0",
+        "doctrine/dbal": "^3.3",
         "fruitcake/laravel-cors": "^2.0",
         "laravel/lumen-framework": "^8.0",
+        "mmghv/lumen-route-binding": "^1.5",
         "softonic/laravel-psr15-bridge": "^2.0"
     },
     "require-dev": {
         "behat/behat": "^3.10",
         "ddelnano/dredd-hooks-php": "^1.1",
+        "flipbox/lumen-generator": "^8.2",
         "fzaninotto/faker": "^1.4",
         "guzzlehttp/guzzle": "^7.0.1",
         "matthiasnoback/behat-local-code-coverage-extension": "^0.5",
@@ -43,7 +46,10 @@
     "autoload-dev": {
         "classmap": [
             "tests/"
-        ]
+        ],
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
     },
     "scripts": {
         "post-root-package-install": [
