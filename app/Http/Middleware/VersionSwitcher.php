@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Exceptions\AcceptHeaderWrongFormatException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Router middleware that switches the controller registered to current route
@@ -30,14 +31,28 @@ class VersionSwitcher
             // Only handle routes that has a controller defined.
             if ($uses = $routeComponent['uses'] ?? null) {
                 [$controllerFrom, $method] = explode('@', $uses);
-                $replacement = sprintf('$1v%d\\\\$2', $version);
-                $controllerTo = preg_replace('/(.*\\\\)([\w]+)$/', $replacement, $controllerFrom);
-                if (method_exists($controllerTo, $method)) {
-                    app()->alias($controllerTo, $controllerFrom);
+                $controllerTo = $this->versionizeControllerPath($controllerFrom, $version);
+
+                if (!class_exists($controllerTo)) {
+                    throw new NotFoundHttpException();
                 }
+
+                app()->alias($controllerTo, $controllerFrom);
             }
         }
 
         return $next($request);
+    }
+
+    protected function versionizeControllerPath(string $path, string $version)
+    {
+        $controllerElements = explode('\\', $path);
+        $controller = array_pop($controllerElements);
+        $controllerElements = array_merge($controllerElements, [
+            'v' . $version,
+            $controller,
+        ]);
+
+        return implode('\\', $controllerElements);
     }
 }

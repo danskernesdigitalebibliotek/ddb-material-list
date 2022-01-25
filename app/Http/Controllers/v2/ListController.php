@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers\v2;
 
-use App\ListId;
 use Illuminate\Http\Request;
-use App\Http\Controllers\ListController as DefaultListController;
+use App\Http\Controllers\v1\ListController as DefaultListController;
 
 class ListController extends DefaultListController
 {
