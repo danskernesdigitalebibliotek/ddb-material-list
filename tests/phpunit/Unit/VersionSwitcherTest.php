@@ -15,7 +15,7 @@ class VersionSwitcherTest extends TestCase
     protected $configuredRoute = [
         1,
         [
-            'uses' => 'App\Http\Controllers\ListController@get',
+            'uses' => 'App\Http\Controllers\v%version%\ListController@get',
             'middleware' => [
                 'auth',
                 'version-switcher',
@@ -25,7 +25,7 @@ class VersionSwitcherTest extends TestCase
             'listId' => 'default',
         ]
     ];
-    protected $baseController = 'App\Http\Controllers\ListController';
+    protected $baseController = 'App\Http\Controllers\v%version%\ListController';
 
     /**
      * @dataProvider versionControllerAliases

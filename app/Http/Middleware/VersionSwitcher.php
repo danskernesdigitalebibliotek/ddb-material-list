@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use Illuminate\Support\Str;
 use App\Exceptions\AcceptHeaderWrongFormatException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -21,7 +22,7 @@ class VersionSwitcher
         }
 
         // If no version has been specified either in header or config do nothing.
-        if (!$version = $headerVersion ?? config(('api.version'))) {
+        if (!$version = $headerVersion ?? config('api.version')) {
             return $next($request);
         }
 
@@ -30,7 +31,7 @@ class VersionSwitcher
         foreach ($route as $routeComponent) {
             // Only handle routes that has a controller defined.
             if ($uses = $routeComponent['uses'] ?? null) {
-                [$controllerFrom, $method] = explode('@', $uses);
+                [$controllerFrom,] = explode('@', $uses);
                 $controllerTo = $this->versionizeControllerPath($controllerFrom, $version);
 
                 if (!class_exists($controllerTo)) {
@@ -46,13 +47,10 @@ class VersionSwitcher
 
     protected function versionizeControllerPath(string $path, string $version)
     {
-        $controllerElements = explode('\\', $path);
-        $controller = array_pop($controllerElements);
-        $controllerElements = array_merge($controllerElements, [
-            'v' . $version,
-            $controller,
-        ]);
+        if (!Str::contains($path, '%version%')) {
+            return $path;
+        }
 
-        return implode('\\', $controllerElements);
+        return Str::replace('%version%', $version, $path);
     }
 }
