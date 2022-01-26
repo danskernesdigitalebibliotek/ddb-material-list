@@ -30,8 +30,10 @@ class VersionSwitcherTest extends TestCase
     /**
      * @dataProvider versionControllerAliases
      */
-    public function testThatMiddlewareSwapsControllerPathDependingOnVersion(string $version, string $expectedController): void
-    {
+    public function testThatMiddlewareSwapsControllerPathDependingOnVersion(
+        string $version,
+        string $expectedController
+    ): void {
         Config::set('api.version', '1');
 
         $request = $this->getMockBuilder(Request::class)

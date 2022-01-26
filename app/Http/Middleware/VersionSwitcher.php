@@ -9,6 +9,12 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Router middleware that switches the controller registered to current route
  * depending on "Accept-Version" header.
+ *
+ * In order to make it work you also need to specify the defined routes like this:
+ *     $router->get('/some/path', 'v%version%\SomeController@someMethod');
+ *
+ * If the controller defined is not resolved or does not exist
+ * a NotFoundHttpException (404) is thrown.
  */
 class VersionSwitcher
 {
@@ -17,7 +23,9 @@ class VersionSwitcher
         // If a version has been specified in the header validate it.
         if ($headerVersion = $request->header('Accept-Version')) {
             if (!is_string($headerVersion) || !intval($headerVersion)) {
-                throw new AcceptHeaderWrongFormatException('The Accept-Version header should be an integer as a string');
+                throw new AcceptHeaderWrongFormatException(
+                    'The Accept-Version header should be an integer as a string'
+                );
             }
         }
 
