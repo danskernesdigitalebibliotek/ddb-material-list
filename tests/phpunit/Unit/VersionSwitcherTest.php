@@ -15,7 +15,7 @@ class VersionSwitcherTest extends TestCase
     protected $configuredRoute = [
         1,
         [
-            'uses' => 'App\Http\Controllers\ListController@get',
+            'uses' => 'App\Http\Controllers\v%version%\ListController@get',
             'middleware' => [
                 'auth',
                 'version-switcher',
@@ -25,13 +25,15 @@ class VersionSwitcherTest extends TestCase
             'listId' => 'default',
         ]
     ];
-    protected $baseController = 'App\Http\Controllers\ListController';
+    protected $baseController = 'App\Http\Controllers\v%version%\ListController';
 
     /**
      * @dataProvider versionControllerAliases
      */
-    public function testThatMiddlewareSwapsControllerPathDependingOnVersion(string $version, string $expectedController): void
-    {
+    public function testThatMiddlewareSwapsControllerPathDependingOnVersion(
+        string $version,
+        string $expectedController
+    ): void {
         Config::set('api.version', '1');
 
         $request = $this->getMockBuilder(Request::class)

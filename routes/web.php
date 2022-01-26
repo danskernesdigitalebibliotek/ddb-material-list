@@ -17,8 +17,8 @@ $router->get('/', function () use ($router) {
 });
 
 $router->group(['middleware' => ['auth', 'version-switcher']], function () use ($router) {
-    $router->get('/list/{listId}', 'ListController@get');
-    $router->head('/list/{listId}/{item}', 'ListController@hasItem');
-    $router->put('/list/{listId}/{item}', 'ListController@addItem');
-    $router->delete('/list/{listId}/{item}', 'ListController@removeItem');
+    $router->get('/list/{listId}', 'v%version%\ListController@get');
+    $router->head('/list/{listId}/{item}', 'v%version%\ListController@hasItem');
+    $router->put('/list/{listId}/{item}', 'v%version%\ListController@addItem');
+    $router->delete('/list/{listId}/{item}', 'v%version%\ListController@removeItem');
 });
