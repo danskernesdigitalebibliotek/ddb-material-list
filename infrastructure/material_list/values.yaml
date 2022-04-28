@@ -25,7 +25,6 @@ app:
     host: '10.240.0.7'
     port: '3306'
     database: 'material-list'
-    ssl: 'false'
   adgangsplatformen:
     driver: 'production'
   log_channel: 'stderr'

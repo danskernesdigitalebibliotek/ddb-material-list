@@ -10,7 +10,6 @@ data:
   APP_DB_HOST: {{ .Values.app.db.host | quote }}
   APP_DB_PORT: {{ .Values.app.db.port | quote }}
   APP_DB_DATABASE: {{ .Values.app.db.database | quote }}
-  APP_DB_SSL: {{ .Values.app.db.ssl | quote }}
   APP_URL: {{ .Values.app.url | quote }}
   APP_TIMEZONE: {{ .Values.app.timezone | quote }}
   APP_CACHE_DRIVER: {{ .Values.app.cacheDriver | quote }}
