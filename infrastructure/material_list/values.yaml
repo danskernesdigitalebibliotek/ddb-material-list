@@ -22,10 +22,10 @@ app:
     version: "latest"
     imagePullPolicy: "IfNotPresent"
   db:
-    host: 'k8s-ddf-prod.mariadb.database.azure.com'
+    host: '10.240.0.7'
     port: '3306'
     database: 'material-list'
-    ssl: 'true'
+    ssl: 'false'
   adgangsplatformen:
     driver: 'production'
   log_channel: 'stderr'
@@ -34,6 +34,7 @@ app:
   cacheDriver: 'file'
   queueConnection: 'sync'
   cors_allow_origin: "*"
+  replicas: 4
   php:
     type: "static"
     max_children: "14"
