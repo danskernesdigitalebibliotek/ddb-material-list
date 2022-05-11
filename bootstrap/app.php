@@ -54,17 +54,18 @@ $app->singleton(
 | route or middleware that'll be assigned to some specific routes.
 |
 */
+$app->configure('api');
 $app->configure('cors');
 
 $app->middleware([
-    Spatie\Cors\Cors::class,
+    Fruitcake\Cors\HandleCors::class,
 ]);
 
-// Route middleware can be inserted like this:
-// $app->routeMiddleware([
-//     'auth' => App\Http\Middleware\Authenticate::class,
-// ]);
-
+// Middleware that selects controller
+// depending on the version set in the "Accept-Version" header.
+$app->routeMiddleware([
+    'version-switcher' => App\Http\Middleware\VersionSwitcher::class,
+]);
 /*
 |--------------------------------------------------------------------------
 | Register Service Providers
@@ -77,7 +78,9 @@ $app->middleware([
 */
 
 $app->register(\Adgangsplatformen\Support\Illuminate\AdgangsplatformenServiceProvider::class);
-$app->register(Spatie\Cors\CorsServiceProvider::class);
+$app->register(Fruitcake\Cors\CorsServiceProvider::class);
+$app->register(App\Providers\RouteBindingServiceProvider::class);
+$app->register(Flipbox\LumenGenerator\LumenGeneratorServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------

@@ -22,10 +22,9 @@ app:
     version: "latest"
     imagePullPolicy: "IfNotPresent"
   db:
-    host: 'material-list-database.mariadb.database.azure.com'
+    host: '10.240.0.7'
     port: '3306'
-    database: 'material_list'
-    ssl: 'true'
+    database: 'material-list'
   adgangsplatformen:
     driver: 'production'
   log_channel: 'stderr'
@@ -34,12 +33,14 @@ app:
   cacheDriver: 'file'
   queueConnection: 'sync'
   cors_allow_origin: "*"
+  replicas: 4
   php:
+    type: "static"
+    max_children: "14"
     memory_limit: "64M"
-    max_children: "10"
-    start_servers: "2"
-    min_spare_servers: "1"
-    max_spare_servers: "3"
+    opcache_memory_consumption: "32"
+    opcache_max_accelerated_files: "20000"
+    opcache_validate_timestamps: "0"
 
 nginx:
   exporter:

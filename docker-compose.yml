@@ -1,0 +1,66 @@
+version: "3.7"
+services:
+  app:
+    depends_on:
+    - db
+    build:
+      args:
+        user: www
+        uid: 1000
+      context: ./
+      dockerfile: development/Dockerfile
+    image: laravel-image
+    container_name: laravel-app
+    restart: unless-stopped
+    working_dir: /var/www/
+    # Uncomment this in order to use xdebug
+    # environment:
+    #   - XDEBUG_MODE=develop,debug
+    volumes:
+      - projectroot:/var/www
+      - ./development/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+      - ~/.composer/auth.json:/home/www-data/.composer/auth.json
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - app-network
+
+  db:
+    image: mysql:5.7
+    container_name: laravel-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_USER: ${DB_USERNAME}
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    volumes:
+      - ./development/mysql/docker-entrypoint-initdb.d/:/docker-entrypoint-initdb.d/
+    networks:
+      - app-network
+
+  nginx:
+    image: nginx:alpine
+    container_name: laravel-nginx
+    restart: unless-stopped
+    environment:
+      VIRTUAL_HOST: ${COMPOSE_PROJECT_NAME}.docker
+    volumes:
+      - projectroot:/var/www
+      - ./development/nginx/conf.d/:/etc/nginx/conf.d/
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  projectroot:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${PWD}
+      o: bind

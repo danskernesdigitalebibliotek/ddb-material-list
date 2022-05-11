@@ -7,7 +7,8 @@
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true"
          processIsolation="false"
-         stopOnFailure="false">
+         stopOnFailure="false"
+         testdox="true">
     <testsuites>
         <testsuite name="Application Test Suite">
             <directory suffix="Test.php">./tests</directory>
@@ -23,6 +24,10 @@
         <env name="APP_DEBUG" value="false"/>
         <env name="ADGANGSPLATFORMEN_DRIVER" value="testing"/>
         <env name="CACHE_DRIVER" value="array"/>
+        <env name="SESSION_DRIVER" value="array"/>
+        <env name="QUEUE_DRIVER" value="sync"/>
         <env name="QUEUE_CONNECTION" value="sync"/>
+        <env name="DB_CONNECTION" value="sqlite"/>
+        <env name="DB_DATABASE" value="/tmp/db.sqlite"/>
     </php>
 </phpunit>

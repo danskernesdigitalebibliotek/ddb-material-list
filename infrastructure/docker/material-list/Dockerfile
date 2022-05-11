@@ -1,4 +1,4 @@
-FROM danskernesdigitalebibliotek/php7.3-fpm-base AS APP_BUILDER
+FROM danskernesdigitalebibliotek/php7.4-fpm-base AS APP_BUILDER
 LABEL maintainer="ITK Dev <itkdev@mkb.aarhus.dk>"
 
 ARG APP_VERSION="develop"
@@ -18,10 +18,13 @@ WORKDIR ${APP_PATH}
 RUN composer install --no-dev --no-ansi --no-interaction --no-progress --no-suggest --prefer-dist --optimize-autoloader \
     && composer clear-cache
 
+## Remove development stuff from the build
+RUN rm -rf development infrastructure .github tests
+
 ####
 ## Build main application image.
 ####
-FROM danskernesdigitalebibliotek/php7.3-fpm-base
+FROM danskernesdigitalebibliotek/php7.4-fpm-base
 LABEL maintainer="ITK Dev <itkdev@mkb.aarhus.dk>"
 
 ENV APP_PATH=/var/www/html
