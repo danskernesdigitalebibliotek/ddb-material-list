@@ -42,7 +42,7 @@ services:
       - app-network
 
   nginx:
-    image: nginx:alpine
+    image: nginxinc/nginx-unprivileged:alpine
     container_name: laravel-nginx
     restart: unless-stopped
     environment:
