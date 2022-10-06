@@ -15,8 +15,6 @@ servers:
 tags:
   - name: 'List'
     description: List handling
-  - name: 'Migrate'
-    description: Data migration
 security:
   - BearerAuth: []
 paths:

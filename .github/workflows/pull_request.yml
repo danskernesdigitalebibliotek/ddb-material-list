@@ -51,10 +51,10 @@ jobs:
     name: Helm chart validation
     runs-on: ubuntu-latest
     steps:
-      - uses: azure/setup-helm@v1
-        name: Install helm
-        with:
-          version: v3.3.4
-      - name: Lint helm
-          run: helm lint infrastructure/material_list --namespace=material-list --set hpa.enabled=true --set ingress.enableTLS=true --set ingress.domain=prod.materiallist.dandigbib.org
-
+    - uses: actions/checkout@master
+    - uses: azure/setup-helm@v1
+      name: Install helm
+      with:
+        version: v3.3.4
+    - name: Lint helm
+      run: helm lint infrastructure/material_list --namespace=material-list --set hpa.enabled=true --set ingress.enableTLS=true --set ingress.domain=prod.materiallist.dandigbib.org
