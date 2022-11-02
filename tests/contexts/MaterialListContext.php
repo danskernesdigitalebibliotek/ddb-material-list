@@ -258,9 +258,9 @@ class MaterialListContext implements Context, SnippetAcceptingContext
     }
 
     /**
-     * @Then the list should be emtpy
+     * @Then the list should be empty
      */
-    public function theListShouldBeEmtpy()
+    public function theListShouldBeEmpty()
     {
         $response = $this->checkListResponse();
 
