@@ -7,3 +7,6 @@ parameters:
         -
             message: '#Undefined variable: \$router#'
             path: 'routes/web.php'
+        -
+            message: '#no value type specified in iterable type Behat\\Gherkin\\Node\\TableNode#'
+            path: 'tests/*'
