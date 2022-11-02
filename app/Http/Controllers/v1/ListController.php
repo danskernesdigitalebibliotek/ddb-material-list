@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers\v1;
 
-use App\ListId;
 use App\ListItem;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Laravel\Lumen\Routing\Controller;
 use Illuminate\Database\Query\Builder;
@@ -21,13 +19,17 @@ class ListController extends Controller
 
     public function get(Request $request, string $listId): array
     {
+        $items = $this->getItems($request, $listId);
+        $materialIds = array_map(function (ListItem $item) {
+            return $item->materialId();
+        }, $items);
         return [
             'id' => $listId,
-            'materials' => $this->getItems($request, $listId),
+            'materials' => $materialIds,
         ];
     }
 
-    protected function getItems(Request $request, string $listId): Collection
+    protected function getItems(Request $request, string $listId): array
     {
         $query = DB::table($this->tableName)
             ->where(['guid' => $request->user()->getId(), 'list' => $listId]);
@@ -43,17 +45,19 @@ class ListController extends Controller
             // the URL.
             $query->where(function ($query) use ($itemIds) {
                 foreach ($itemIds as $itemId) {
-                    $item = ListItem::createFromUrlParameter($itemId);
+                    $item = ListItem::createFromString($itemId);
                     $this->idQuery($query, $item, true);
                 }
             });
         }
 
         $items = $query->orderBy('changed_at', 'DESC')
-            ->select($this->idColumn)
-            ->pluck($this->idColumn);
+            ->get(['material', 'collection']);
 
-        return $items;
+        return $items->map(function (\stdClass $item_data) {
+            $id = $item_data->material ?? $item_data->collection;
+            return ListItem::createFromString($id);
+        })->toArray();
     }
 
     public function hasItem(Request $request, string $listId, ListItem $item): Response
@@ -107,13 +111,18 @@ class ListController extends Controller
      */
     protected function idQuery(Builder $query, ListItem $item, $useOr = true): Builder
     {
-        $idWhere = [$this->idColumn, '=', $item->agency . '-' . $item->base . ':' . $item->id];
-
-        if (\in_array($item->base, ['katalog', 'basis'])) {
-            $idWhere = [$this->idColumn, 'LIKE', '%:' . $item->id];
+        $idQuery = $query->newQuery();
+        // Accept matches for both materials (v1) and collections (v2).
+        if (!in_array($item->base, ['katalog', 'basis'])) {
+            $idQuery->where('material', '=', $item->materialId());
+            $idQuery->orWhere('collection', '=', $item->collectionId());
+        } else {
+            $idQuery->where('material', 'LIKE', '%:' . $item->id);
+            $idQuery->orWhere('collection', 'LIKE', '%:' . $item->id);
         }
 
-        return $useOr ? $query->orWhere([$idWhere]) : $query->where([$idWhere]);
+        $boolean = $useOr ? "or" : "and";
+        return $query->addNestedWhereQuery($idQuery, $boolean);
     }
 
     protected function commaSeparatedQueryParamToArray(string $param, Request $request): array

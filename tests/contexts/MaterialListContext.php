@@ -93,12 +93,15 @@ class MaterialListContext implements Context, SnippetAcceptingContext
     /**
      * Get headers for requests.
      *
-     * Most importantly the Authorization header.
+     * This includes:
+     * - Authorization header to support authentication.
+     * - Accept-Version header to toggle between versions.
      */
-    protected function getHeaders() : array
+    protected function getHeaders($version = 1) : array
     {
         return [
             'Authorization' => 'Bearer ' . $this->state['token'],
+            'Accept-Version' => $version,
         ];
     }
 
@@ -121,7 +124,7 @@ class MaterialListContext implements Context, SnippetAcceptingContext
     }
 
     /**
-     * @When fetching the list
+     * @When fetching (materials in) the list
      */
     public function fetchingTheList()
     {
@@ -129,7 +132,7 @@ class MaterialListContext implements Context, SnippetAcceptingContext
     }
 
     /**
-     * @When fetching the :list list
+     * @When fetching (materials in) the :list list
      */
     public function fetchingTheListNamed($list, $materialIds = [])
     {
@@ -140,6 +143,28 @@ class MaterialListContext implements Context, SnippetAcceptingContext
         $this->state['list'] = $list;
         $this->get('/list/' . $list . $query, $this->getHeaders());
     }
+
+    /**
+     * @When fetching collections in the list
+     */
+    public function fetchingCollectionsInTheList()
+    {
+        $this->fetchingCollectionsInTheListNamed('default');
+    }
+
+    /**
+     * @When fetching collections in the :list list
+     */
+    public function fetchingCollectionsInTheListNamed($list, $collectionIds = [])
+    {
+        $query = '';
+        if (!empty($collectionIds)) {
+            $query = "?collection_ids=" . implode(',', $collectionIds);
+        }
+        $this->state['list'] = $list;
+        $this->get('/list/' . $list . $query, $this->getHeaders(2));
+    }
+
 
     /**
      * @Then the system should return success
@@ -210,8 +235,8 @@ class MaterialListContext implements Context, SnippetAcceptingContext
             throw new Exception('Bad list id in response');
         }
 
-        if (!isset($response['materials'])) {
-            throw new Exception('No materials key in response');
+        if (!isset($response['materials']) && !isset($response['collections'])) {
+            throw new Exception('No materials or collections key in response');
         }
 
         return $response;
@@ -239,17 +264,30 @@ class MaterialListContext implements Context, SnippetAcceptingContext
     {
         $response = $this->checkListResponse();
 
-        if (!empty($response['materials'])) {
+        if (isset($response['materials']) && !empty($response['materials'])) {
+            throw new Exception('Material list not empty');
+        }
+
+
+        if (isset($response['materials']) && !empty($response['materials'])) {
             throw new Exception('Material list not empty');
         }
     }
 
     /**
-     * @When :material is added to the list
+     * @When (material) :material is added to the list
      */
     public function isAddedToTheList($material)
     {
         $this->put('/list/default/' . $material, [], $this->getHeaders());
+    }
+
+    /**
+     * @When collection :collection is added to the list
+     */
+    public function isCollectionAddedToTheList($collection)
+    {
+        $this->put('/list/default/' . $collection, [], $this->getHeaders(2));
     }
 
     /**
@@ -264,7 +302,7 @@ class MaterialListContext implements Context, SnippetAcceptingContext
     }
 
     /**
-     * @Then the list should contain:
+     * @Then the list should contain (materials):
      */
     public function theListShouldContain(TableNode $table)
     {
@@ -283,6 +321,25 @@ class MaterialListContext implements Context, SnippetAcceptingContext
     }
 
     /**
+     * @Then the list should contain collections:
+     */
+    public function theListShouldContainCollections(TableNode $table)
+    {
+        $response = $this->checkListResponse();
+
+        $expected = [];
+        foreach ($table as $row) {
+            $expected[] = $row['collection'];
+        }
+
+        if ($response['collections'] !== $expected) {
+            print_r($expected);
+            print_r($response);
+            throw new Exception('List content not the expected');
+        }
+    }
+
+    /**
      * @Then fetching the list should return:
      */
     public function fetchingTheListShouldReturn(TableNode $table)
@@ -292,7 +349,16 @@ class MaterialListContext implements Context, SnippetAcceptingContext
     }
 
     /**
-     * @When checking if :material is on the list
+     * @Then fetching the list should return collections:
+     */
+    public function fetchingTheListShouldReturnCollections(TableNode $table)
+    {
+        $this->fetchingTheList();
+        $this->theListShouldContain($table);
+    }
+
+    /**
+     * @When checking if (material) :material is on the list
      */
     public function checkingIfIsOnTheList($material)
     {
@@ -303,7 +369,18 @@ class MaterialListContext implements Context, SnippetAcceptingContext
     }
 
     /**
-     * @Then :material should be on the list
+     * @When checking if collection :collection is on the list
+     */
+    public function checkingIfCollectionIsOnTheList($collection)
+    {
+        // Sadly there's no $this->head.
+        $server = $this->transformHeadersToServerVars($this->getHeaders(2));
+
+        $this->call('HEAD', '/list/default/' . $collection, [], [], [], $server);
+    }
+
+    /**
+     * @Then (material) :material should be on the list
      */
     public function shouldBeOnTheList($material)
     {
@@ -312,11 +389,20 @@ class MaterialListContext implements Context, SnippetAcceptingContext
     }
 
     /**
-     * @When deleting :material from the list
+     * @When deleting (material) :material from the list
      */
     public function deletingFromTheList($material)
     {
         $this->delete('/list/default/' . $material, [], $this->getHeaders());
+    }
+
+
+    /**
+     * @When deleting collection :collection from the list
+     */
+    public function deletingCollectionFromTheList($collection)
+    {
+        $this->delete('/list/default/' . $collection, [], $this->getHeaders(2));
     }
 
     /**
@@ -339,12 +425,22 @@ class MaterialListContext implements Context, SnippetAcceptingContext
     }
 
     /**
-     * @When checking if the list contains:
+     * @When checking if the list contains (materials):
      */
     public function checkingIfTheListContains(TableNode $table)
     {
         $materials = $table->getColumn(0);
         array_shift($materials);
         $this->fetchingTheListNamed('default', $materials);
+    }
+
+    /**
+     * @When checking if the list contains collections:
+     */
+    public function checkingIfTheListContainsCollections(TableNode $table)
+    {
+        $collections = $table->getColumn(0);
+        array_shift($collections);
+        $this->fetchingCollectionsInTheListNamed('default', $collections);
     }
 }
