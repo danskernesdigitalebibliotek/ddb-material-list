@@ -37,7 +37,7 @@ Feature: Cross version compatability
     When deleting collection "work-of:123-kat:1" from the list
     Then the system should return success
     When fetching materials in the list
-    Then the list should be emtpy
+    Then the list should be empty
 
   Scenario: Collections added in v2 can be deleted as materials in v1
     Given a known user that has no items on list
@@ -45,4 +45,4 @@ Feature: Cross version compatability
     When deleting "123-kat:1" from the list
     Then the system should return success
     When fetching collections in the list
-    Then the list should be emtpy
+    Then the list should be empty
