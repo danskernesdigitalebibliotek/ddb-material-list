@@ -164,7 +164,3 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/itemId'
-    LegacyUserId:
-      description: 'Legacy user identifier.'
-      type: string
-      example: '29A10F616FE6CA5C6E06EBF507A9FDC5BB89F8EBCF65726BEAC61C646854E83856D3B1D46BE4696EDCFB3C9F57EEBB6941D8654BC1F4B514D6217141AEA1653C'
