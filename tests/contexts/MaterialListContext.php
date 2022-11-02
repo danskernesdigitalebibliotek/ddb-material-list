@@ -396,32 +396,12 @@ class MaterialListContext implements Context, SnippetAcceptingContext
         $this->delete('/list/default/' . $material, [], $this->getHeaders());
     }
 
-
     /**
      * @When deleting collection :collection from the list
      */
     public function deletingCollectionFromTheList($collection)
     {
         $this->delete('/list/default/' . $collection, [], $this->getHeaders(2));
-    }
-
-    /**
-     * @Given a migrated list for legacy user id :legacyId:
-     */
-    public function aMigratedListForOuid($legacyId, TableNode $table)
-    {
-        $materials = $table->getColumn(0);
-        // Loose header.
-        array_shift($materials);
-        $this->addMaterialsToList('legacy-' . $legacyId, 'default', $materials);
-    }
-
-    /**
-     * @When the user runs migrate for legacy user id :legacyId
-     */
-    public function theUserRunsMigrateWith($legacyId)
-    {
-        $this->put('/migrate/' . $legacyId, [], $this->getHeaders());
     }
 
     /**
