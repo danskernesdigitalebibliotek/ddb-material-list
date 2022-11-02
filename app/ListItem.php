@@ -4,14 +4,33 @@ namespace App;
 
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
-class ListItem
+final class ListItem
 {
     const DEFAULT_LIST_ID = 'default';
 
+    /**
+     * @var bool
+     */
     public $isCollection;
+
+    /**
+     * @var int
+     */
     public $agency;
+
+    /**
+     * @var string
+     */
     public $base;
+
+    /**
+     * @var string
+     */
     public $id;
+
+    /**
+     * @var string
+     */
     public $fullId;
 
     public static function createFromString(string $parameter): self
