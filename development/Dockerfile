@@ -9,8 +9,8 @@ RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
 # Install node and npm
 RUN apk add --update nodejs npm
 
-# Install dredd API specification testing tool.
-RUN npm install --global dredd@12
+# Install dredd and speccy API specification testing tools.
+RUN npm install --global dredd@12 speccy
 
 # Install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
