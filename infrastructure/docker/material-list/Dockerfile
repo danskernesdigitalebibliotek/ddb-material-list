@@ -15,7 +15,7 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 WORKDIR ${APP_PATH}
 
 ## Install assets
-RUN composer install --no-dev --no-ansi --no-interaction --no-progress --no-suggest --prefer-dist --optimize-autoloader \
+RUN COMPOSER_ALLOW_SUPERUSER=1 composer install --no-dev --no-ansi --no-interaction --no-progress --prefer-dist --optimize-autoloader \
     && composer clear-cache
 
 ## Remove development stuff from the build
