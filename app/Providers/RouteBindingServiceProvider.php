@@ -24,7 +24,7 @@ class RouteBindingServiceProvider extends BaseServiceProvider
         });
 
         $binder->bind('item', function ($value): ListItem {
-            return ListItem::createFromUrlParameter($value);
+            return ListItem::createFromString($value);
         });
     }
 }

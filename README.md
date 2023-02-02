@@ -246,9 +246,14 @@ coverage to `coverage`, which can be rendered to HTML with
 To ensure the integrity and quality of the specification we lint it using
 [Speccy](https://github.com/wework/speccy).
 
-To install Speccy, run `npm install --global speccy`
+##### Local
 
-To run Speccy, run `speccy lint material-list.yaml`
+- Install Speccy: `npm install --global speccy`
+- Run Speccy: `speccy lint material-list.yaml`
+
+##### Using Docker
+
+Run `docker compose run app speccy lint material-list.yaml`.
 
 #### API specification test
 
@@ -270,6 +275,10 @@ To get the names of requests (for use in hook file), use `dredd
 --names`. Getting dredd to display any output from the hook file (for
 debugging), you need to run it in verbose mode: `dredd
 --loglevel=debug`.
+
+##### Using Docker
+
+Run `docker compose run app dredd`.
 
 #### Unit tests
 

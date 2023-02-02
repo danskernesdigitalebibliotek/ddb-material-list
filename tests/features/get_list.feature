@@ -10,7 +10,7 @@ Feature: Fetching list
     Given a known user that has no items on list
     When fetching the list
     Then the system should return success
-    And the list should be emtpy
+    And the list should be empty
 
   Scenario: User can fetch their list
     Given a known user

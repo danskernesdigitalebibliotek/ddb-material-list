@@ -37,6 +37,8 @@ class MaterialListContext implements Context, SnippetAcceptingContext
 
     /**
      * Scenario state data.
+     *
+     * @var string[]
      */
     protected $state = [];
 
@@ -50,7 +52,7 @@ class MaterialListContext implements Context, SnippetAcceptingContext
      *
      * @BeforeScenario
      */
-    public function before(BeforeScenarioScope $scope)
+    public function before(BeforeScenarioScope $scope) : void
     {
         $this->state = [];
         // Boot the app.
@@ -82,30 +84,37 @@ class MaterialListContext implements Context, SnippetAcceptingContext
      * (pilfered from Laravel\Lumen\Testing\TestCase)
      *
      * @param string  $command
-     * @param array   $parameters
+     * @param mixed[] $parameters
      * @return int
      */
     public function artisan($command, $parameters = [])
     {
-        return $this->app['Illuminate\Contracts\Console\Kernel']->call($command, $parameters);
+        /** @var \Illuminate\Contracts\Console\Kernel $consoleKernel */
+        $consoleKernel = $this->app['Illuminate\Contracts\Console\Kernel'];
+        return $consoleKernel->call($command, $parameters);
     }
 
     /**
      * Get headers for requests.
      *
-     * Most importantly the Authorization header.
+     * This includes:
+     * - Authorization header to support authentication.
+     * - Accept-Version header to toggle between versions.
+     *
+     * @return mixed[]
      */
-    protected function getHeaders() : array
+    protected function getHeaders(int $version = 1) : array
     {
         return [
             'Authorization' => 'Bearer ' . $this->state['token'],
+            'Accept-Version' => $version,
         ];
     }
 
     /**
      * @Given an unknown user
      */
-    public function anUnknownUser()
+    public function anUnknownUser() : void
     {
         // An empty token is considered bad in TestTokenAccess.
         $this->state['token'] = '';
@@ -115,23 +124,25 @@ class MaterialListContext implements Context, SnippetAcceptingContext
      * @Given a known user
      * @Given a known user that has no items on list
      */
-    public function aKnownUser()
+    public function aKnownUser() : void
     {
         $this->state['token'] = $this->faker->sha1;
     }
 
     /**
-     * @When fetching the list
+     * @When fetching (materials in) the list
      */
-    public function fetchingTheList()
+    public function fetchingTheList() : void
     {
         $this->fetchingTheListNamed('default');
     }
 
     /**
-     * @When fetching the :list list
+     * @When fetching (materials in) the :list list
+     *
+     * @param string[] $materialIds
      */
-    public function fetchingTheListNamed($list, $materialIds = [])
+    public function fetchingTheListNamed(string $list, array $materialIds = []) : void
     {
         $query = '';
         if (!empty($materialIds)) {
@@ -142,9 +153,33 @@ class MaterialListContext implements Context, SnippetAcceptingContext
     }
 
     /**
+     * @When fetching collections in the list
+     */
+    public function fetchingCollectionsInTheList() : void
+    {
+        $this->fetchingCollectionsInTheListNamed('default');
+    }
+
+    /**
+     * @When fetching collections in the :list list
+     *
+     * @param string[] $collectionIds
+     */
+    public function fetchingCollectionsInTheListNamed(string $list, array $collectionIds = []) : void
+    {
+        $query = '';
+        if (!empty($collectionIds)) {
+            $query = "?collection_ids=" . implode(',', $collectionIds);
+        }
+        $this->state['list'] = $list;
+        $this->get('/list/' . $list . $query, $this->getHeaders(2));
+    }
+
+
+    /**
      * @Then the system should return success
      */
-    public function theSystemShouldReturnSuccess()
+    public function theSystemShouldReturnSuccess() : void
     {
         $this->checkStatusCode([200, 201, 204]);
     }
@@ -152,7 +187,7 @@ class MaterialListContext implements Context, SnippetAcceptingContext
     /**
      * @Then the system should return access denied
      */
-    public function theSystemShouldReturnAccessDenied()
+    public function theSystemShouldReturnAccessDenied() : void
     {
         $this->checkStatusCode(401);
     }
@@ -160,7 +195,7 @@ class MaterialListContext implements Context, SnippetAcceptingContext
     /**
      * @Then the system should return not found
      */
-    public function theSystemShouldReturnNotFound()
+    public function theSystemShouldReturnNotFound() : void
     {
         $this->checkStatusCode(404);
     }
@@ -168,15 +203,17 @@ class MaterialListContext implements Context, SnippetAcceptingContext
     /**
      * @Then the system should return validation error
      */
-    public function theSystemShouldReturnValidationError()
+    public function theSystemShouldReturnValidationError() : void
     {
         $this->checkStatusCode(422);
     }
 
     /**
      * Check that status code is the expected.
+     *
+     * @param int|int[] $expected
      */
-    protected function checkStatusCode($expected)
+    protected function checkStatusCode($expected) :  void
     {
         if (!is_array($expected)) {
             $expected = [$expected];
@@ -191,7 +228,7 @@ class MaterialListContext implements Context, SnippetAcceptingContext
     /**
      * Test the basic structure of a list response.
      *
-     * @return array
+     * @return mixed[]
      *   The decoded response.
      */
     protected function checkListResponse() : array
@@ -202,6 +239,9 @@ class MaterialListContext implements Context, SnippetAcceptingContext
             throw new Exception('Empty response');
         }
         $response = json_decode($json, true);
+        if (!is_array($response)) {
+            throw new Exception('Unable to decode response as JSON');
+        }
         if (empty($response['id'])) {
             throw new Exception('No list id in response');
         }
@@ -210,8 +250,8 @@ class MaterialListContext implements Context, SnippetAcceptingContext
             throw new Exception('Bad list id in response');
         }
 
-        if (!isset($response['materials'])) {
-            throw new Exception('No materials key in response');
+        if (!isset($response['materials']) && !isset($response['collections'])) {
+            throw new Exception('No materials or collections key in response');
         }
 
         return $response;
@@ -219,8 +259,10 @@ class MaterialListContext implements Context, SnippetAcceptingContext
 
     /**
      * Add materials to list.
+     *
+     * @param string[] $materials
      */
-    public function addMaterialsToList(string $guid, string $list, array $materials)
+    public function addMaterialsToList(string $guid, string $list, array $materials) : void
     {
         foreach ($materials as $material) {
             DB::table('materials')->insert([
@@ -233,29 +275,42 @@ class MaterialListContext implements Context, SnippetAcceptingContext
     }
 
     /**
-     * @Then the list should be emtpy
+     * @Then the list should be empty
      */
-    public function theListShouldBeEmtpy()
+    public function theListShouldBeEmpty() : void
     {
         $response = $this->checkListResponse();
 
-        if (!empty($response['materials'])) {
+        if (isset($response['materials']) && !empty($response['materials'])) {
+            throw new Exception('Material list not empty');
+        }
+
+
+        if (isset($response['materials']) && !empty($response['materials'])) {
             throw new Exception('Material list not empty');
         }
     }
 
     /**
-     * @When :material is added to the list
+     * @When (material) :material is added to the list
      */
-    public function isAddedToTheList($material)
+    public function isAddedToTheList(string $material) : void
     {
         $this->put('/list/default/' . $material, [], $this->getHeaders());
     }
 
     /**
+     * @When collection :collection is added to the list
+     */
+    public function isCollectionAddedToTheList(string $collection) : void
+    {
+        $this->put('/list/default/' . $collection, [], $this->getHeaders(2));
+    }
+
+    /**
      * @Given they have the following items on the list:
      */
-    public function theyHaveTheFollowingItemsOnTheList(TableNode $table)
+    public function theyHaveTheFollowingItemsOnTheList(TableNode $table) : void
     {
         $materials = $table->getColumn(0);
         // Loose header.
@@ -264,9 +319,9 @@ class MaterialListContext implements Context, SnippetAcceptingContext
     }
 
     /**
-     * @Then the list should contain:
+     * @Then the list should contain (materials):
      */
-    public function theListShouldContain(TableNode $table)
+    public function theListShouldContain(TableNode $table) : void
     {
         $response = $this->checkListResponse();
 
@@ -283,18 +338,46 @@ class MaterialListContext implements Context, SnippetAcceptingContext
     }
 
     /**
+     * @Then the list should contain collections:
+     */
+    public function theListShouldContainCollections(TableNode $table) : void
+    {
+        $response = $this->checkListResponse();
+
+        $expected = [];
+        foreach ($table as $row) {
+            $expected[] = $row['collection'];
+        }
+
+        if ($response['collections'] !== $expected) {
+            print_r($expected);
+            print_r($response);
+            throw new Exception('List content not the expected');
+        }
+    }
+
+    /**
      * @Then fetching the list should return:
      */
-    public function fetchingTheListShouldReturn(TableNode $table)
+    public function fetchingTheListShouldReturn(TableNode $table) : void
     {
         $this->fetchingTheList();
         $this->theListShouldContain($table);
     }
 
     /**
-     * @When checking if :material is on the list
+     * @Then fetching the list should return collections:
      */
-    public function checkingIfIsOnTheList($material)
+    public function fetchingTheListShouldReturnCollections(TableNode $table) : void
+    {
+        $this->fetchingTheList();
+        $this->theListShouldContain($table);
+    }
+
+    /**
+     * @When checking if (material) :material is on the list
+     */
+    public function checkingIfIsOnTheList(string $material) : void
     {
         // Sadly there's no $this->head.
         $server = $this->transformHeadersToServerVars($this->getHeaders());
@@ -303,48 +386,58 @@ class MaterialListContext implements Context, SnippetAcceptingContext
     }
 
     /**
-     * @Then :material should be on the list
+     * @When checking if collection :collection is on the list
      */
-    public function shouldBeOnTheList($material)
+    public function checkingIfCollectionIsOnTheList(string $collection) : void
+    {
+        // Sadly there's no $this->head.
+        $server = $this->transformHeadersToServerVars($this->getHeaders(2));
+
+        $this->call('HEAD', '/list/default/' . $collection, [], [], [], $server);
+    }
+
+    /**
+     * @Then (material) :material should be on the list
+     */
+    public function shouldBeOnTheList(string $material)  : void
     {
         $this->checkingIfIsOnTheList($material);
         $this->theSystemShouldReturnSuccess();
     }
 
     /**
-     * @When deleting :material from the list
+     * @When deleting (material) :material from the list
      */
-    public function deletingFromTheList($material)
+    public function deletingFromTheList(string $material) : void
     {
         $this->delete('/list/default/' . $material, [], $this->getHeaders());
     }
 
     /**
-     * @Given a migrated list for legacy user id :legacyId:
+     * @When deleting collection :collection from the list
      */
-    public function aMigratedListForOuid($legacyId, TableNode $table)
+    public function deletingCollectionFromTheList(string $collection) : void
     {
-        $materials = $table->getColumn(0);
-        // Loose header.
-        array_shift($materials);
-        $this->addMaterialsToList('legacy-' . $legacyId, 'default', $materials);
+        $this->delete('/list/default/' . $collection, [], $this->getHeaders(2));
     }
 
     /**
-     * @When the user runs migrate for legacy user id :legacyId
+     * @When checking if the list contains (materials):
      */
-    public function theUserRunsMigrateWith($legacyId)
-    {
-        $this->put('/migrate/' . $legacyId, [], $this->getHeaders());
-    }
-
-    /**
-     * @When checking if the list contains:
-     */
-    public function checkingIfTheListContains(TableNode $table)
+    public function checkingIfTheListContains(TableNode $table) : void
     {
         $materials = $table->getColumn(0);
         array_shift($materials);
         $this->fetchingTheListNamed('default', $materials);
+    }
+
+    /**
+     * @When checking if the list contains collections:
+     */
+    public function checkingIfTheListContainsCollections(TableNode $table) : void
+    {
+        $collections = $table->getColumn(0);
+        array_shift($collections);
+        $this->fetchingCollectionsInTheListNamed('default', $collections);
     }
 }
