@@ -7,9 +7,11 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Log\Logger;
 use Laravel\Lumen\Routing\Controller;
 use Illuminate\Database\Query\Builder;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
 class ListController extends Controller
 {
@@ -27,6 +29,16 @@ class ListController extends Controller
      * @var string
      */
     protected $idFilterName = 'material_ids';
+
+    /**
+     * @var \Illuminate\Log\Logger
+     */
+    protected $log;
+
+    public function __construct(Logger $log)
+    {
+        $this->log = $log;
+    }
 
     /**
      * @return mixed[]
@@ -64,8 +76,12 @@ class ListController extends Controller
             // the URL.
             $query->where(function ($query) use ($itemIds) {
                 foreach ($itemIds as $itemId) {
-                    $item = ListItem::createFromString($itemId);
-                    $this->idQuery($query, $item, true);
+                    try {
+                        $item = ListItem::createFromString($itemId);
+                        $this->idQuery($query, $item, true);
+                    } catch (\InvalidArgumentException $e) {
+                        throw new UnprocessableEntityHttpException($e->getMessage());
+                    }
                 }
             });
         }
@@ -75,8 +91,12 @@ class ListController extends Controller
 
         return $items->map(function (\stdClass $item_data) {
             $id = $item_data->material ?? $item_data->collection;
-            return ListItem::createFromString($id);
-        })->toArray();
+            try {
+                return ListItem::createFromString($id);
+            } catch (\InvalidArgumentException $e) {
+                $this->log->error('Unable to process stored item id: ' . $e->getMessage());
+            }
+        })->filter()->toArray();
     }
 
     public function hasItem(Request $request, string $listId, ListItem $item): Response

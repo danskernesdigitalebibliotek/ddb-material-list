@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\ListItem;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use mmghv\LumenRouteBinding\RouteBindingServiceProvider as BaseServiceProvider;
+use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
 class RouteBindingServiceProvider extends BaseServiceProvider
 {
@@ -24,7 +25,11 @@ class RouteBindingServiceProvider extends BaseServiceProvider
         });
 
         $binder->bind('item', function ($value): ListItem {
-            return ListItem::createFromString($value);
+            try {
+                return ListItem::createFromString($value);
+            } catch (\InvalidArgumentException $e) {
+                throw new UnprocessableEntityHttpException($e->getMessage());
+            }
         });
     }
 }
