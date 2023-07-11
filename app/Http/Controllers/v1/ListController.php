@@ -96,7 +96,7 @@ class ListController extends Controller
             } catch (\InvalidArgumentException $e) {
                 $this->log->error('Unable to process stored item id: ' . $e->getMessage());
             }
-        })->filter()->toArray();
+        })->filter()->values()->toArray();
     }
 
     public function hasItem(Request $request, string $listId, ListItem $item): Response
