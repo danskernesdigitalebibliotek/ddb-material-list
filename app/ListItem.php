@@ -2,8 +2,6 @@
 
 namespace App;
 
-use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
-
 final class ListItem
 {
     const DEFAULT_LIST_ID = 'default';
@@ -38,7 +36,7 @@ final class ListItem
         $itemList = new static();
 
         if (!preg_match('/(work-of:)?(\d+)-(\w+):(\w+)/', urldecode($parameter), $matches)) {
-            throw new UnprocessableEntityHttpException('Invalid pid: ' . $parameter);
+            throw new \InvalidArgumentException('Invalid pid: ' . $parameter);
         }
 
         [$itemList->fullId, $workOf, $itemList->agency, $itemList->base, $itemList->id] = $matches;
