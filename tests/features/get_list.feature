@@ -97,3 +97,20 @@ Feature: Fetching list
       | 123-katalog:3 |
     When checking if "321-basis:2" is on the list
     Then the system should return success
+
+  Scenario: Invalid list items are not returned as a part of the list
+    Given a known user
+    And they have the following items on the list:
+      | material      |
+      | 123-basis:1   |
+      # This item is invalid, and should not be part of the response.
+      | banana        |
+      | 123-basis:2   |
+    Then fetching the list should return:
+      | material      |
+      # The order of the list is intentionally reversed. The last item in the precondition should be the first in the
+      # response as items are returned with the most recently added first.
+      | 123-basis:2   |
+      | 123-basis:1   |
+    And the system should return success
+
