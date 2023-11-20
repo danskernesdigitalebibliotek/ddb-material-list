@@ -73,5 +73,6 @@ web:
 variables:
   env:
     APP_NAME: 'Material list'
-    APP_ENV: local
+    APP_ENV: production
     APP_DEBUG: true
+    ADGANGSPLATFORMEN_DRIVER: testing
