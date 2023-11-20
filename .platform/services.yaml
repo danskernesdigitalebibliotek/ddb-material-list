@@ -1,0 +1,5 @@
+# The services of the project.
+
+db:
+  type: mysql:5.7
+  disk: 256

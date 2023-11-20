@@ -1,0 +1,80 @@
+# The name of this app. Must be unique within a project.
+name: app
+
+# The runtime the application uses.
+type: 'php:7.4'
+
+# The build-time dependencies of the app.
+dependencies:
+  php:
+    composer/composer: '^2'
+
+# Configuration of the build of this application.
+build:
+  flavor: composer
+
+# The hooks executed at various points in the lifecycle of the application.
+hooks:
+  build: |
+    set -e
+
+  deploy: |
+    set -e
+    php artisan optimize:clear
+    php artisan optimize
+    php artisan view:cache
+    php artisan migrate --force
+
+# The relationships of the application with services or other applications.
+# The left-hand side is the name of the relationship as it will be exposed
+# to the application in the PLATFORM_RELATIONSHIPS variable. The right-hand
+# side is in the form `<service name>:<endpoint name>`.
+relationships:
+  database: 'db:mysql'
+
+# The size of the persistent disk of the application (in MB).
+disk: 2048
+
+# The mounts that will be performed when the package is deployed.
+mounts:
+  "storage/app/public":
+    source: local
+    source_path: "public"
+  "storage/framework/views":
+    source: local
+    source_path: "resources/views"
+  "storage/framework/sessions":
+    source: local
+    source_path: "sessions"
+  "storage/framework/cache":
+    source: local
+    source_path: "cache"
+  "storage/logs":
+    source: local
+    source_path: "logs"
+  "bootstrap/cache":
+    source: local
+    source_path: "cache"
+  "/.config":
+    source: local
+    source_path: "config"
+
+# The configuration of app when it is exposed to the web.
+web:
+  locations:
+    # All requests not otherwise specified follow these rules.
+    '/':
+      # The folder from which to serve static assets, for this location.
+      #
+      # This is a filesystem path, relative to the application root.
+      root: "public"
+      index:
+        - index.php
+      allow: true
+      passthru: "/index.php"
+
+variables:
+  env:
+    APP_NAME: 'DDF Material List'
+    APP_ENV: development
+    APP_DEBUG: true
