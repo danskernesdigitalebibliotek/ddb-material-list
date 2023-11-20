@@ -15,9 +15,6 @@ build:
 
 # The hooks executed at various points in the lifecycle of the application.
 hooks:
-  build: |
-    set -e
-
   deploy: |
     set -e
     php artisan migrate --force
