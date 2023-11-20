@@ -20,9 +20,6 @@ hooks:
 
   deploy: |
     set -e
-    php artisan optimize:clear
-    php artisan optimize
-    php artisan view:cache
     php artisan migrate --force
 
 # The relationships of the application with services or other applications.
@@ -42,7 +39,7 @@ mounts:
     source_path: "public"
   "storage/framework/views":
     source: local
-    source_path: "resources/views"
+    source_path: "views"
   "storage/framework/sessions":
     source: local
     source_path: "sessions"
@@ -75,6 +72,6 @@ web:
 
 variables:
   env:
-    APP_NAME: 'DDF Material List'
-    APP_ENV: development
+    APP_NAME: 'Material list'
+    APP_ENV: production
     APP_DEBUG: true
