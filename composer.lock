@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "704709e20e9df57297e01a8bac754e52",
+    "content-hash": "df952b901311f3da7616ebdc0e623754",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -3821,6 +3821,98 @@
                 }
             ],
             "time": "2021-12-04T23:24:31+00:00"
+        },
+        {
+            "name": "platformsh/config-reader",
+            "version": "2.4.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/platformsh/config-reader-php.git",
+                "reference": "dc08f50f5a40a767457668ad154116c8ea89cfc6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/platformsh/config-reader-php/zipball/dc08f50f5a40a767457668ad154116c8ea89cfc6",
+                "reference": "dc08f50f5a40a767457668ad154116c8ea89cfc6",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^8.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Platformsh\\ConfigReader\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Larry Garfield",
+                    "email": "larry@platform.sh"
+                }
+            ],
+            "description": "Small helper to access Platform.sh environment variables",
+            "support": {
+                "issues": "https://github.com/platformsh/config-reader-php/issues",
+                "source": "https://github.com/platformsh/config-reader-php/tree/2.4.1"
+            },
+            "time": "2023-09-14T17:07:00+00:00"
+        },
+        {
+            "name": "platformsh/laravel-bridge",
+            "version": "2.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/platformsh/laravel-bridge.git",
+                "reference": "ac87a6c48ab7435d99dcdafdc1ab76fb561e170c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/platformsh/laravel-bridge/zipball/ac87a6c48ab7435d99dcdafdc1ab76fb561e170c",
+                "reference": "ac87a6c48ab7435d99dcdafdc1ab76fb561e170c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2",
+                "platformsh/config-reader": "^2.4.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^8.5"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "platformsh-laravel-env.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Larry Garfield",
+                    "email": "larry@platform.sh"
+                }
+            ],
+            "description": "Bridge library for running Symfony Flex on Platform.sh",
+            "support": {
+                "issues": "https://github.com/platformsh/laravel-bridge/issues",
+                "source": "https://github.com/platformsh/laravel-bridge/tree/2.2.1"
+            },
+            "time": "2022-08-02T13:58:47+00:00"
         },
         {
             "name": "psr/cache",
@@ -10035,5 +10127,5 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.6.0"
 }
