@@ -2,4 +2,4 @@
 
 db:
   type: mysql:5.7
-  disk: 256
+  disk: 2048
