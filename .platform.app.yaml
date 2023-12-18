@@ -30,6 +30,12 @@ relationships:
 disk: 2048
 
 # The mounts that will be performed when the package is deployed.
+# Some of these mounts share the same path with pre-existing directories,
+# resulting in warnings during the build phase. The file structure and
+# mounts adhere to Platform.sh's documentation, hence these warnings
+# are deliberate and part of the intentional configuration.
+# See: https://docs.platform.sh/guides/laravel/deploy/configure.html
+# & https://github.com/platformsh-templates/laravel
 mounts:
   "storage/app/public":
     source: local
@@ -71,5 +77,3 @@ variables:
   env:
     APP_NAME: 'Material list'
     APP_ENV: production
-    APP_DEBUG: true
-    ADGANGSPLATFORMEN_DRIVER: testing
