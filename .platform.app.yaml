@@ -4,6 +4,10 @@ name: app
 # The runtime the application uses.
 type: 'php:7.4'
 
+runtime:
+  sizing_hints:
+    request_memory: 20
+
 # The build-time dependencies of the app.
 dependencies:
   php:
