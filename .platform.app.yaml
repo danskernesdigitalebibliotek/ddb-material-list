@@ -76,8 +76,6 @@ web:
         - index.php
       allow: true
       passthru: "/index.php"
-      headers:
-        Access-Control-Allow-Origin: "*"
 
 variables:
   env:
