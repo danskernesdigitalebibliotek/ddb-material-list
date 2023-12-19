@@ -6,10 +6,7 @@ type: 'php:7.4'
 
 runtime:
   sizing_hints:
-    # A lean stack means that application memory usage is low.
-    # This allows us to have many workers which is useful as most time is spent
-    # waiting for token authorization.
-    request_memory: 10
+    request_memory: 20
 
 # The build-time dependencies of the app.
 dependencies:
