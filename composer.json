@@ -10,6 +10,7 @@
         }
     ],
     "require": {
+        "ans-group/laravel-health-check": "^1.14",
         "composer/package-versions-deprecated": "^1.11",
         "danskernesdigitalebibliotek/oauth2-adgangsplatformen": "^1.0",
         "doctrine/dbal": "^3.3",
