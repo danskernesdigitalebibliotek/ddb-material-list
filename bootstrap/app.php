@@ -81,6 +81,7 @@ $app->register(\Adgangsplatformen\Support\Illuminate\AdgangsplatformenServicePro
 $app->register(Fruitcake\Cors\CorsServiceProvider::class);
 $app->register(App\Providers\RouteBindingServiceProvider::class);
 $app->register(Flipbox\LumenGenerator\LumenGeneratorServiceProvider::class);
+$app->register(\UKFast\HealthCheck\HealthCheckServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------
