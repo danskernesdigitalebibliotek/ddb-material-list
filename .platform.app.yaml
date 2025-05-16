@@ -36,7 +36,7 @@ relationships:
   database: 'db:mysql'
 
 # The size of the persistent disk of the application (in MB).
-disk: 2048
+disk: 1024
 
 # The mounts that will be performed when the package is deployed.
 # Some of these mounts share the same path with pre-existing directories,
