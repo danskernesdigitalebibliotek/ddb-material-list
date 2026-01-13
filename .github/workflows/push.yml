@@ -22,7 +22,6 @@ jobs:
           php artisan --no-interaction migrate:fresh
       - name: Unit tests
         run: phpdbg -qrr ./vendor/bin/phpunit --coverage-clover=coverage/unit.xml
-        continue-on-error: true
       - name: Report coverage to Codecov
         run: |
           bash <(curl -s https://codecov.io/bash) -F Unit -f coverage/unit.xml
