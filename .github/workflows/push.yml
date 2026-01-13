@@ -10,7 +10,7 @@ jobs:
       - name: Setup PHP, with composer and extensions
         uses: shivammathur/setup-php@master
         with:
-          php-version: 7.3
+          php-version: 7.4
           tools: composer:v2
           # We're using phpdbg, we don't need a coverage extension.
           coverage: none
@@ -35,7 +35,7 @@ jobs:
       - name: Setup PHP, with composer and extensions
         uses: shivammathur/setup-php@master
         with:
-          php-version: 7.3
+          php-version: 7.4
           tools: composer:v2
           coverage: none
       - name: Install Dependencies
@@ -71,7 +71,7 @@ jobs:
       - name: Setup PHP, with composer and extensions
         uses: shivammathur/setup-php@master
         with:
-          php-version: 7.3
+          php-version: 7.4
           tools: composer:v2
           coverage: none
       - name: Install Dependencies
