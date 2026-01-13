@@ -9,7 +9,6 @@ services:
         uid: 1000
       context: ./
       dockerfile: development/Dockerfile
-    image: laravel-image
     container_name: laravel-app
     restart: unless-stopped
     working_dir: /var/www/
