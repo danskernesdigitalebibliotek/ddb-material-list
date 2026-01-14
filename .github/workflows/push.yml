@@ -19,7 +19,7 @@ jobs:
           tools: composer:v2
       - name: Install Dependencies
         run: |
-          composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
+          composer install
       - name: Create Database
         run: |
           php artisan --no-interaction migrate:fresh
@@ -45,7 +45,7 @@ jobs:
           tools: composer:v2
       - name: Install Dependencies
         run: |
-          composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
+          composer install
       - name: Behaviour tests
         run: |
           ./vendor/bin/behat
@@ -83,7 +83,7 @@ jobs:
           tools: composer:v2
       - name: Install Dependencies
         run: |
-          composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
+          composer install
       - name: Install Dredd
         run: |
           npm install dredd@12 --no-optional
