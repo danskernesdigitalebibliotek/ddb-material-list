@@ -4,7 +4,6 @@ namespace Tests\Unit;
 
 use App\ListItem;
 use Tests\TestCase;
-use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
 class ListItemTest extends TestCase
 {
@@ -24,7 +23,7 @@ class ListItemTest extends TestCase
     public function testThatListItemCreateFromUrlParameterValidatesWronglyFormattedString() : void
     {
         $urlParameter = 'john';
-        $this->expectException(UnprocessableEntityHttpException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid pid: ' . $urlParameter);
         ListItem::createFromString($urlParameter);
     }
