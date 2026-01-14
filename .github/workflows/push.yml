@@ -12,8 +12,6 @@ jobs:
         with:
           php-version: 7.4
           tools: composer:v2
-          # We're using phpdbg, we don't need a coverage extension.
-          coverage: none
       - name: Install Dependencies
         run: |
           composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
@@ -21,7 +19,7 @@ jobs:
         run: |
           php artisan --no-interaction migrate:fresh
       - name: Unit tests
-        run: phpdbg -qrr ./vendor/bin/phpunit --coverage-clover=coverage/unit.xml
+        run: ./vendor/bin/phpunit --coverage-clover=coverage/unit.xml
       - name: Report coverage to Codecov
         run: |
           bash <(curl -s https://codecov.io/bash) -F Unit -f coverage/unit.xml
@@ -37,16 +35,15 @@ jobs:
         with:
           php-version: 7.4
           tools: composer:v2
-          coverage: none
       - name: Install Dependencies
         run: |
           composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
       - name: Behaviour tests
         run: |
-          phpdbg -qrr vendor/bin/behat
+          ./vendor/bin/behat
       - name: Behaviour test coverage
         run: |
-          phpdbg -qrr vendor/bin/phpcov merge --clover=coverage/behat.xml coverage/default.cov
+          ./vendor/bin/phpcov merge --clover=coverage/behat.xml coverage/default.cov
       - name: Report coverage to Codecov
         run: |
           bash <(curl -s https://codecov.io/bash) -F Behaviour -f coverage/behat.xml
@@ -73,7 +70,6 @@ jobs:
         with:
           php-version: 7.4
           tools: composer:v2
-          coverage: none
       - name: Install Dependencies
         run: |
           composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
