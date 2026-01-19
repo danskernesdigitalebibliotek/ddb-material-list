@@ -1,4 +1,4 @@
-FROM danskernesdigitalebibliotek/php7.4-fpm-base
+FROM danskernesdigitalebibliotek/php8.0-fpm-base
 
 RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
     && pecl install xdebug-3.0.0\
