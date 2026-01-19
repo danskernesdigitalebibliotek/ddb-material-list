@@ -12,17 +12,12 @@ jobs:
         php-version: 8.0
         tools: composer:v2
         coverage: none
-    - name: Install Reviewdog
-      run: |
-        wget -O - -q https://raw.githubusercontent.com/reviewdog/reviewdog/master/install.sh| sh -s -- -b $PWD/ v0.9.13
     - name: Install Dependencies
       run: |
         composer install
     - name: Check codestyle
       run: |
-        vendor/bin/phpcs --report=checkstyle | ./reviewdog -f=checkstyle -name=PHPCS -reporter=github-pr-check
-      env:
-        REVIEWDOG_TOKEN: ${{ secrets.REVIEWDOG_TOKEN }}
+        vendor/bin/phpcs
 
   static_code_analysis:
     name: Static Code Analysis
