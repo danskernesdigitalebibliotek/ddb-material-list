@@ -1,12 +1,14 @@
+includes:
+	- phpstan-baseline.neon
+
 parameters:
     level: max
-    excludes_analyse:
-        - vendor
-        - database/migrations
+    paths:
+        - app
+        - bootstrap
+        - tests
+        - routes
     ignoreErrors:
         -
-            message: '#Undefined variable: \$router#'
+            message: '#Variable \$router might not be defined\.#'
             path: 'routes/web.php'
-        -
-            message: '#no value type specified in iterable type Behat\\Gherkin\\Node\\TableNode#'
-            path: 'tests/*'

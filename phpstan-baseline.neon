@@ -1,0 +1,415 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Property App\\Console\\Kernel\:\:\$commands type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Console/Kernel.php
+
+		-
+			message: '#^Parameter \#2 \$status of class Illuminate\\Http\\Response constructor expects int, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Exceptions/Handler.php
+
+		-
+			message: '#^Property App\\Exceptions\\Handler\:\:\$dontReport type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Exceptions/Handler.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\v1\\ListController\:\:getItems\(\) should return array\<App\\ListItem\> but returns array\<int, mixed\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/v1/ListController.php
+
+		-
+			message: '#^Parameter \#1 \$callback of method Illuminate\\Support\\Collection\<\(int\|string\),mixed\>\:\:map\(\) expects callable\(mixed, int\|string\)\: App\\ListItem, Closure\(stdClass\)\: App\\ListItem given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Http/Controllers/v1/ListController.php
+
+		-
+			message: '#^Parameter \#1 \$parameter of static method App\\ListItem\:\:createFromString\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Http/Controllers/v1/ListController.php
+
+		-
+			message: '#^Parameter \#1 \$query of method App\\Http\\Controllers\\v1\\ListController\:\:idQuery\(\) expects Illuminate\\Database\\Query\\Builder, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Http/Controllers/v1/ListController.php
+
+		-
+			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
+			identifier: foreach.nonIterable
+			count: 1
+			path: app/Http/Middleware/VersionSwitcher.php
+
+		-
+			message: '#^Cannot access offset ''uses'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: app/Http/Middleware/VersionSwitcher.php
+
+		-
+			message: '#^Cannot call method alias\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Http/Middleware/VersionSwitcher.php
+
+		-
+			message: '#^Cannot call method header\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Http/Middleware/VersionSwitcher.php
+
+		-
+			message: '#^Cannot call method route\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Http/Middleware/VersionSwitcher.php
+
+		-
+			message: '#^Method App\\Http\\Middleware\\VersionSwitcher\:\:handle\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Middleware/VersionSwitcher.php
+
+		-
+			message: '#^Method App\\Http\\Middleware\\VersionSwitcher\:\:handle\(\) has parameter \$next with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: app/Http/Middleware/VersionSwitcher.php
+
+		-
+			message: '#^Method App\\Http\\Middleware\\VersionSwitcher\:\:handle\(\) has parameter \$request with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: app/Http/Middleware/VersionSwitcher.php
+
+		-
+			message: '#^Method App\\Http\\Middleware\\VersionSwitcher\:\:versionizeControllerPath\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Middleware/VersionSwitcher.php
+
+		-
+			message: '#^Parameter \#1 \$class of function class_exists expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Http/Middleware/VersionSwitcher.php
+
+		-
+			message: '#^Parameter \#2 \$string of function explode expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Http/Middleware/VersionSwitcher.php
+
+		-
+			message: '#^Parameter \#2 \$version of method App\\Http\\Middleware\\VersionSwitcher\:\:versionizeControllerPath\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Http/Middleware/VersionSwitcher.php
+
+		-
+			message: '#^Trying to invoke mixed but it''s not a callable\.$#'
+			identifier: callable.nonCallable
+			count: 2
+			path: app/Http/Middleware/VersionSwitcher.php
+
+		-
+			message: '#^Property App\\ListItem\:\:\$agency \(int\) does not accept string\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: app/ListItem.php
+
+		-
+			message: '#^Anonymous function should return string but returns mixed\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Providers/RouteBindingServiceProvider.php
+
+		-
+			message: '#^Method App\\Providers\\RouteBindingServiceProvider\:\:boot\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Providers/RouteBindingServiceProvider.php
+
+		-
+			message: '#^Parameter \#1 \$parameter of static method App\\ListItem\:\:createFromString\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Providers/RouteBindingServiceProvider.php
+
+		-
+			message: '#^Cannot access property \$app on mixed\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: routes/web.php
+
+		-
+			message: '#^Cannot call method delete\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: routes/web.php
+
+		-
+			message: '#^Cannot call method get\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: routes/web.php
+
+		-
+			message: '#^Cannot call method group\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: routes/web.php
+
+		-
+			message: '#^Cannot call method head\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: routes/web.php
+
+		-
+			message: '#^Cannot call method put\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: routes/web.php
+
+		-
+			message: '#^Cannot call method version\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: routes/web.php
+
+		-
+			message: '#^Cannot access offset ''collection'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: tests/contexts/MaterialListContext.php
+
+		-
+			message: '#^Cannot access offset ''material'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: tests/contexts/MaterialListContext.php
+
+		-
+			message: '#^Cannot call method boot\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: tests/contexts/MaterialListContext.php
+
+		-
+			message: '#^Cannot call method forceRootUrl\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: tests/contexts/MaterialListContext.php
+
+		-
+			message: '#^Cannot call method get\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: tests/contexts/MaterialListContext.php
+
+		-
+			message: '#^Cannot call method make\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: tests/contexts/MaterialListContext.php
+
+		-
+			message: '#^Parameter \#2 \$collectionIds of method MaterialListContext\:\:fetchingCollectionsInTheListNamed\(\) expects array\<string\>, array given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/contexts/MaterialListContext.php
+
+		-
+			message: '#^Parameter \#2 \$materialIds of method MaterialListContext\:\:fetchingTheListNamed\(\) expects array\<string\>, array given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/contexts/MaterialListContext.php
+
+		-
+			message: '#^Parameter \#3 \$materials of method MaterialListContext\:\:addMaterialsToList\(\) expects array\<string\>, array given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/contexts/MaterialListContext.php
+
+		-
+			message: '#^Property MaterialListContext\:\:\$app \(Laravel\\Lumen\\Application\) does not accept mixed\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: tests/contexts/MaterialListContext.php
+
+		-
+			message: '#^Property MaterialListContext\:\:\$faker \(Faker\\Generator\) does not accept mixed\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: tests/contexts/MaterialListContext.php
+
+		-
+			message: '#^Cannot access property \$Accept\-Version on mixed\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: tests/dredd/hooks.php
+
+		-
+			message: '#^Cannot access property \$Authorization on mixed\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: tests/dredd/hooks.php
+
+		-
+			message: '#^Cannot access property \$fullPath on mixed\.$#'
+			identifier: property.nonObject
+			count: 2
+			path: tests/dredd/hooks.php
+
+		-
+			message: '#^Cannot access property \$headers on mixed\.$#'
+			identifier: property.nonObject
+			count: 2
+			path: tests/dredd/hooks.php
+
+		-
+			message: '#^Cannot access property \$id on mixed\.$#'
+			identifier: property.nonObject
+			count: 2
+			path: tests/dredd/hooks.php
+
+		-
+			message: '#^Cannot access property \$name on mixed\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: tests/dredd/hooks.php
+
+		-
+			message: '#^Cannot access property \$request on mixed\.$#'
+			identifier: property.nonObject
+			count: 4
+			path: tests/dredd/hooks.php
+
+		-
+			message: '#^Cannot access property \$skip on mixed\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: tests/dredd/hooks.php
+
+		-
+			message: '#^Cannot access property \$uri on mixed\.$#'
+			identifier: property.nonObject
+			count: 2
+			path: tests/dredd/hooks.php
+
+		-
+			message: '#^Cannot call method call\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: tests/dredd/hooks.php
+
+		-
+			message: '#^Cannot call method make\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: tests/dredd/hooks.php
+
+		-
+			message: '#^Cannot call method output\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: tests/dredd/hooks.php
+
+		-
+			message: '#^Parameter \#1 \$str of function strtr expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 3
+			path: tests/dredd/hooks.php
+
+		-
+			message: '#^Parameter \#1 \(mixed\) of echo cannot be converted to string\.$#'
+			identifier: echo.nonString
+			count: 1
+			path: tests/dredd/hooks.php
+
+		-
+			message: '#^Parameter \#2 \$subject of function preg_match expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/dredd/hooks.php
+
+		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: array.invalidKey
+			count: 1
+			path: tests/dredd/hooks.php
+
+		-
+			message: '#^Method Tests\\ExceptionHandlerTest\:\:testExceptionHandler\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: tests/phpunit/Feature/ExceptionHandlerTest.php
+
+		-
+			message: '#^Method Tests\\ExceptionHandlerTest\:\:testResponseExceptions\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: tests/phpunit/Feature/ExceptionHandlerTest.php
+
+		-
+			message: '#^Method Tests\\Feature\\SwitchVersionTest\:\:testThatWeGetOutputFromDifferentControllersDependingOnVersion\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: tests/phpunit/Feature/SwitchVersionTest.php
+
+		-
+			message: '#^Method Tests\\Feature\\SwitchVersionTest\:\:testThatWeGetOutputFromDifferentControllersDependingOnVersion\(\) has parameter \$jsonResponse with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/phpunit/Feature/SwitchVersionTest.php
+
+		-
+			message: '#^Method Tests\\Feature\\SwitchVersionTest\:\:versionResponses\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/phpunit/Feature/SwitchVersionTest.php
+
+		-
+			message: '#^Method Tests\\TestCase\:\:createApplication\(\) should return Laravel\\Lumen\\Application but returns mixed\.$#'
+			identifier: return.type
+			count: 1
+			path: tests/phpunit/TestCase.php
+
+		-
+			message: '#^Anonymous function has an unused use \$version\.$#'
+			identifier: closure.unusedUse
+			count: 1
+			path: tests/phpunit/Unit/VersionSwitcherTest.php
+
+		-
+			message: '#^Cannot call method getAlias\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: tests/phpunit/Unit/VersionSwitcherTest.php
+
+		-
+			message: '#^Method Tests\\Unit\\VersionSwitcherTest\:\:versionControllerAliases\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/phpunit/Unit/VersionSwitcherTest.php
+
+		-
+			message: '#^Property Tests\\Unit\\VersionSwitcherTest\:\:\$baseController has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: tests/phpunit/Unit/VersionSwitcherTest.php
+
+		-
+			message: '#^Property Tests\\Unit\\VersionSwitcherTest\:\:\$configuredRoute has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: tests/phpunit/Unit/VersionSwitcherTest.php

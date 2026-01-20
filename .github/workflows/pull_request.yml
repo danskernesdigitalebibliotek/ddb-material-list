@@ -9,20 +9,15 @@ jobs:
     - name: Setup PHP, with composer and extensions
       uses: shivammathur/setup-php@master
       with:
-        php-version: 7.4
+        php-version: 8.0
         tools: composer:v2
         coverage: none
-    - name: Install Reviewdog
-      run: |
-        wget -O - -q https://raw.githubusercontent.com/reviewdog/reviewdog/master/install.sh| sh -s -- -b $PWD/ v0.9.13
     - name: Install Dependencies
       run: |
-        composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
+        composer install
     - name: Check codestyle
       run: |
-        vendor/bin/phpcs --report=checkstyle | ./reviewdog -f=checkstyle -name=PHPCS -reporter=github-pr-check
-      env:
-        REVIEWDOG_TOKEN: ${{ secrets.REVIEWDOG_TOKEN }}
+        vendor/bin/phpcs
 
   static_code_analysis:
     name: Static Code Analysis
@@ -32,17 +27,12 @@ jobs:
     - name: Setup PHP, with composer and extensions
       uses: shivammathur/setup-php@master
       with:
-        php-version: 7.4
+        php-version: 8.0
         tools: composer:v2
         coverage: none
-    - name: Install Reviewdog
-      run: |
-        wget -O - -q https://raw.githubusercontent.com/reviewdog/reviewdog/master/install.sh| sh -s -- -b $PWD/ v0.9.13
     - name: Install Dependencies
       run: |
-        composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
+        composer install
     - name: Static code analysis
       run: |
-        php -d memory_limit=1G vendor/bin/phpstan analyse . --error-format=checkstyle | ./reviewdog -f=checkstyle -name=PHPStan -reporter=github-pr-check
-      env:
-        REVIEWDOG_TOKEN: ${{ secrets.REVIEWDOG_TOKEN }}
+        php -d memory_limit=1G vendor/bin/phpstan

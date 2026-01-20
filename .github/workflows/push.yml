@@ -15,11 +15,11 @@ jobs:
       - name: Setup PHP, with composer and extensions
         uses: shivammathur/setup-php@master
         with:
-          php-version: 7.4
+          php-version: 8.0
           tools: composer:v2
       - name: Install Dependencies
         run: |
-          composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
+          composer install
       - name: Create Database
         run: |
           php artisan --no-interaction migrate:fresh
@@ -41,17 +41,17 @@ jobs:
       - name: Setup PHP, with composer and extensions
         uses: shivammathur/setup-php@master
         with:
-          php-version: 7.4
+          php-version: 8.0
           tools: composer:v2
       - name: Install Dependencies
         run: |
-          composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
+          composer install
       - name: Behaviour tests
         run: |
           ./vendor/bin/behat
       - name: Behaviour test coverage
         run: |
-          ./vendor/bin/phpcov merge --clover=coverage/behat.xml coverage/default.cov
+          ./vendor/bin/phpcov merge --clover=coverage/behat.xml coverage/
       - name: Report coverage to Codecov
         uses: codecov/codecov-action@v5
         with:
@@ -79,11 +79,11 @@ jobs:
       - name: Setup PHP, with composer and extensions
         uses: shivammathur/setup-php@master
         with:
-          php-version: 7.4
+          php-version: 8.0
           tools: composer:v2
       - name: Install Dependencies
         run: |
-          composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
+          composer install
       - name: Install Dredd
         run: |
           npm install dredd@12 --no-optional
