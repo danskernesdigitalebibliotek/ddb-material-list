@@ -286,25 +286,6 @@ Unit tests are primarily used to test parts that are difficult to test
 by the previous methods, unexpected exception handling for instance.
 Run `./vendor/bin/phpunit` to run the test suite.
 
-## Deployment
-
-Create namespace with labels to allow traffic.
-
-```sh
-kubectl create namespace material-list
-kubectl label namespaces/ingress networking/namespace=ingress
-kubectl label namespaces/material-list networking/namespace=material-list
-```
-
-This repository comes with helm chats for deployment to kubernetes cluster in `infrastructure/material_list` which
-requires that you have a local `secrets.yml` in the templates folder. As this file contains sensitive information
-you can use the `secrects.example.yaml` file as a template for the required values.
-
-The following command can be used to install the chart
-```sh
-helm upgrade --install --namespace=material-list material-list infrastructure/material_list/ --set ingress.domain=prod.materiallist.dandigbib.org
-```
-
 ## License
 
 Copyright (C) 2019 Danskernes Digitale Bibliotek (DDB)
