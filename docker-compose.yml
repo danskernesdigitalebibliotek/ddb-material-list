@@ -10,15 +10,10 @@ services:
       dockerfile: development/Dockerfile
     container_name: laravel-app
     working_dir: /var/www/
-    # Uncomment this in order to use xdebug
-    # environment:
-    #   - XDEBUG_MODE=develop,debug
     volumes:
       - projectroot:/var/www
       - ./development/php/local.ini:/usr/local/etc/php/conf.d/local.ini
       - ~/.composer/auth.json:/home/www-data/.composer/auth.json
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
     networks:
       - app-network
 
