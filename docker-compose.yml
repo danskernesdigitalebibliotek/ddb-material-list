@@ -14,8 +14,6 @@ services:
       - projectroot:/var/www
       - ./development/php/local.ini:/usr/local/etc/php/conf.d/local.ini
       - ~/.composer/auth.json:/home/www-data/.composer/auth.json
-    networks:
-      - app-network
 
   db:
     image: mysql:5.7
@@ -27,8 +25,6 @@ services:
       MYSQL_USER: ${DB_USERNAME:-larovel}
     volumes:
       - ./development/mysql/docker-entrypoint-initdb.d/:/docker-entrypoint-initdb.d/
-    networks:
-      - app-network
 
   nginx:
     image: nginxinc/nginx-unprivileged:alpine
@@ -38,12 +34,6 @@ services:
     volumes:
       - projectroot:/var/www
       - ./development/nginx/conf.d/:/etc/nginx/conf.d/
-    networks:
-      - app-network
-
-networks:
-  app-network:
-    driver: bridge
 
 volumes:
   projectroot:
