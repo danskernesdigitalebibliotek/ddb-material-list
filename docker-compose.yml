@@ -41,7 +41,7 @@ services:
     image: nginxinc/nginx-unprivileged:alpine
     container_name: laravel-nginx
     environment:
-      VIRTUAL_HOST: ${COMPOSE_PROJECT_NAME}.docker
+      VIRTUAL_HOST: ${COMPOSE_PROJECT_NAME}.${DEV_TLD:-docker}
     volumes:
       - projectroot:/var/www
       - ./development/nginx/conf.d/:/etc/nginx/conf.d/
