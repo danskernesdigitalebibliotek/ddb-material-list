@@ -26,10 +26,10 @@ services:
     image: mysql:5.7
     container_name: laravel-db
     environment:
-      MYSQL_DATABASE: ${DB_DATABASE:-}
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-}
-      MYSQL_PASSWORD: ${DB_PASSWORD:-}
-      MYSQL_USER: ${DB_USERNAME:-}
+      MYSQL_DATABASE: ${DB_DATABASE:-database}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-rootpass}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-password}
+      MYSQL_USER: ${DB_USERNAME:-larovel}
     volumes:
       - ./development/mysql/docker-entrypoint-initdb.d/:/docker-entrypoint-initdb.d/
     networks:
