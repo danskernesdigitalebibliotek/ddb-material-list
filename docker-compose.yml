@@ -8,7 +8,6 @@ services:
         uid: 1000
       context: ./
       dockerfile: development/Dockerfile
-    container_name: laravel-app
     working_dir: /var/www/
     volumes:
       - projectroot:/var/www
@@ -17,7 +16,6 @@ services:
 
   db:
     image: mysql:5.7
-    container_name: laravel-db
     environment:
       MYSQL_DATABASE: ${DB_DATABASE:-database}
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-rootpass}
@@ -28,7 +26,6 @@ services:
 
   nginx:
     image: nginxinc/nginx-unprivileged:alpine
-    container_name: laravel-nginx
     environment:
       VIRTUAL_HOST: ${COMPOSE_PROJECT_NAME}.${DEV_TLD:-docker}
     volumes:
