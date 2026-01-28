@@ -9,7 +9,6 @@ services:
       context: ./
       dockerfile: development/Dockerfile
     container_name: laravel-app
-    restart: unless-stopped
     working_dir: /var/www/
     # Uncomment this in order to use xdebug
     # environment:
@@ -26,7 +25,6 @@ services:
   db:
     image: mysql:5.7
     container_name: laravel-db
-    restart: unless-stopped
     environment:
       MYSQL_DATABASE: ${DB_DATABASE:-}
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-}
@@ -42,7 +40,6 @@ services:
   nginx:
     image: nginxinc/nginx-unprivileged:alpine
     container_name: laravel-nginx
-    restart: unless-stopped
     environment:
       VIRTUAL_HOST: ${COMPOSE_PROJECT_NAME}.docker
     volumes:
