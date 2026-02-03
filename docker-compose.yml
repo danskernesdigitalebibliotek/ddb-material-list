@@ -1,36 +1,115 @@
-services:
-  app:
-    depends_on:
-    - db
-    build:
-      args:
-        user: www
-        uid: 1000
-      context: ./
-      dockerfile: development/Dockerfile
-    working_dir: /var/www/
-    volumes:
-      - projectroot:/var/www
-      - ./development/php/local.ini:/usr/local/etc/php/conf.d/local.ini
-      - ~/.composer/auth.json:/home/www-data/.composer/auth.json
+# Lagoon reads labels, service names, image names and build
+# definitions from this file, and ignores the rest.
+# Adapted from https://github.com/lagoon-examples/laravel-example-simple
 
-  db:
-    image: mysql:5.7
-    environment:
-      MYSQL_DATABASE: ${DB_DATABASE:-database}
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-rootpass}
-      MYSQL_PASSWORD: ${DB_PASSWORD:-password}
-      MYSQL_USER: ${DB_USERNAME:-larovel}
+x-volumes:
+  &default-volumes
+    # Define all volumes you would like to have real-time mounted into the docker containers
     volumes:
-      - ./development/mysql/docker-entrypoint-initdb.d/:/docker-entrypoint-initdb.d/
+      - 'projectroot:/app'
+
+x-environment:
+  &default-environment
+    # Environment variables which mimic what will be set in a Lagoon cluster locally
+    LAGOON_PROJECT: 'material-list'
+    LAGOON_ENVIRONMENT: 'local'
+    LAGOON_ENVIRONMENT_TYPE: ${LAGOON_ENVIRONMENT_TYPE:-local}
+    # Uncomment if you like to have the system behave like in production
+    #LAGOON_ENVIRONMENT_TYPE: production
+
+x-user:
+  &default-user
+    # The default user under which the containers should run. Change this if you are on linux and run with another user than id `1000`
+    user: ${UID:-1000}
+
+services:
+  https:
+    image: ghcr.io/reload/https-proxy:proxy
+    ports:
+      - '80'
+      - '443'
+    depends_on:
+      - nginx
+    labels:
+      lagoon.type: none
+    volumes:
+      - 'projectroot:/app'
+      - '${HOME}/.local/share/mkcert:/rootCA:ro'
+      - '${HOME}/.local/share/dev_certificates:/cert:rw'
+    environment:
+      NGINX_DOCUMENT_ROOT: /app/web
+      NGINX_PROXY_PASS: http://nginx:8080
+      VIRTUAL_PROTO: https
+      VIRTUAL_HOST: >-
+        ${COMPOSE_PROJECT_NAME}.${DEV_TLD:-docker}
+    working_dir: /app
+
+  cli: # cli container
+    build:
+      context: .
+      dockerfile: lagoon/cli.dockerfile
+    image: &cli-image ${COMPOSE_PROJECT_NAME}-cli # this image will be reused as `CLI_IMAGE` in subsequent Docker builds
+    # Don't try to pull the above image.
+    pull_policy: never
+    labels:
+      # Lagoon Labels
+      lagoon.type: cli-persistent
+      lagoon.persistent.name: nginx # mount the persistent storage of nginx into this container
+      lagoon.persistent: /app/storage/ # location where the persistent storage should be mounted
+    << : *default-volumes # loads the defined volumes from the top
+    user: root
+    environment:
+      << : *default-environment # loads the defined environment variables from the top
+    depends_on:
+        - mariadb
+
+  php:
+    build:
+      context: .
+      dockerfile: lagoon/php.dockerfile
+      args:
+        CLI_IMAGE: *cli-image
+    labels:
+      lagoon.type: nginx-php-persistent
+      lagoon.name: nginx # we want this service be part of the nginx pod in Lagoon
+      lagoon.persistent: /app/storage/ # define where the persistent storage should be mounted too
+    << : [*default-volumes, *default-user] # loads the defined volumes and user from the top
+    depends_on:
+      - cli # basically just tells docker-compose to build the cli first
+    environment:
+      << : *default-environment # loads the defined environment variables from the top
+
+  mariadb:
+    image: uselagoon/mariadb-11.4
+    labels:
+      lagoon.type: mariadb
+    # Do a periodic healthcheck. This is mainly used to block the php service
+    # from starting up before we have a healthy database.
+    healthcheck:
+      test: "/usr/share/container-scripts/mysql/readiness-probe.sh"
+      interval: 10s
+    ports:
+      - "3306" # exposes the port 3306 with a random local port, find it with `docker-compose port mariadb 3306`
+    << : *default-user # uses the defined user from top
+    environment:
+      MARIADB_CHARSET: 'utf8mb4'
+      MARIADB_COLLATION: 'utf8mb4_danish_ci'
+      << : *default-environment
 
   nginx:
-    image: nginxinc/nginx-unprivileged:alpine
+    build:
+      context: .
+      dockerfile: lagoon/nginx.dockerfile
+      args:
+        CLI_IMAGE: *cli-image # Inject the name of the cli image
+    labels:
+      lagoon.type: nginx-php-persistent
+      lagoon.persistent: /app/storage/ # define where the persistent storage should be mounted too
+    <<: [*default-volumes, *default-user] # loads the defined volumes and user from the top
+    depends_on:
+      - cli # basically just tells docker-compose to build the cli first
     environment:
-      VIRTUAL_HOST: ${COMPOSE_PROJECT_NAME}.${DEV_TLD:-docker}
-    volumes:
-      - projectroot:/var/www
-      - ./development/nginx/conf.d/:/etc/nginx/conf.d/
+      << : *default-environment # loads the defined environment variables from the top
 
 volumes:
   projectroot:

@@ -11,13 +11,14 @@ tasks:
     desc: Run all tests
     summary: Runs all unit, behaviour and API tests.
     cmds:
-      - docker compose exec app ./vendor/bin/phpunit
-      - docker compose exec app ./vendor/bin/behat
-      - docker compose exec app dredd
+      - docker compose exec -e XDEBUG_ENABLE=true cli ./vendor/bin/phpunit
+      - docker compose exec -e XDEBUG_ENABLE=true cli ./vendor/bin/behat
+      # Sadly doesn't work anymore.
+      # - docker compose exec cli npx dredd@12
 
   lint:
     desc: Run all linters
     cmds:
-      - docker compose exec app ./vendor/bin/phpcs
-      - docker compose exec app php -d memory_limit=1G ./vendor/bin/phpstan
-      - docker compose exec app speccy lint material-list.yaml
+      - docker compose exec cli ./vendor/bin/phpcs
+      - docker compose exec cli php -d memory_limit=1G ./vendor/bin/phpstan
+      - docker compose exec cli npx speccy lint material-list.yaml
