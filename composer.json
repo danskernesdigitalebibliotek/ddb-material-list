@@ -14,13 +14,13 @@
         "danskernesdigitalebibliotek/oauth2-adgangsplatformen": "^1.0",
         "doctrine/dbal": "^3.3",
         "flipbox/lumen-generator": "^9.1",
-        "laravel/lumen-framework": "9.0.0",
+        "laravel/lumen-framework": "^10.0",
         "mmghv/lumen-route-binding": "^1.5",
         "platformsh/laravel-bridge": "^2.2",
-        "softonic/laravel-psr15-bridge": "^3"
+        "softonic/laravel-psr15-bridge": "^4"
     },
     "require-dev": {
-        "behat/behat": "^3.10",
+        "behat/behat": "^3",
         "ddelnano/dredd-hooks-php": "^1.1",
         "fzaninotto/faker": "^1.4",
         "guzzlehttp/guzzle": "^7.0.1",

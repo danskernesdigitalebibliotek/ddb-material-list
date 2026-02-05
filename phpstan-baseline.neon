@@ -223,24 +223,6 @@ parameters:
 			path: tests/contexts/MaterialListContext.php
 
 		-
-			message: '#^Parameter \#2 \$collectionIds of method MaterialListContext\:\:fetchingCollectionsInTheListNamed\(\) expects array\<string\>, array given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/contexts/MaterialListContext.php
-
-		-
-			message: '#^Parameter \#2 \$materialIds of method MaterialListContext\:\:fetchingTheListNamed\(\) expects array\<string\>, array given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/contexts/MaterialListContext.php
-
-		-
-			message: '#^Parameter \#3 \$materials of method MaterialListContext\:\:addMaterialsToList\(\) expects array\<string\>, array given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/contexts/MaterialListContext.php
-
-		-
 			message: '#^Property MaterialListContext\:\:\$app \(Laravel\\Lumen\\Application\) does not accept mixed\.$#'
 			identifier: assign.propertyType
 			count: 1
