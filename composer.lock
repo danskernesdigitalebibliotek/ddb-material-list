@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "56ffcfe894c62f287e566ff8fcf39065",
+    "content-hash": "f575cbddda0b9f46c85512639fa06e2a",
     "packages": [
         {
             "name": "brick/math",
@@ -7436,6 +7436,83 @@
             "time": "2024-11-12T16:29:46+00:00"
         },
         {
+            "name": "composer/semver",
+            "version": "3.4.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/composer/semver.git",
+                "reference": "198166618906cb2de69b95d7d47e5fa8aa1b2b95"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/composer/semver/zipball/198166618906cb2de69b95d7d47e5fa8aa1b2b95",
+                "reference": "198166618906cb2de69b95d7d47e5fa8aa1b2b95",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.3.2 || ^7.0 || ^8.0"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^1.11",
+                "symfony/phpunit-bridge": "^3 || ^7"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "3.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Composer\\Semver\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nils Adermann",
+                    "email": "naderman@naderman.de",
+                    "homepage": "http://www.naderman.de"
+                },
+                {
+                    "name": "Jordi Boggiano",
+                    "email": "j.boggiano@seld.be",
+                    "homepage": "http://seld.be"
+                },
+                {
+                    "name": "Rob Bast",
+                    "email": "rob.bast@gmail.com",
+                    "homepage": "http://robbast.nl"
+                }
+            ],
+            "description": "Semver library that offers utilities, version constraint parsing and validation.",
+            "keywords": [
+                "semantic",
+                "semver",
+                "validation",
+                "versioning"
+            ],
+            "support": {
+                "irc": "ircs://irc.libera.chat:6697/composer",
+                "issues": "https://github.com/composer/semver/issues",
+                "source": "https://github.com/composer/semver/tree/3.4.4"
+            },
+            "funding": [
+                {
+                    "url": "https://packagist.com",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/composer",
+                    "type": "github"
+                }
+            ],
+            "time": "2025-08-20T19:15:30+00:00"
+        },
+        {
             "name": "composer/xdebug-handler",
             "version": "3.0.5",
             "source": {
@@ -7699,6 +7776,84 @@
             "time": "2022-12-30T00:23:10+00:00"
         },
         {
+            "name": "dvdoug/behat-code-coverage",
+            "version": "v5.3.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dvdoug/behat-code-coverage.git",
+                "reference": "bb785d553dd44643102bccb4054cdfad85bb1795"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dvdoug/behat-code-coverage/zipball/bb785d553dd44643102bccb4054cdfad85bb1795",
+                "reference": "bb785d553dd44643102bccb4054cdfad85bb1795",
+                "shasum": ""
+            },
+            "require": {
+                "behat/behat": "^3.10",
+                "composer-runtime-api": "^2.0",
+                "composer/semver": "^3.0",
+                "php": "^7.4 || ^8.0",
+                "phpunit/php-code-coverage": "^9.2.16||^10.0",
+                "symfony/config": "^5.1.4||^6.0||^7.0",
+                "symfony/console": "^5.3.7||^6.0.9||^7.0",
+                "symfony/dependency-injection": "^5.1.4||^6.0||^7.0",
+                "symfony/event-dispatcher": "^5.0||^6.0||^7.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.38.0",
+                "phpunit/phpunit": "^9.5.5||^10.0",
+                "symfony/filesystem": "^5.0||^6.0||^7.0"
+            },
+            "suggest": {
+                "ext-pcov": "PCOV allows you to collect line coverage only, but is faster than Xdebug",
+                "ext-xdebug": "Xdebug allows you to collect line, branch and path coverage"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "DVDoug\\Behat\\CodeCoverage\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-2-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Doug Wright",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Generate Code Coverage reports for Behat tests",
+            "homepage": "https://behat.cc",
+            "keywords": [
+                "BDD",
+                "Behat",
+                "clover",
+                "cobertura",
+                "code",
+                "code-coverage",
+                "coverage",
+                "report",
+                "reports",
+                "scenario",
+                "test",
+                "tests"
+            ],
+            "support": {
+                "issues": "https://github.com/dvdoug/behat-code-coverage/issues",
+                "source": "https://github.com/dvdoug/behat-code-coverage/tree/v5.3.2.1"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/dvdoug",
+                    "type": "github"
+                }
+            ],
+            "time": "2024-09-15T18:19:34+00:00"
+        },
+        {
             "name": "fzaninotto/faker",
             "version": "v1.5.0",
             "source": {
@@ -7805,80 +7960,6 @@
                 "source": "https://github.com/hamcrest/hamcrest-php/tree/v2.1.1"
             },
             "time": "2025-04-30T06:54:44+00:00"
-        },
-        {
-            "name": "matthiasnoback/behat-local-code-coverage-extension",
-            "version": "v0.5.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/matthiasnoback/behat-local-code-coverage-extension.git",
-                "reference": "5e44796b67bd4d5a9e1c1c3058ba8f309d6ad1df"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/matthiasnoback/behat-local-code-coverage-extension/zipball/5e44796b67bd4d5a9e1c1c3058ba8f309d6ad1df",
-                "reference": "5e44796b67bd4d5a9e1c1c3058ba8f309d6ad1df",
-                "shasum": ""
-            },
-            "require": {
-                "behat/behat": "^3.4",
-                "matthiasnoback/live-code-coverage": "^1.0",
-                "php": ">=7.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "support": {
-                "issues": "https://github.com/matthiasnoback/behat-local-code-coverage-extension/issues",
-                "source": "https://github.com/matthiasnoback/behat-local-code-coverage-extension/tree/v0.5.0"
-            },
-            "time": "2021-03-31T07:44:46+00:00"
-        },
-        {
-            "name": "matthiasnoback/live-code-coverage",
-            "version": "v1.6.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/matthiasnoback/live-code-coverage.git",
-                "reference": "23d04096c01379f16770d96c0cdcf40d2b421743"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/matthiasnoback/live-code-coverage/zipball/23d04096c01379f16770d96c0cdcf40d2b421743",
-                "reference": "23d04096c01379f16770d96c0cdcf40d2b421743",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^7.3 || ^8.0",
-                "phpunit/php-code-coverage": "^9.0",
-                "phpunit/phpunit": "^9.3",
-                "webmozart/assert": "^1.2"
-            },
-            "require-dev": {
-                "symfony/filesystem": "^3.3",
-                "symfony/finder": "^3.3",
-                "symfony/process": "^3.3"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "LiveCodeCoverage\\": "src/LiveCodeCoverage/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Generate code coverage reports on a live server",
-            "support": {
-                "issues": "https://github.com/matthiasnoback/live-code-coverage/issues",
-                "source": "https://github.com/matthiasnoback/live-code-coverage/tree/v1.6.0"
-            },
-            "time": "2021-03-08T07:44:10+00:00"
         },
         {
             "name": "mockery/mockery",
@@ -10448,64 +10529,6 @@
                 }
             ],
             "time": "2025-11-17T20:03:58+00:00"
-        },
-        {
-            "name": "webmozart/assert",
-            "version": "1.12.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/webmozarts/assert.git",
-                "reference": "9be6926d8b485f55b9229203f962b51ed377ba68"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/webmozarts/assert/zipball/9be6926d8b485f55b9229203f962b51ed377ba68",
-                "reference": "9be6926d8b485f55b9229203f962b51ed377ba68",
-                "shasum": ""
-            },
-            "require": {
-                "ext-ctype": "*",
-                "ext-date": "*",
-                "ext-filter": "*",
-                "php": "^7.2 || ^8.0"
-            },
-            "suggest": {
-                "ext-intl": "",
-                "ext-simplexml": "",
-                "ext-spl": ""
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.10-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Webmozart\\Assert\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Bernhard Schussek",
-                    "email": "bschussek@gmail.com"
-                }
-            ],
-            "description": "Assertions to validate method input/output with nice error messages.",
-            "keywords": [
-                "assert",
-                "check",
-                "validate"
-            ],
-            "support": {
-                "issues": "https://github.com/webmozarts/assert/issues",
-                "source": "https://github.com/webmozarts/assert/tree/1.12.1"
-            },
-            "time": "2025-10-29T15:56:20+00:00"
         }
     ],
     "aliases": [],

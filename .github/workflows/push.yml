@@ -45,10 +45,7 @@ jobs:
           composer install
       - name: Behaviour tests
         run: |
-          ./vendor/bin/behat
-      - name: Behaviour test coverage
-        run: |
-          ./vendor/bin/phpcov merge --clover=coverage/behat.xml coverage/
+          ./vendor/bin/behat --xdebug
       - name: Report coverage to Codecov
         uses: codecov/codecov-action@v5
         with:
