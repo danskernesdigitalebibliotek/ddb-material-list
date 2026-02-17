@@ -2,7 +2,7 @@
 name: app
 
 # The runtime the application uses.
-type: 'php:8.0'
+type: 'php:8.2'
 
 runtime:
   sizing_hints:
@@ -86,3 +86,4 @@ variables:
   env:
     APP_NAME: 'Material list'
     APP_ENV: production
+    COMPOSER_NO_DEV: 1
