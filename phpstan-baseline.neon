@@ -25,12 +25,6 @@ parameters:
 			path: app/Http/Controllers/v1/ListController.php
 
 		-
-			message: '#^Parameter \#1 \$callback of method Illuminate\\Support\\Collection\<\(int\|string\),mixed\>\:\:map\(\) expects callable\(mixed, int\|string\)\: App\\ListItem, Closure\(stdClass\)\: App\\ListItem given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Controllers/v1/ListController.php
-
-		-
 			message: '#^Parameter \#1 \$parameter of static method App\\ListItem\:\:createFromString\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
