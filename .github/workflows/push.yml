@@ -81,6 +81,9 @@ jobs:
       - name: Install Dredd
         run: |
           npm install dredd@12 --no-optional
+      - name: Configure app
+        run: |
+          cp .env.testing .env
       - name: Specification tests
         run: |
           node_modules/.bin/dredd --loglevel=error
