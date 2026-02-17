@@ -20,9 +20,6 @@ jobs:
       - name: Install Dependencies
         run: |
           composer install
-      - name: Create Database
-        run: |
-          php artisan --no-interaction migrate:fresh
       - name: Unit tests
         run: ./vendor/bin/phpunit --coverage-clover=coverage/unit.xml
       - name: Report coverage to Codecov
