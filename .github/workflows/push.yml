@@ -90,7 +90,7 @@ jobs:
 env:
   ADGANGSPLATFORMEN_DRIVER: testing
   DB_CONNECTION: sqlite
-  DB_DATABASE: /tmp/db.sqlite
+  DB_DATABASE: ":memory:"
   CACHE_DRIVER: array
   SESSION_DRIVER: array
   QUEUE_DRIVER: sync
