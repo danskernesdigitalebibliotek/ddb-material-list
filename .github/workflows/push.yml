@@ -84,14 +84,9 @@ jobs:
       - name: Configure app
         run: |
           cp .env.testing .env
+          # The SQLite driver requires the file to exist.
+          touch /tmp/material-list.sqlite
+          ./artisan migrate:fresh
       - name: Specification tests
         run: |
-          node_modules/.bin/dredd --loglevel=error
-env:
-  ADGANGSPLATFORMEN_DRIVER: testing
-  DB_CONNECTION: sqlite
-  DB_DATABASE: ":memory:"
-  CACHE_DRIVER: array
-  SESSION_DRIVER: array
-  QUEUE_DRIVER: sync
-  APP_ENV: testing
+          node_modules/.bin/dredd --loglevel=debug
