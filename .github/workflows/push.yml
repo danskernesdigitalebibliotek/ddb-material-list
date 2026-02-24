@@ -15,14 +15,11 @@ jobs:
       - name: Setup PHP, with composer and extensions
         uses: shivammathur/setup-php@master
         with:
-          php-version: 8.0
+          php-version: 8.2
           tools: composer:v2
       - name: Install Dependencies
         run: |
           composer install
-      - name: Create Database
-        run: |
-          php artisan --no-interaction migrate:fresh
       - name: Unit tests
         run: ./vendor/bin/phpunit --coverage-clover=coverage/unit.xml
       - name: Report coverage to Codecov
@@ -41,17 +38,14 @@ jobs:
       - name: Setup PHP, with composer and extensions
         uses: shivammathur/setup-php@master
         with:
-          php-version: 8.0
+          php-version: 8.2
           tools: composer:v2
       - name: Install Dependencies
         run: |
           composer install
       - name: Behaviour tests
         run: |
-          ./vendor/bin/behat
-      - name: Behaviour test coverage
-        run: |
-          ./vendor/bin/phpcov merge --clover=coverage/behat.xml coverage/
+          ./vendor/bin/behat --xdebug
       - name: Report coverage to Codecov
         uses: codecov/codecov-action@v5
         with:
@@ -79,7 +73,7 @@ jobs:
       - name: Setup PHP, with composer and extensions
         uses: shivammathur/setup-php@master
         with:
-          php-version: 8.0
+          php-version: 8.2
           tools: composer:v2
       - name: Install Dependencies
         run: |
@@ -87,14 +81,12 @@ jobs:
       - name: Install Dredd
         run: |
           npm install dredd@12 --no-optional
+      - name: Configure app
+        run: |
+          cp .env.testing .env
+          # The SQLite driver requires the file to exist.
+          touch /tmp/material-list.sqlite
+          ./artisan migrate:fresh
       - name: Specification tests
         run: |
-          node_modules/.bin/dredd --loglevel=error
-env:
-  ADGANGSPLATFORMEN_DRIVER: testing
-  DB_CONNECTION: sqlite
-  DB_DATABASE: /tmp/db.sqlite
-  CACHE_DRIVER: array
-  SESSION_DRIVER: array
-  QUEUE_DRIVER: sync
-  APP_ENV: testing
+          node_modules/.bin/dredd --loglevel=debug

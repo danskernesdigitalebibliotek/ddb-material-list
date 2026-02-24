@@ -3,9 +3,16 @@ default:
   suites:
     default:
       paths: [ '%paths.base%/tests/features' ]
-      local_coverage_enabled: true
       contexts:
         - MaterialListContext
   extensions:
-    BehatLocalCodeCoverage\LocalCodeCoverageExtension:
-      target_directory: '%paths.base%/coverage'
+    DVDoug\Behat\CodeCoverage\Extension:
+      filter:
+        include:
+          directories:
+            'app': ~
+            'bootstrap': ~
+            'routes': ~
+      reports:
+        clover:
+          target: coverage/behat.xml

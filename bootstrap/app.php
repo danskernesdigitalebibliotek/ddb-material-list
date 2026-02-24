@@ -6,6 +6,7 @@ require_once __DIR__.'/../vendor/autoload.php';
     dirname(__DIR__)
 ))->bootstrap();
 
+
 /*
 |--------------------------------------------------------------------------
 | Create The Application
@@ -58,7 +59,7 @@ $app->configure('api');
 $app->configure('cors');
 
 $app->middleware([
-    Fruitcake\Cors\HandleCors::class,
+    Illuminate\Http\Middleware\HandleCors::class,
 ]);
 
 // Middleware that selects controller
@@ -78,7 +79,6 @@ $app->routeMiddleware([
 */
 
 $app->register(\Adgangsplatformen\Support\Illuminate\AdgangsplatformenServiceProvider::class);
-$app->register(Fruitcake\Cors\CorsServiceProvider::class);
 $app->register(App\Providers\RouteBindingServiceProvider::class);
 $app->register(Flipbox\LumenGenerator\LumenGeneratorServiceProvider::class);
 
