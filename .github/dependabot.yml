@@ -1,0 +1,25 @@
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: "/"
+    open-pull-requests-limit: 20
+    schedule:
+      interval: weekly
+      day: monday
+      time: '04:00'
+      timezone: Europe/Copenhagen
+    labels:
+      - "dependencies"
+      - "github_actions"
+
+  - package-ecosystem: composer
+    directory: "/cms"
+    open-pull-requests-limit: 20
+    schedule:
+      interval: weekly
+      day: monday
+      time: "04:00"
+      timezone: Europe/Copenhagen
+    labels:
+      - "dependencies"
+      - "composer"
