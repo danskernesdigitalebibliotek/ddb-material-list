@@ -23,7 +23,7 @@ jobs:
       - name: Unit tests
         run: ./vendor/bin/phpunit --coverage-clover=coverage/unit.xml
       - name: Report coverage to Codecov
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v6
         with:
           files: coverage/unit.xml
           flags: Unit
@@ -47,7 +47,7 @@ jobs:
         run: |
           ./vendor/bin/behat --xdebug
       - name: Report coverage to Codecov
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v6
         with:
           files: coverage/behat.xml
           flags: Behaviour
