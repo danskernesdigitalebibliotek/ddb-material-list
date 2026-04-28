@@ -21,7 +21,7 @@
     },
     "require-dev": {
         "behat/behat": "^3",
-        "ddelnano/dredd-hooks-php": "^1.1",
+        "ddelnano/dredd-hooks-php": "^2.0",
         "dvdoug/behat-code-coverage": "^5.3",
         "fzaninotto/faker": "^1.4",
         "guzzlehttp/guzzle": "^7.0.1",
