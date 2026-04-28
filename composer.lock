@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f575cbddda0b9f46c85512639fa06e2a",
+    "content-hash": "9bd6e40a5985e4150a1d533ebf8e4892",
     "packages": [
         {
             "name": "brick/math",
@@ -7580,25 +7580,25 @@
         },
         {
             "name": "ddelnano/dredd-hooks-php",
-            "version": "1.1.6",
+            "version": "2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ddelnano/dredd-hooks-php.git",
-                "reference": "89ac3d4a738cbad090aaf5f1f1c5297e14d61a63"
+                "reference": "13982f442d116deb9cf1bfe8c596c55e4df057ee"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ddelnano/dredd-hooks-php/zipball/89ac3d4a738cbad090aaf5f1f1c5297e14d61a63",
-                "reference": "89ac3d4a738cbad090aaf5f1f1c5297e14d61a63",
+                "url": "https://api.github.com/repos/ddelnano/dredd-hooks-php/zipball/13982f442d116deb9cf1bfe8c596c55e4df057ee",
+                "reference": "13982f442d116deb9cf1bfe8c596c55e4df057ee",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.4"
+                "php": ">=7.2"
             },
             "require-dev": {
                 "mockery/mockery": "0.9.*",
-                "phpunit/phpunit": "~4.0",
-                "squizlabs/php_codesniffer": "^2.5"
+                "phpunit/phpunit": "~8.0",
+                "squizlabs/php_codesniffer": "^3.5"
             },
             "bin": [
                 "bin/dredd-hooks-php"
@@ -7628,7 +7628,7 @@
                 "issues": "https://github.com/ddelnano/dredd-hooks-php/issues",
                 "source": "https://github.com/ddelnano/dredd-hooks-php/tree/master"
             },
-            "time": "2018-09-24T12:37:02+00:00"
+            "time": "2020-06-07T05:53:14+00:00"
         },
         {
             "name": "dealerdirect/phpcodesniffer-composer-installer",
