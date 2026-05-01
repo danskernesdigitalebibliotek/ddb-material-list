@@ -8,9 +8,6 @@ updates:
       day: monday
       time: '04:00'
       timezone: Europe/Copenhagen
-    labels:
-      - "dependencies"
-      - "github_actions"
 
   - package-ecosystem: composer
     directory: "/"
@@ -20,6 +17,3 @@ updates:
       day: monday
       time: "04:00"
       timezone: Europe/Copenhagen
-    labels:
-      - "dependencies"
-      - "composer"
