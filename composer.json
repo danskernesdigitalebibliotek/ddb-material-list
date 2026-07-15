@@ -11,7 +11,7 @@
     ],
     "require": {
         "composer/package-versions-deprecated": "^1.11",
-        "danskernesdigitalebibliotek/oauth2-adgangsplatformen": "^1.0",
+        "danskernesdigitalebibliotek/oauth2-adgangsplatformen": "^2",
         "doctrine/dbal": "^3.3",
         "flipbox/lumen-generator": "^9.1",
         "laravel/lumen-framework": "^11.0",
