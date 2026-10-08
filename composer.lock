@@ -283,16 +283,16 @@
         },
         {
             "name": "danskernesdigitalebibliotek/oauth2-adgangsplatformen",
-            "version": "2.0.0",
+            "version": "2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/danskernesdigitalebibliotek/oauth2-adgangsplatformen.git",
-                "reference": "06ceca776887555c60ea2e5ecff9f1128ac81413"
+                "reference": "3ca89f0ced3fdf8e3941eb50d61a0c3ad5f48eaf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/danskernesdigitalebibliotek/oauth2-adgangsplatformen/zipball/06ceca776887555c60ea2e5ecff9f1128ac81413",
-                "reference": "06ceca776887555c60ea2e5ecff9f1128ac81413",
+                "url": "https://api.github.com/repos/danskernesdigitalebibliotek/oauth2-adgangsplatformen/zipball/3ca89f0ced3fdf8e3941eb50d61a0c3ad5f48eaf",
+                "reference": "3ca89f0ced3fdf8e3941eb50d61a0c3ad5f48eaf",
                 "shasum": ""
             },
             "require": {
@@ -346,10 +346,10 @@
             ],
             "description": "OAuth 2.0 provider for using Adgangsplatformen - a single sign-on solution for public libraries in Denmark",
             "support": {
-                "source": "https://github.com/danskernesdigitalebibliotek/oauth2-adgangsplatformen/tree/2.0.0",
+                "source": "https://github.com/danskernesdigitalebibliotek/oauth2-adgangsplatformen/tree/2.1.0",
                 "issues": "https://github.com/danskernesdigitalebibliotek/oauth2-adgangsplatformen/issues"
             },
-            "time": "2026-07-15T09:26:27+00:00"
+            "time": "2026-10-08T18:04:22+00:00"
         },
         {
             "name": "doctrine/dbal",
